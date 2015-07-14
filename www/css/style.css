@@ -1,0 +1,17 @@
+/* Empty. Add your own CSS if you like */
+.separator_line{
+    width:95%;
+    height:1px;
+    border-bottom: solid 1px #ddd;
+    margin-left:auto;
+    margin-right:auto;
+}
+.row{
+    padding:0;
+}
+.album_header{
+    width:95%;
+    border-bottom: solid 2px #ddd;
+    margin-left:auto;
+    margin-right:auto;
+}

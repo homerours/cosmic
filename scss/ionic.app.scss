@@ -1,0 +1,187 @@
+/*
+To customize the look and feel of Ionic, you can override the variables
+in ionic's _variables.scss file.
+
+For example, you might change some of the default colors:
+
+$light:                           #fff !default;
+$stable:                          #f8f8f8 !default;
+$positive:                        #387ef5 !default;
+$calm:                            #11c1f3 !default;
+$balanced:                        #33cd5f !default;
+$energized:                       #ffc900 !default;
+$assertive:                       #ef473a !default;
+$royal:                           #886aea !default;
+$dark:                            #444 !default;
+ */
+
+// The path for our ionicons font files, relative to the built CSS in www/css
+$ionicons-font-path: "../lib/ionic/fonts" !default;
+
+$pink                     : #E12F56;
+$font-size-xlarge         : 20px !default;
+$font-size-medium         : 16px !default;
+$artwork-list-width       : 80% !default;
+$separator-line-width     : 95%;
+
+// Player
+$player-icon-size         : 35px;
+$player-title-font-family : "OmnesLight";
+$player-title-blur-path   : "../img/blur.png";
+$player-blur-path         : "../img/flou4.png";
+$player-time-color        : white;
+$player-time-opacity      : 0.7;
+$player-time-font-size    : 30px;
+$player-title-size        : 36px;
+
+/*.album_header{*/
+    /*width:95%;*/
+    /*border-bottom: solid 2px #ddd;*/
+    /*margin-left:auto;*/
+    /*margin-right:auto;*/
+/*}*/
+
+// Include all of Ionic
+@import "www/lib/ionic/scss/ionic";
+
+// Custom fonts
+@font-face{
+    font-family: 'HelveticaNeueLight';
+    src: url('fonts/helvetica_neue_light/helvetica-neue-light.ttf');
+}
+@font-face{
+    font-family: 'HelveticaNeueUltraLight';
+    src: url('fonts/helveticaneue_ultralight/helvetica-neue-ultra-light.ttf');
+}
+@font-face{
+    font-family: 'Omnes';
+    src: url('fonts/omnes-webfont.ttf');
+}
+@font-face{
+    font-family: 'OmnesLight';
+    font-style: normal;
+    font-weight: 200;
+    src: url('fonts/omnes_light-webfont.ttf');
+}
+@font-face{
+    font-family: 'OmnesExtraLight';
+    src: url('fonts/omnes_extralight-webfont.ttf');
+}
+
+// Music Player
+.player{
+    color: $dark;
+    .top{
+        position:relative;
+    }
+    .icon{
+        cursor    : pointer;
+        display   : block;
+        color     : $dark;
+        font-size : $player-icon-size;
+    }
+    .controls{
+        position : absolute;
+        bottom   : 0;
+        width    : 100%;
+        .row .col{
+            padding-bottom : 0;
+            padding-top    : 0;
+            text-align     : center;
+        }
+    }
+    .artwork{
+        padding-top: 100%;
+    }
+    .title{
+        font-family    : $player-title-font-family;
+        letter-spacing : -1px;
+        position       : absolute;
+        top            : 15px;
+        left           : 0;
+        font-size      : $player-title-size;
+        color          : $pink;
+        padding-bottom : 4px;
+        line-height    : ($player-icon-size - 2px);
+        background     : url($player-title-blur-path) top left repeat;
+    }
+    .blur{
+        background : url($player-blur-path) top right repeat;
+        height     : 100%;
+        position   : absolute;
+        top        : 0;
+        right      : 0;
+    }
+    .time{
+        position  : absolute;
+        color     : $player-time-color;
+        opacity   : $player-time-opacity;
+        bottom    : 3px;
+        font-size : $player-time-font-size;
+    }
+    .current-time{
+        @extend .time;
+        left :3px;
+    }
+    .total-duration{
+        @extend .time;
+        right :3px;
+    }
+}
+
+// Title list
+.title-list{
+    color: $dark;
+    .row{
+        padding-bottom:0;
+        padding-top: 0;
+    }
+
+    .artwork{
+        vertical-align: middle;
+        width: $artwork-list-width;
+        margin-left: ((100% - $artwork-list-width) / 2);
+    }
+
+    .blank-artwork{
+        width: $artwork-list-width;
+        padding-top: $artwork-list-width;
+    }
+
+    .song-title{
+        font-family: $font-family-sans-serif;
+        font-size: $font-size-xlarge;
+    }
+
+    .album-header{
+        font-size: $font-size-medium;
+        font-weight: bold;
+        padding-bottom:0;
+        .album-title{
+            padding-bottom:0;
+            padding-left: ((100% - $separator-line-width) / 2);
+        }
+        .nb-songs{
+            padding-bottom:0;
+            text-align: right;
+            padding-right: ((100% - $separator-line-width) / 2);
+        }
+
+    }
+
+    .separator-line{
+        width: $separator-line-width;
+        margin-left:auto;
+        margin-right:auto;
+        height: 0;
+    }
+    .title-separator{
+        @extend .separator-line;
+        border-bottom: solid 1px #ddd;
+    }
+
+    .album-separator{
+        @extend .separator-line;
+        border-bottom: solid 2px #ddd;
+    }
+}

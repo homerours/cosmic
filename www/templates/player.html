@@ -1,0 +1,44 @@
+<ion-view view-title="Player">
+    <ion-content class="player" scroll="false">
+
+        <div class="top">
+            <div class="artwork" ng-click='seek($event);' ng-style="{'background':'url(data/artwork/1.jpg) left','background-size':'100%'}">
+                <div class="blur" ng-style="{'width':100 - 10 + '%'}">
+                </div>
+            </div>
+
+            <div class="title">
+                {{player.playlist[player.playlistIndex].artist}}<br/><span>{{player.playlist[player.playlistIndex].title}}</span>
+            </div>
+            <div class="current-time">{{player.currentTime() | date : 'mm:ss'}}</div>
+            <div class="total-duration">{{player.duration() | date : 'mm:ss'}}</div>
+        </div>
+
+
+        <div class="controls">
+            <div class="row">
+                <div class="col"></div>
+                <div class="col"><i class="icon ion-ios-rewind" ng-click="player.prev()"></i></div>
+                <div class="col">
+                    <i class="icon ion-ios-play" ng-click="player.play()" ng-hide="player.playing"></i>
+                    <i class="icon ion-ios-pause" ng-click="player.pause()" ng-show="player.playing"></i>
+                </div>
+                <div class="col"><i class="icon ion-ios-fastforward" ng-click="player.next()"></i></div>
+                <div class="col"></div>
+            </div>
+
+            <div class="range range-dark">
+                <i class="icon ion-ios-volume-low"></i>
+                <input type="range" name="volume" min="0" max="1" ng-model="player.volume" ng-change='player.setVolume();'/>
+                <i class="icon ion-ios-volume-high"></i>
+            </div>
+            <div class="row">
+                <div class="col col-30">Repeat</div>
+                <div class="col col-20"></div>
+                <div class="col col-20"></div>
+                <div class="col col-30">Shuffle</div>
+            </div>
+        </div>
+
+    </ion-content>
+</ion-view>
