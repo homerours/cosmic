@@ -1,8 +1,11 @@
 var cosmicMobileControllers=angular.module('cosmic.controllers', []);
 
 // Playlists
-cosmicMobileControllers.controller('PlaylistsCtrl', function($scope,cosmicPlayer) {
+cosmicMobileControllers.controller('PlaylistsCtrl', function($scope) {
 
+    //var path='file:///storage/emulated/0/Music/My_music/Fold.mp3';
+    //var mymedia=$cordovaMedia.newMedia(mypath).then(function(){});
+    //mymedia.play();
 });
 
 // Artists
@@ -24,7 +27,15 @@ cosmicMobileControllers.controller('TitlesCtrl', function($scope, $stateParams,c
 // Player
 cosmicMobileControllers.controller('PlayerCtrl', function($scope,cosmicPlayer) {
     $scope.player=cosmicPlayer;
-    $scope.player.initAndPlay();
+    $scope.player.initAndPlay(0,function(){
+        $scope.position=cosmicPlayer.position;
+        $scope.duration=cosmicPlayer.duration;
+        if ($scope.duration>0){
+            $scope.progress=100*($scope.position / $scope.duration);
+        } else {
+            $scope.progress=100;
+        }
+    });
 });
 
 // Settings

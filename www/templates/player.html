@@ -3,15 +3,15 @@
 
         <div class="top">
             <div class="artwork" ng-click='seek($event);' ng-style="{'background':'url(data/artwork/1.jpg) left','background-size':'100%'}">
-                <div class="blur" ng-style="{'width':100 - 10 + '%'}">
+                <div class="blur" ng-style="{'width':100 - progress + '%'}">
                 </div>
             </div>
 
             <div class="title">
                 {{player.playlist[player.playlistIndex].artist}}<br/><span>{{player.playlist[player.playlistIndex].title}}</span>
             </div>
-            <div class="current-time">{{player.currentTime() | date : 'mm:ss'}}</div>
-            <div class="total-duration">{{player.duration() | date : 'mm:ss'}}</div>
+            <div class="current-time">{{position | date : 'mm:ss'}}</div>
+            <div class="total-duration">{{duration | date : 'mm:ss'}}</div>
         </div>
 
 
@@ -29,7 +29,7 @@
 
             <div class="range range-dark">
                 <i class="icon ion-ios-volume-low"></i>
-                <input type="range" name="volume" min="0" max="1" ng-model="player.volume" ng-change='player.setVolume();'/>
+                <input type="range" name="volume" min="0" max="100" ng-model="player.volume" ng-change='player.setVolume();'/>
                 <i class="icon ion-ios-volume-high"></i>
             </div>
             <div class="row">

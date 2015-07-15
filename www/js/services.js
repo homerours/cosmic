@@ -206,6 +206,7 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
             if (entry.isFile) {
                 if (extensionsAudio.indexOf(extension)!=-1){
                     entry.file(function(file){
+                        file=file.slice(-300);
                         ID3.loadTags(fileName,function() {
                             var tags   = ID3.getAllTags(fileName);
                             var title  = tags.title || name;
@@ -287,16 +288,20 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
 
 });
 
-cosmicMobileServices.factory('cosmicPlayer',  function($q,$cordovaMedia) {
+cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedia) {
     var player = {
         playing: false,
+        position:0,
+        duration:0,
+        onUpdate:null,
+        isWatchingTime: null,
         media: null,
-        playlist: [{artist:'Muse',title:'Time is Running Out',path:'ressource////'}],
+        playlist: [{artist:'Muse',title:'Time is Running Out',path:'file:///storage/emulated/0/Music/My_music/Fold.mp3'}],
         viewPlaylist: [],
         playlistIndex: 0,
-        volume: 0.7,
+        volume: 70,
         setVolume: function() {
-            this.media.setVolume(this.volume);
+            this.media.setVolume(this.volume/100);
         },
         loadPlaylist: function() {
             player.playlist = player.viewPlaylist;
@@ -305,19 +310,14 @@ cosmicMobileServices.factory('cosmicPlayer',  function($q,$cordovaMedia) {
             player.viewPlaylist = playlist;
         },
         initMedia: function() {
-            var deferred=$q.defer();
-            if (this.playlist.length>0){
-                this.media=$cordovaMedia.newMedia(this.playlist[0].path).then(function(res){
-                    console.log('Media opened');
-                    deferred.resolve();
-                },function(err){
-                    console.error(err);
-                    deferred.reject(err);
-                });
-            } else {
+            var self=this;
+            console.log('init media');
+            var mypath=this.playlist[0].path;
+            self.media=new Media(mypath,function(leo){
                 deferred.resolve();
-            }
-            return deferred.promise;
+            },function(err){
+            });
+            console.log('media fixed');
         },
         clearMedia: function(){
             if (this.media){
@@ -325,22 +325,31 @@ cosmicMobileServices.factory('cosmicPlayer',  function($q,$cordovaMedia) {
                 this.media=null;
             }
         },
-        initAndPlay: function(index) {
-            this.clearMedia();
-            this.initMedia(function(){
-                this.play();
-            });
+        initAndPlay: function(index,updateCb) {
+            var self=this;
+            console.log('INIT AND PLAY');
+            this.onUpdate=updateCb;
+            self.clearMedia();
+            console.log('d clear');
+            self.initMedia();
+            console.log('d init');
+            self.play();
+            console.log('d play');
+            self.currentDuration();
         },
         play: function() {
+            this.startWatchTime();
             this.media.play();
             player.playing = true;
         },
         pause: function() {
             this.media.pause();
+            this.stopWatchTime();
             player.playing = false;
         },
         stop: function() {
             this.media.stop();
+            this.stopWatchTime();
             player.playing = false;
         },
         seek: function(percent) {
@@ -348,14 +357,57 @@ cosmicMobileServices.factory('cosmicPlayer',  function($q,$cordovaMedia) {
             this.media.seekTo(1000 * percent * this.media.getDuration());
         },
         next: function() {
+            this.stopWatchTime();
             this.playlistIndex = (this.playlistIndex + 1) % this.playlist.length;
             this.initAndPlay();
         },
-        currentTime: function() {
-            return this.media.getCurrentPosition();
+        startWatchTime: function() {
+            var self=this;
+            if (self.media){
+                var dur;
+                var counter=0;
+                self.isWatchingTime=$interval(function(){
+                    self.media.getCurrentPosition(function(pos){
+                        self.position=1000*pos;
+                        self.onUpdate();
+                        console.log('time : ',self.position);
+                    });
+                },1000);
+            } else {
+                self.duration=0;
+            }
+            return;
+        },
+        stopWatchTime : function(){
+            var self=this;
+            if (self.isWatchingTime){
+                $interval.cancel(self.isWatchingTime);
+                self.isWatchingTime=null;
+            }
+            return;
         },
         currentDuration: function() {
-            return this.media.getDuration();
+            var defered=$q.defer();
+            var self=this;
+            if (self.media){
+                var dur;
+                var counter=0;
+                var inter=$interval(function(){
+                    dur=self.media.getDuration();
+                    console.log('tour : ',counter);
+                    if (dur>=0 || counter>10){
+                        $interval.cancel(inter);
+                        self.duration=1000*dur;
+                        self.onUpdate();
+                        defered.resolve();
+                    }
+                    counter++;
+                },500);
+            } else {
+                self.duration=0;
+                defered.resole();
+            }
+            return defered.promise;
         }
     };
     //audio.addEventListener('timeupdate', function(evt) {
