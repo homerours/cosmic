@@ -19,23 +19,52 @@ cosmicMobileControllers.controller('ArtistsCtrl', function($scope,$q, cosmicDB) 
 cosmicMobileControllers.controller('TitlesCtrl', function($scope, $stateParams,cosmicDB) {
     var artistId=$stateParams.artistId;
     cosmicDB.getTitles(artistId).then(function(albums){
-        console.log(JSON.stringify(albums));
         $scope.albums=albums;
     });
 });
 
 // Player
-cosmicMobileControllers.controller('PlayerCtrl', function($scope,cosmicPlayer) {
-    $scope.player=cosmicPlayer;
-    $scope.player.initAndPlay(0,function(){
-        $scope.position=cosmicPlayer.position;
-        $scope.duration=cosmicPlayer.duration;
-        if ($scope.duration>0){
-            $scope.progress=100*($scope.position / $scope.duration);
-        } else {
-            $scope.progress=100;
-        }
-    });
+cosmicMobileControllers.controller('PlayerCtrl', function($scope,$stateParams,cosmicPlayer) {
+    var index=$stateParams.index;
+    console.log('Player index : '+ index);
+    if (index>=0){
+        var onUpdate = function(position){
+            $scope.position=position;
+            if ($scope.duration>0){
+                $scope.progress=100*($scope.position / $scope.duration);
+            } else {
+                $scope.progress=100;
+            }
+        };
+        var onNewTitle = function(){
+            $scope.player=cosmicPlayer;
+            cosmicPlayer.getDuration().then(function(duration){
+                $scope.duration=duration;
+            });
+        };
+        cosmicPlayer.launchPlayer(index,onUpdate,onNewTitle);
+    } else {
+        //var onUpdate = function(position){
+            //$scope.position=position;
+            //if ($scope.duration>0){
+                //$scope.progress=100*($scope.position / $scope.duration);
+            //} else {
+                //$scope.progress=100;
+            //}
+        //};
+        //var onNewTitle = function(){
+            //$scope.player=cosmicPlayer;
+            //cosmicPlayer.getDuration().then(function(duration){
+                //$scope.duration=duration;
+            //});
+        //};
+        //cosmicPlayer.launchPlayer(0,onUpdate,onNewTitle);
+    }
+    $scope.seek = function($event) {
+        console.log('Seek');
+        var current_percent = $event.clientX / $event.currentTarget.offsetWidth;
+        cosmicPlayer.seek(current_percent);
+    };
 });
 
 // Settings

@@ -1,6 +1,6 @@
 var cosmicMobileServices = angular.module('cosmic.services', ['ngCordova']);
 
-cosmicMobileServices.factory('cosmicDB',  function($q,$cordovaSQLite) {
+cosmicMobileServices.factory('cosmicDB',  function($q,$cordovaSQLite, cosmicPlayer) {
     var database={
         db: null,
         initDatabase: function(){
@@ -16,6 +16,7 @@ cosmicMobileServices.factory('cosmicDB',  function($q,$cordovaSQLite) {
             $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS album (id integer primary key autoincrement, name text, artist integer)");
             $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS title (id integer primary key autoincrement, name text, album integer, track integer, year integer,path text)");
         },
+
         getArtists: function(){
             // Get all artists from database
             return $cordovaSQLite.execute(this.db,"SELECT * FROM artist ORDER BY name", []).then(function(res) {
@@ -26,9 +27,10 @@ cosmicMobileServices.factory('cosmicDB',  function($q,$cordovaSQLite) {
                 return artists;
             });
         },
+
         getTitles:  function(artistId){
             // Get all titles from artist
-            var query= "SELECT t.name AS titleName, t.id AS titleId, albumName , albumId , artistName FROM"+
+            var query= "SELECT t.name AS titleName, t.id AS titleId, t.path AS path, albumName , albumId , artistName FROM"+
                 " title t INNER JOIN"+
                 " (SELECT ar.name AS artistName, al.name AS albumName, al.id AS albumId FROM"+
                 " (SELECT * FROM artist WHERE id=?) ar INNER JOIN album al ON al.artist=ar.id) a"+
@@ -37,18 +39,21 @@ cosmicMobileServices.factory('cosmicDB',  function($q,$cordovaSQLite) {
                 console.log('Got '+res.rows.length+' titles');
                 console.dir(res.rows.item(0));
                 var albums=[];
+                var viewPlaylist=[];
                 var i = 0;
                 while (i<res.rows.length){
                     var currentAlbumId=res.rows.item(i).albumId;
-                    var currentAlbum={name: res.rows.item(i).albumName};
+                    var currentAlbum={name: res.rows.item(i).albumName, id : res.rows.item(i).albumId};
                     var titles= [];
                     while (i<res.rows.length && res.rows.item(i).albumId==currentAlbumId){
                         titles.push({name:res.rows.item(i).titleName, id: res.rows.item(i).titleId});
+                        viewPlaylist.push({name:res.rows.item(i).titleName, album: res.rows.item(i).albumName,artist : res.rows.item(i).artistName, path : res.rows.item(i).path ,id: res.rows.item(i).titleId});
                         i++;
                     }
                     currentAlbum.titles=titles;
                     albums.push(currentAlbum);
                 }
+                cosmicPlayer.loadViewPlaylist(viewPlaylist);
                 return albums;
             },function(err){
                 console.log('error');
@@ -115,30 +120,32 @@ cosmicMobileServices.factory('cosmicDB',  function($q,$cordovaSQLite) {
             });
         },
 
-        addTitle: function(title,artist,album,track,year,path){
+        addTitle: function(title){
+            var defered=$q.defer();
             var dbService=this;
-            return $cordovaSQLite.execute(dbService.db,"SELECT * FROM title WHERE path=?", [path]).then(function(res) {
+            $cordovaSQLite.execute(dbService.db,"SELECT * FROM title WHERE path=?", [title.path]).then(function(res) {
                 if (res.rows.length===0){
-                    dbService.addArtist(artist).then(function(artistId){
-                        return dbService.addAlbum(album,artistId);
+                    dbService.addArtist(title.artist).then(function(artistId){
+                        return dbService.addAlbum(title.album,artistId);
                     })
                     .then(function(albumId){
                         // Inserting new title
-                        return $cordovaSQLite.execute(dbService.db,"INSERT INTO title (name,album,track,year,path) VALUES (?,?,?,?,?)", [title,albumId,track,year,path]);
+                        return $cordovaSQLite.execute(dbService.db,"INSERT INTO title (name,album,track,year,path) VALUES (?,?,?,?,?)", [title.title,albumId,title.track,title.year,title.path]);
                     })
                     .then(function(res) {
-                        return res.insertId;
+                        console.log('Inserted title '+ title.title);
+                        defered.resolve(res.insertId);
                     }, function (err){
                         console.dir(err);
+                        defered.reject(err);
                     });
 
                 } else {
                     // No title
-                    return 0;
+                    defered.resolve(0);
                 }
             });
-
-
+            return defered.promise;
         }
     };
     database.initDatabase();
@@ -213,7 +220,8 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
                             var artist = tags.artist || 'Unknown Artist';
                             var album  = tags.album || 'Unknown Album';
                             var track  = tags.track || 1;
-                            results.push({title:title,artist:artist,track:track,year:tags.year,path:entry.nativeUrl});
+                            var currentTitle={title:title,album: album, artist:artist,track:track,year:tags.year,path:entry.nativeURL};
+                            results.push(currentTitle);
                             console.log(title);
                             //console.dir({title:title,artist:artist,track:track,year:tags.year,path:entry.nativeUrl});
                             hDeferred.resolve();
@@ -256,11 +264,9 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
                     console.log("readEntries");
                     console.dir(entries);
 
-
                     for (var index=0;index<entries.length;index++){
                         promises.push(myfs.handleItem(entries[index],results));
                     }
-
                     var sz=promises.length;
                     console.log(sz+' promises to resolve');
                     $q.all(promises).then(function(res){
@@ -276,7 +282,19 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
             var results=[];
             this.scanDirectory(path,results).then(function(res){
                 console.dir(results);
-                console.log('DONE');
+                console.log('DONE SCAN');
+                var syncLoop = function(i){
+                    if (i>= results.length){
+                        console.log('DATABASE READY');
+                    } else {
+                        cosmicDB.addTitle(results[i]).then(function(){
+                            i++;
+                            syncLoop(i);
+                        });
+                    }
+                };
+                syncLoop(0);
+
             },function(err){
                 console.error(err);
             });
@@ -291,10 +309,10 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
 cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedia) {
     var player = {
         playing: false,
-        position:0,
-        duration:0,
         onUpdate:null,
+        onTitleChange:null,
         isWatchingTime: null,
+        duration:0,
         media: null,
         playlist: [{artist:'Muse',title:'Time is Running Out',path:'file:///storage/emulated/0/Music/My_music/Fold.mp3'}],
         viewPlaylist: [],
@@ -304,20 +322,24 @@ cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedi
             this.media.setVolume(this.volume/100);
         },
         loadPlaylist: function() {
+            console.log('Load playlist, size: '+this.viewPlaylist.length);
             player.playlist = player.viewPlaylist;
+            console.dir(this.playlist);
         },
         loadViewPlaylist: function(playlist) {
             player.viewPlaylist = playlist;
         },
-        initMedia: function() {
+        initMedia: function(index) {
             var self=this;
+            self.clearMedia();
             console.log('init media');
-            var mypath=this.playlist[0].path;
+            self.playlistIndex=index;
+            var mypath=this.playlist[index].path;
             self.media=new Media(mypath,function(leo){
-                deferred.resolve();
             },function(err){
             });
-            console.log('media fixed');
+            self.play();
+            self.onTitleChange();
         },
         clearMedia: function(){
             if (this.media){
@@ -325,17 +347,13 @@ cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedi
                 this.media=null;
             }
         },
-        initAndPlay: function(index,updateCb) {
+        // player launcher for the controller
+        launchPlayer: function(index,updateCb,newSongCb) {
             var self=this;
-            console.log('INIT AND PLAY');
-            this.onUpdate=updateCb;
-            self.clearMedia();
-            console.log('d clear');
-            self.initMedia();
-            console.log('d init');
-            self.play();
-            console.log('d play');
-            self.currentDuration();
+            self.loadPlaylist();
+            self.onUpdate=updateCb;
+            self.onTitleChange=newSongCb;
+            self.initMedia(index);
         },
         play: function() {
             this.startWatchTime();
@@ -354,12 +372,18 @@ cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedi
         },
         seek: function(percent) {
             console.log(percent);
-            this.media.seekTo(1000 * percent * this.media.getDuration());
+            var self=this;
+            if (self.duration >0){
+                var newPosition=percent*self.duration;
+                self.media.seekTo(newPosition);
+                self.onUpdate(newPosition);
+            }
         },
         next: function() {
-            this.stopWatchTime();
-            this.playlistIndex = (this.playlistIndex + 1) % this.playlist.length;
-            this.initAndPlay();
+            var self=this;
+            self.stopWatchTime();
+            self.playlistIndex = (self.playlistIndex + 1) % self.playlist.length;
+            self.initMedia(self.playlistIndex);
         },
         startWatchTime: function() {
             var self=this;
@@ -368,13 +392,12 @@ cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedi
                 var counter=0;
                 self.isWatchingTime=$interval(function(){
                     self.media.getCurrentPosition(function(pos){
-                        self.position=1000*pos;
-                        self.onUpdate();
-                        console.log('time : ',self.position);
+                        self.onUpdate(1000*pos);
+                        //console.log('time : ',pos);
                     });
-                },1000);
+                },500);
             } else {
-                self.duration=0;
+                self.onUpdate(0);
             }
             return;
         },
@@ -386,7 +409,7 @@ cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedi
             }
             return;
         },
-        currentDuration: function() {
+        getDuration: function() {
             var defered=$q.defer();
             var self=this;
             if (self.media){
@@ -398,32 +421,15 @@ cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedi
                     if (dur>=0 || counter>10){
                         $interval.cancel(inter);
                         self.duration=1000*dur;
-                        self.onUpdate();
-                        defered.resolve();
+                        defered.resolve(1000*dur);
                     }
                     counter++;
                 },500);
             } else {
-                self.duration=0;
-                defered.resole();
+                defered.resole(-1000);
             }
             return defered.promise;
         }
     };
-    //audio.addEventListener('timeupdate', function(evt) {
-    //$rootScope.$apply(function() {
-    //player.progress = player.currentTime();
-    //player.progress_percent = 100 * player.progress / player.currentDuration();
-    //});
-    //});
-    //audio.addEventListener('ended', function() {
-    //$rootScope.$apply(player.next());
-    //});
-    //audio.addEventListener('canplay', function(evt) {
-    //$rootScope.$apply(function() {
-    //player.ready = true;
-    //// player.progress = player.currentTime();
-    //});
-    //});
     return player;
 });
