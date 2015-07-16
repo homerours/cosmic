@@ -342,9 +342,11 @@ cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedi
             self.onTitleChange();
         },
         clearMedia: function(){
-            if (this.media){
-                this.media.release();
-                this.media=null;
+            var self=this;
+            self.stopWatchTime();
+            if (self.media){
+                self.media.release();
+                self.media=null;
             }
         },
         // player launcher for the controller
@@ -379,9 +381,19 @@ cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedi
                 self.onUpdate(newPosition);
             }
         },
+        prev: function() {
+            var self=this;
+                self.media.getCurrentPosition(function(pos){
+                    if (pos<=5){
+                        self.playlistIndex = (self.playlistIndex - 1) % self.playlist.length;
+                        self.initMedia(self.playlistIndex);
+                    } else {
+                        self.seek(0);
+                    }
+                });
+        },
         next: function() {
             var self=this;
-            self.stopWatchTime();
             self.playlistIndex = (self.playlistIndex + 1) % self.playlist.length;
             self.initMedia(self.playlistIndex);
         },
@@ -393,6 +405,9 @@ cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedi
                 self.isWatchingTime=$interval(function(){
                     self.media.getCurrentPosition(function(pos){
                         self.onUpdate(1000*pos);
+                        if (pos>=self.duration-0.6){
+                            self.next();
+                        }
                         //console.log('time : ',pos);
                     });
                 },500);
