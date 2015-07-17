@@ -46,7 +46,8 @@ cosmicMobileServices.factory('cosmicDB',  function($q,$cordovaSQLite, cosmicPlay
                     var currentAlbum={name: res.rows.item(i).albumName, id : res.rows.item(i).albumId};
                     var titles= [];
                     while (i<res.rows.length && res.rows.item(i).albumId==currentAlbumId){
-                        titles.push({name:res.rows.item(i).titleName, id: res.rows.item(i).titleId});
+                        titles.push({name:res.rows.item(i).titleName, id: res.rows.item(i).titleId, index : i});
+                        // Index is the position of the song in the playlist
                         viewPlaylist.push({name:res.rows.item(i).titleName, album: res.rows.item(i).albumName,artist : res.rows.item(i).artistName, path : res.rows.item(i).path ,id: res.rows.item(i).titleId});
                         i++;
                     }
@@ -207,9 +208,11 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
                 var tags   = ID3.getAllTags(fileName);
                 defered.resolve(tags);
             },{
+                tags: ["artist", "title", "album", "year", "comment", "track", "genre", "lyrics", "picture"],
                 dataReader:FileAPIReader(file),
                 onError: function(reason) {
                     console.log('Error in ID3 tags reading');
+                    console.dir(reason);
                     defered.reject(reason);
                 }
             });
@@ -233,7 +236,7 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
                         var fileEnd=file.slice(-500);
                         file=[];
 
-                        myfs.readTags(fileName,fileEnd).then(function(tags){
+                        myfs.readTags(fileName,fileBegining).then(function(tags){
                             if (tags.title){
                                 var title  = tags.title || name;
                                 var artist = tags.artist || 'Unknown Artist';
@@ -244,7 +247,7 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
                                 console.log(title);
                                 hDeferred.resolve();
                             } else {
-                                myfs.readTags(fileName,fileBegining).then(function(tags2){
+                                myfs.readTags(fileName,fileEnd).then(function(tags2){
                                     var title  = tags2.title || name;
                                     var artist = tags2.artist || 'Unknown Artist';
                                     var album  = tags2.album || 'Unknown Album';
@@ -259,9 +262,9 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
                         });
 
                     },function(err){
-                        hDeferred.resolve();
-                        console.log('ERREUR de FILE');
+                        console.log('Error: hashtag in path');
                         console.dir(err);
+                        hDeferred.resolve();
                     });
                 } else {
                     hDeferred.resolve();
@@ -285,6 +288,7 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
 
             window.resolveLocalFileSystemURL(path, function(fileSystem) {
                 var directoryReader = fileSystem.createReader();
+
                 directoryReader.readEntries(function(entries) {
                     console.log("readEntries");
                     console.dir(entries);
@@ -298,13 +302,18 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
                         console.log('all done: '+sz);
                         d.resolve();
                     });
+                },function(err){
+                    console.log('Read entries error');
+                    console.dir(err);
+                    d.resolve();
                 });
             });
             return d.promise;
         },
         startScan: function(){
-            var path="file:///storage/emulated/0/Music/My_music/";
+            var path="file:///storage/emulated/0/Music/Mymusic/";
             var results=[];
+            console.log('ROOT: '+cordova.file.externalRootDirectory);
             this.scanDirectory(path,results).then(function(res){
                 console.dir(results);
                 console.log('DONE SCAN');
