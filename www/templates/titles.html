@@ -22,7 +22,7 @@
                         <div ng-if="$index>0" class="blank-artwork"></div>
                     </div>
                     <div class="col col-80 col-center song-title" >
-                        <ion-item  class="link" href="#/tab/player/{{$index}}">{{title.name}}</ion-item>
+                        <ion-item  class="link" ng-click="playTitle($index)">{{title.name}}</ion-item>
                     </div>
                 </div>
 

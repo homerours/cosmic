@@ -60,7 +60,7 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
     })
 
   .state('tab.player', {
-    url: '/player/:index',
+    url: '/player',
     views: {
       'tab-player': {
         templateUrl: 'templates/player.html',

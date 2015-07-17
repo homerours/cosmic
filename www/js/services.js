@@ -30,11 +30,11 @@ cosmicMobileServices.factory('cosmicDB',  function($q,$cordovaSQLite, cosmicPlay
 
         getTitles:  function(artistId){
             // Get all titles from artist
-            var query= "SELECT t.name AS titleName, t.id AS titleId, t.path AS path, albumName , albumId , artistName FROM"+
+            var query= "SELECT t.name AS titleName, t.id AS titleId,t.track, t.path AS path, albumName , albumId , artistName FROM"+
                 " title t INNER JOIN"+
                 " (SELECT ar.name AS artistName, al.name AS albumName, al.id AS albumId FROM"+
                 " (SELECT * FROM artist WHERE id=?) ar INNER JOIN album al ON al.artist=ar.id) a"+
-                " ON t.album=a.albumId ORDER BY albumName";
+                " ON t.album=a.albumId ORDER BY albumName,t.track";
             return $cordovaSQLite.execute(this.db,query, [artistId]).then(function(res) {
                 console.log('Got '+res.rows.length+' titles');
                 console.dir(res.rows.item(0));
@@ -201,42 +201,67 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
             });
             return deferred.promise;
         },
+        readTags : function (fileName,file){
+            var defered=$q.defer();
+            ID3.loadTags(fileName,function() {
+                var tags   = ID3.getAllTags(fileName);
+                defered.resolve(tags);
+            },{
+                dataReader:FileAPIReader(file),
+                onError: function(reason) {
+                    console.log('Error in ID3 tags reading');
+                    defered.reject(reason);
+                }
+            });
+            return defered.promise;
+
+        },
         handleItem : function(entry,results){
             var extensionsAudio=['mp3','m4a'];
             var myfs=this;
             var hDeferred=$q.defer();
             var fileName = entry.name;
-            console.log('exploring '+fileName);
             var extension=fileName.substr(fileName.lastIndexOf('.')+1);
             var name=fileName.substr(0,fileName.lastIndexOf('.'));
+            console.log('exploring '+fileName+', ext : ' + extension);
             // Audio file
             if (entry.isFile) {
                 if (extensionsAudio.indexOf(extension)!=-1){
+
                     entry.file(function(file){
-                        file=file.slice(-300);
-                        ID3.loadTags(fileName,function() {
-                            var tags   = ID3.getAllTags(fileName);
-                            var title  = tags.title || name;
-                            var artist = tags.artist || 'Unknown Artist';
-                            var album  = tags.album || 'Unknown Album';
-                            var track  = tags.track || 1;
-                            var currentTitle={title:title,album: album, artist:artist,track:track,year:tags.year,path:entry.nativeURL};
-                            results.push(currentTitle);
-                            console.log(title);
-                            //console.dir({title:title,artist:artist,track:track,year:tags.year,path:entry.nativeUrl});
-                            hDeferred.resolve();
-                            //return hDeferred.promise;
-                            //cosmicDB.addTitle(title,artist,album,track,tags.year,entry.nativeUrl);
-                        },{
-                            dataReader:FileAPIReader(file),
-                            onError: function(reason) {
-                                if (reason.error === "xhr") {
-                                    console.log("There was a network error: ", reason.xhr);
-                                }
-                                hDeferred.reject(reason);
+                        var fileBegining=file.slice(0,500000);
+                        var fileEnd=file.slice(-500);
+                        file=[];
+
+                        myfs.readTags(fileName,fileEnd).then(function(tags){
+                            if (tags.title){
+                                var title  = tags.title || name;
+                                var artist = tags.artist || 'Unknown Artist';
+                                var album  = tags.album || 'Unknown Album';
+                                var track  = tags.track || 1;
+                                var currentTitle={title:title,album: album, artist:artist,track:track,year:tags.year,path:entry.nativeURL};
+                                results.push(currentTitle);
+                                console.log(title);
+                                hDeferred.resolve();
+                            } else {
+                                myfs.readTags(fileName,fileBegining).then(function(tags2){
+                                    var title  = tags2.title || name;
+                                    var artist = tags2.artist || 'Unknown Artist';
+                                    var album  = tags2.album || 'Unknown Album';
+                                    var track  = tags2.track || 1;
+                                    var year = tags2.year;
+                                    var currentTitle={title:title,album: album, artist:artist,track:track,year:year,path:entry.nativeURL};
+                                    results.push(currentTitle);
+                                    console.log(title);
+                                    hDeferred.resolve();
+                                });
                             }
                         });
 
+                    },function(err){
+                        hDeferred.resolve();
+                        console.log('ERREUR de FILE');
+                        console.dir(err);
                     });
                 } else {
                     hDeferred.resolve();
@@ -309,8 +334,8 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
 cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedia) {
     var player = {
         playing: false,
-        onUpdate:null,
-        onTitleChange:null,
+        onUpdate:function(position){},
+        onTitleChange:function(){},
         isWatchingTime: null,
         duration:0,
         media: null,
@@ -318,9 +343,14 @@ cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedi
         viewPlaylist: [],
         playlistIndex: 0,
         volume: 70,
+        setIndex : function(index){
+            this.playlistIndex=index;
+        },
         setVolume: function() {
+            console.log('New volume: '+ this.volume);
             this.media.setVolume(this.volume/100);
         },
+
         loadPlaylist: function() {
             console.log('Load playlist, size: '+this.viewPlaylist.length);
             player.playlist = player.viewPlaylist;
@@ -329,12 +359,12 @@ cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedi
         loadViewPlaylist: function(playlist) {
             player.viewPlaylist = playlist;
         },
-        initMedia: function(index) {
+
+        initMedia: function() {
             var self=this;
             self.clearMedia();
             console.log('init media');
-            self.playlistIndex=index;
-            var mypath=this.playlist[index].path;
+            var mypath=this.playlist[self.playlistIndex].path;
             self.media=new Media(mypath,function(leo){
             },function(err){
             });
@@ -349,13 +379,18 @@ cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedi
                 self.media=null;
             }
         },
+        setOnUpdate : function(onUpdate){
+            this.onUpdate=onUpdate;
+        },
+        setOnTitleChange : function(onTitleChange){
+            this.onTitleChange=onTitleChange;
+        },
         // player launcher for the controller
-        launchPlayer: function(index,updateCb,newSongCb) {
+        launchPlayer: function(index) {
             var self=this;
+            self.setIndex(index);
             self.loadPlaylist();
-            self.onUpdate=updateCb;
-            self.onTitleChange=newSongCb;
-            self.initMedia(index);
+            self.initMedia();
         },
         play: function() {
             this.startWatchTime();
@@ -383,14 +418,14 @@ cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedi
         },
         prev: function() {
             var self=this;
-                self.media.getCurrentPosition(function(pos){
-                    if (pos<=5){
-                        self.playlistIndex = (self.playlistIndex - 1) % self.playlist.length;
-                        self.initMedia(self.playlistIndex);
-                    } else {
-                        self.seek(0);
-                    }
-                });
+            self.media.getCurrentPosition(function(pos){
+                if (pos<=5){
+                    self.playlistIndex = (self.playlistIndex + self.playlist.length - 1) % self.playlist.length;
+                    self.initMedia(self.playlistIndex);
+                } else {
+                    self.seek(0);
+                }
+            });
         },
         next: function() {
             var self=this;
@@ -405,7 +440,8 @@ cosmicMobileServices.factory('cosmicPlayer',  function($interval,$q,$cordovaMedi
                 self.isWatchingTime=$interval(function(){
                     self.media.getCurrentPosition(function(pos){
                         self.onUpdate(1000*pos);
-                        if (pos>=self.duration-0.6){
+                        if (self.duration>0 && 1000*pos>=self.duration-600){
+                            console.log('End of current song --- play next song');
                             self.next();
                         }
                         //console.log('time : ',pos);

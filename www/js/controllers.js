@@ -16,53 +16,44 @@ cosmicMobileControllers.controller('ArtistsCtrl', function($scope,$q, cosmicDB) 
 });
 
 // Titles
-cosmicMobileControllers.controller('TitlesCtrl', function($scope, $stateParams,cosmicDB) {
+cosmicMobileControllers.controller('TitlesCtrl', function($scope, $stateParams, $state,cosmicDB,cosmicPlayer) {
     var artistId=$stateParams.artistId;
     cosmicDB.getTitles(artistId).then(function(albums){
         $scope.albums=albums;
     });
+    $scope.playTitle = function (index){
+        cosmicPlayer.launchPlayer(index);
+        $state.go('tab.player');
+    };
 });
 
 // Player
 cosmicMobileControllers.controller('PlayerCtrl', function($scope,$stateParams,cosmicPlayer) {
-    var index=$stateParams.index;
-    console.log('Player index : '+ index);
-    if (index>=0){
-        var onUpdate = function(position){
-            $scope.position=position;
-            if ($scope.duration>0){
-                $scope.progress=100*($scope.position / $scope.duration);
-            } else {
-                $scope.progress=100;
-            }
-        };
-        var onNewTitle = function(){
-            $scope.player=cosmicPlayer;
-            cosmicPlayer.getDuration().then(function(duration){
-                $scope.duration=duration;
-            });
-        };
-        cosmicPlayer.launchPlayer(index,onUpdate,onNewTitle);
-    } else {
-        //var onUpdate = function(position){
-            //$scope.position=position;
-            //if ($scope.duration>0){
-                //$scope.progress=100*($scope.position / $scope.duration);
-            //} else {
-                //$scope.progress=100;
-            //}
-        //};
-        //var onNewTitle = function(){
-            //$scope.player=cosmicPlayer;
-            //cosmicPlayer.getDuration().then(function(duration){
-                //$scope.duration=duration;
-            //});
-        //};
-        //cosmicPlayer.launchPlayer(0,onUpdate,onNewTitle);
-    }
+    console.log('load Player Ctrl');
+
+    var onUpdate = function(position){
+        $scope.position=position;
+        if ($scope.duration>0){
+            $scope.progress=100*($scope.position / $scope.duration);
+        } else {
+            $scope.progress=0;
+        }
+    };
+    var onNewTitle = function(){
+        $scope.player=cosmicPlayer;
+        $scope.position=0;
+        $scope.progress=0;
+        cosmicPlayer.getDuration().then(function(duration){
+            $scope.duration=duration;
+        });
+    };
+    onNewTitle();
+    cosmicPlayer.setOnUpdate(onUpdate);
+    cosmicPlayer.setOnTitleChange(onNewTitle);
     $scope.seek = function($event) {
         console.log('Seek');
         var current_percent = $event.clientX / $event.currentTarget.offsetWidth;
+        $scope.progress=current_percent;
         cosmicPlayer.seek(current_percent);
     };
 });
