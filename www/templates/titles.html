@@ -21,8 +21,10 @@
                         <img  ng-if="$index==0" src="data/artwork/1.jpg" class="artwork" />
                         <div ng-if="$index>0" class="blank-artwork"></div>
                     </div>
-                    <div class="col col-80 col-center song-title" >
-                        <ion-item  class="link" ng-click="playTitle(title.index)">{{title.name}}</ion-item>
+                    <div class="col col-80 col-center song-title" ng-click="playTitle(title.index)">
+                        <!--<ion-item  class="link" >-->
+                            {{title.name}}
+                        <!--</ion-item>-->
                     </div>
                 </div>
 

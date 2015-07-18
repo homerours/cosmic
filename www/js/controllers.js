@@ -41,6 +41,7 @@ cosmicMobileControllers.controller('PlayerCtrl', function($scope,$stateParams,co
     };
     var onNewTitle = function(){
         $scope.player=cosmicPlayer;
+        console.log(cosmicPlayer.playlist);
         $scope.position=0;
         $scope.progress=0;
         cosmicPlayer.getDuration().then(function(duration){

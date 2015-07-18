@@ -12,9 +12,14 @@ cosmicMobileServices.factory('cosmicDB',  function($q,$cordovaSQLite, cosmicPlay
             $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS artist");
             $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS album");
             $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS title");
+            $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS artwork");
             $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artist (id integer primary key autoincrement, name text)");
             $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS album (id integer primary key autoincrement, name text, artist integer)");
-            $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS title (id integer primary key autoincrement, name text, album integer, track integer, year integer,path text)");
+            $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS title (id integer primary key autoincrement, name text, album integer, track integer, year integer,path text, artwork integer default 1)");
+            var self=this;
+            $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artwork (id integer primary key autoincrement, file_name text)").then(function(){
+                $cordovaSQLite.execute(self.db, "INSERT INTO artwork (file_name) VALUES (?)",['default_artwork.jpg']);
+            });
         },
 
         getArtists: function(){
@@ -30,8 +35,8 @@ cosmicMobileServices.factory('cosmicDB',  function($q,$cordovaSQLite, cosmicPlay
 
         getTitles:  function(artistId){
             // Get all titles from artist
-            var query= "SELECT t.name AS titleName, t.id AS titleId,t.track, t.path AS path, albumName , albumId , artistName FROM"+
-                " title t INNER JOIN"+
+            var query= "SELECT t.name AS titleName, t.id AS titleId,t.track, t.path AS path, art.file_name AS artworkFileName, albumName , albumId , artistName FROM"+
+                " title t INNER JOIN artwork art ON t.artwork=art.id INNER JOIN"+
                 " (SELECT ar.name AS artistName, al.name AS albumName, al.id AS albumId FROM"+
                 " (SELECT * FROM artist WHERE id=?) ar INNER JOIN album al ON al.artist=ar.id) a"+
                 " ON t.album=a.albumId ORDER BY albumName,t.track";
@@ -41,14 +46,15 @@ cosmicMobileServices.factory('cosmicDB',  function($q,$cordovaSQLite, cosmicPlay
                 var albums=[];
                 var viewPlaylist=[];
                 var i = 0;
+                var path=cordova.file.externalRootDirectory+'Music/Mymusic/';
                 while (i<res.rows.length){
                     var currentAlbumId=res.rows.item(i).albumId;
                     var currentAlbum={name: res.rows.item(i).albumName, id : res.rows.item(i).albumId};
                     var titles= [];
                     while (i<res.rows.length && res.rows.item(i).albumId==currentAlbumId){
-                        titles.push({name:res.rows.item(i).titleName, id: res.rows.item(i).titleId, index : i});
+                        titles.push({name:res.rows.item(i).titleName, id: res.rows.item(i).titleId, index : i, artwork: res.rows.item(i).artworkFileName});
                         // Index is the position of the song in the playlist
-                        viewPlaylist.push({name:res.rows.item(i).titleName, album: res.rows.item(i).albumName,artist : res.rows.item(i).artistName, path : res.rows.item(i).path ,id: res.rows.item(i).titleId});
+                        viewPlaylist.push({name:res.rows.item(i).titleName, album: res.rows.item(i).albumName,artist : res.rows.item(i).artistName, path : res.rows.item(i).path ,id: res.rows.item(i).titleId, artwork : path+res.rows.item(i).artworkFileName});
                         i++;
                     }
                     currentAlbum.titles=titles;
@@ -88,7 +94,6 @@ cosmicMobileServices.factory('cosmicDB',  function($q,$cordovaSQLite, cosmicPlay
                     return 0;
                 }
             });
-
         },
         addArtist: function(artistName){
             console.log('add '+artistName);
@@ -131,9 +136,12 @@ cosmicMobileServices.factory('cosmicDB',  function($q,$cordovaSQLite, cosmicPlay
                     })
                     .then(function(albumId){
                         // Inserting new title
-                        return $cordovaSQLite.execute(dbService.db,"INSERT INTO title (name,album,track,year,path) VALUES (?,?,?,?,?)", [title.title,albumId,title.track,title.year,title.path]);
+                        return dbService.addArtwork(title.artwork).then(function(artworkId){
+                            return $cordovaSQLite.execute(dbService.db,"INSERT INTO title (name,album,track,year,path,artwork) VALUES (?,?,?,?,?,?)", [title.title,albumId,title.track,title.year,title.path,artworkId]);
+                        });
                     })
                     .then(function(res) {
+                        console.log(res);
                         console.log('Inserted title '+ title.title);
                         defered.resolve(res.insertId);
                     }, function (err){
@@ -147,7 +155,23 @@ cosmicMobileServices.factory('cosmicDB',  function($q,$cordovaSQLite, cosmicPlay
                 }
             });
             return defered.promise;
-        }
+        },
+
+        addArtwork: function(fileName){
+            var self=this;
+            var defered=$q.defer();
+            console.log('add Artwork');
+            if (fileName){
+                console.log('Title has artwork');
+                $cordovaSQLite.execute(self.db,"INSERT INTO artwork (file_name) VALUES (?)", [fileName]).then(function(res) {
+                    console.log("INSERT ARTWORK ID -> " + res.insertId);
+                    defered.resolve(res.insertId);
+                });
+            } else {
+                defered.resolve(1);
+            }
+            return defered.promise;
+        },
     };
     database.initDatabase();
     return database;
@@ -219,6 +243,81 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
             return defered.promise;
 
         },
+
+        b64toBlob : function (b64Data, contentType, sliceSize) {
+            contentType = contentType || '';
+            sliceSize = sliceSize || 512;
+
+            var byteCharacters = atob(b64Data);
+            var byteArrays = [];
+
+            for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+                var byteNumbers = new Array(slice.length);
+                for (var i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                var byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+            var blob = new Blob(byteArrays, {type: contentType});
+            return blob;
+        },
+        pictureFormat: function (format){
+            var lowerFormat=format.toLowerCase();
+            if (lowerFormat.indexOf('png')>=0){
+                return {extension: '.png', mime: 'image/png'};
+            } else {
+                return {extension: '.jpg', mime: 'image/jpeg'};
+            }
+
+        },
+
+        storeArtwork: function(image){
+            var myfs=this;
+            var defered=$q.defer();
+            var format = myfs.pictureFormat(image.format);
+            // Process the data
+            var base64String = "";
+            for (var i = 0; i < image.data.length; i++) {
+                base64String += String.fromCharCode(image.data[i]);
+            }
+            base64String=btoa(base64String);
+            var blob = myfs.b64toBlob(base64String,format.mime);
+            // Generate random file name
+            var d=new Date();
+            var imageFileName='artwork_'+(d.getTime()).toString()+format.extension;
+
+            var path=cordova.file.externalRootDirectory+'Music/Mymusic/';
+            // Get the directory
+            window.resolveLocalFileSystemURL(path, function(dir) {
+                // Get the file
+                console.log(imageFileName);
+                dir.getFile(imageFileName, {create:true}, function(imageFile) {
+                    // Write file
+                    imageFile.createWriter(function(fileWriter) {
+                        fileWriter.write(blob);
+                        console.log("Artwork file written");
+                        defered.resolve(imageFileName);
+                    }, function(err){
+                        console.log('Error for artwork file write');
+                        console.dir(err);
+                        defered.resolve();
+                    });
+                }, function(err){
+                    console.log('Error for opening file');
+                    console.dir(err);
+                    defered.resolve();
+                });
+            }, function(err){
+                console.log('Error opening dir');
+                console.dir(err);
+                defered.resolve();
+            });
+            return defered.promise;
+        },
+
         handleItem : function(entry,results){
             var extensionsAudio=['mp3','m4a'];
             var myfs=this;
@@ -238,14 +337,26 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
 
                         myfs.readTags(fileName,fileBegining).then(function(tags){
                             if (tags.title){
+                                console.log('Got tags :',tags);
                                 var title  = tags.title || name;
                                 var artist = tags.artist || 'Unknown Artist';
                                 var album  = tags.album || 'Unknown Album';
                                 var track  = tags.track || 1;
+                                var image=tags.picture;
                                 var currentTitle={title:title,album: album, artist:artist,track:track,year:tags.year,path:entry.nativeURL};
-                                results.push(currentTitle);
                                 console.log(title);
-                                hDeferred.resolve();
+                                if (image){
+                                    console.log('This title has an artwork!');
+                                    myfs.storeArtwork(image).then(function(imageFileName){
+                                        currentTitle.artwork=imageFileName;
+                                        results.push(currentTitle);
+                                        hDeferred.resolve();
+                                    });
+                                } else {
+                                    results.push(currentTitle);
+                                    hDeferred.resolve();
+                                }
+
                             } else {
                                 myfs.readTags(fileName,fileEnd).then(function(tags2){
                                     var title  = tags2.title || name;
@@ -263,7 +374,7 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
 
                     },function(err){
                         console.log('Error: hashtag in path');
-                        console.dir(err);
+                        //console.dir(err);
                         hDeferred.resolve();
                     });
                 } else {
@@ -311,7 +422,7 @@ cosmicMobileServices.factory("$fileFactory", function($q,cosmicDB) {
             return d.promise;
         },
         startScan: function(){
-            var path="file:///storage/emulated/0/Music/Mymusic/";
+            var path=cordova.file.externalRootDirectory+'Music/Mymusic/';
             var results=[];
             console.log('ROOT: '+cordova.file.externalRootDirectory);
             this.scanDirectory(path,results).then(function(res){
