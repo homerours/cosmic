@@ -1,8 +1,9 @@
 {
-  "name": "cosmic",
+  "name": "Cosmic",
   "app_id": "",
   "gulpStartupTasks": [
     "sass",
+    "injection",
     "watch"
   ],
   "watchPatterns": [

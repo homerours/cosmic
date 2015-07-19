@@ -18,7 +18,7 @@
 
                 <div class="row" >
                     <div class="col">
-                        <img  ng-if="$index==0" src="data/artwork/1.jpg" class="artwork" />
+                        <img  ng-if="$index==0" ng-src="{{album.artwork}}" class="artwork" />
                         <div ng-if="$index>0" class="blank-artwork"></div>
                     </div>
                     <div class="col col-80 col-center song-title" ng-click="playTitle(title.index)">

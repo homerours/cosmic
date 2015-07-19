@@ -1,13 +1,8 @@
-<!--<div class="list scroll-list">-->
-    <!--<div ng-repeat="file in files">-->
-        <!--<a class="item item-icon-left" href="#" ng-click="getContents(file.nativeURL)">-->
-            <!--<i ng-show="file.isDirectory" class="icon ion-folder"></i>-->
-            <!--<i ng-show="file.isFile" class="icon ion-document"></i>-->
-            <!--{{file.name}}-->
-        <!--</a>-->
-    <!--</div>-->
-<!--</div>-->
-<div>
-<button class="button button-light" ng-click="scan();">Scan</button>
-<button class="button button-light" ng-click="flush();">Flush</button>
-</div>
+<ion-view view-title="Settings">
+    <ion-content  scroll="false">
+        <div>
+            <button class="button button-light" ng-click="scan();">Scan</button>
+            <button class="button button-light" ng-click="flush();">Flush</button>
+        </div>
+    </ion-content>
+</ion-view>

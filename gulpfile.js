@@ -6,13 +6,24 @@ var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
+var inject = require('gulp-inject');
 
 var paths = {
-  sass: ['./scss/**/*.scss']
+  sass: ['./scss/**/*.scss'],
+  javascript:[
+  './www/js/**/*.js']
 };
 
-gulp.task('default', ['sass']);
+gulp.task('default', ['sass','injection']);
 
+// Javascript includes
+gulp.task('injection',function(){
+    return gulp.src('./www/index.html')
+    .pipe(inject(gulp.src(paths.javascript, {read: false}), {relative: true}))
+    .pipe(gulp.dest('./www'));
+});
+
+// SASS compilation
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
     .pipe(sass({
