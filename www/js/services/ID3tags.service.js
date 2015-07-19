@@ -1,4 +1,4 @@
-angular.module('cosmic.services').factory("ID3Tags", function($q) {
+angular.module('cosmic.services').factory("ID3Tags", function($q,cosmicConfig) {
 
     var ID3Service={
 
@@ -81,7 +81,7 @@ angular.module('cosmic.services').factory("ID3Tags", function($q) {
             var d=new Date();
             var imageFileName='artwork_'+(d.getTime()).toString()+format.extension;
 
-            var path=cordova.file.externalRootDirectory+'Music/Mymusic/';
+            var path=cosmicConfig.appRootStorage + 'tmp/';
             // Get the directory
             window.resolveLocalFileSystemURL(path, function(dir) {
                 // Get the file

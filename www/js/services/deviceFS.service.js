@@ -1,9 +1,35 @@
-angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Tags) {
+angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Tags,cosmicConfig,$cordovaToast) {
 
     var deviceFSService = {
 
+        // Verify that the storage directories exists
+        initDeviceFS : function(){
+            var q = $q.defer();
+            var path = cosmicConfig.appRootStorage;
+            var dirName = 'artworks';
+            var dirName2 = 'tmp';
+            console.log('Initialisation : '+ path);
+
+            window.resolveLocalFileSystemURL(path, function (fileSystem) {
+                fileSystem.getDirectory(dirName, {create : true, exclusive : false}, function (result) {
+                    console.log('Create folder : ' + dirName);
+                    fileSystem.getDirectory(dirName2, {create : true, exclusive : false}, function (result) {
+                        console.log('Create folder : ' + dirName2);
+                        q.resolve();
+                    }, function (error) {
+                        q.reject('Directory Initialisation failed : '+error);
+                    });
+                }, function (error) {
+                    q.reject('Directory Initialisation failed : '+error);
+                });
+            }, function (error) {
+                q.reject('Directory Initialisation failed : '+error);
+            });
+            return q.promise;
+        },
+
         handleItem : function(entry,results){
-            var extensionsAudio=['mp3','m4a'];
+            var extensionsAudio=cosmicConfig.extensionsAudio;
             var self=this;
             var hDeferred=$q.defer();
             var fileName = entry.name;
@@ -11,7 +37,7 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
             console.log('exploring '+fileName+', ext : ' + extension);
             // Audio file
             if (entry.isFile) {
-                if (extensionsAudio.indexOf(extension)!=-1){
+                if (extensionsAudio.indexOf(extension.toLowerCase())!=-1){
 
                     entry.file(function(file){
                         var fileBegining=file.slice(0,500000);
@@ -102,6 +128,7 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
                 console.log('DONE SCAN');
                 var syncLoop = function(i){
                     if (i>= results.length){
+                        $cordovaToast.showShortCenter('Database Ready !');
                         console.log('DATABASE READY');
                     } else {
                         cosmicDB.addTitle(results[i]).then(function(){
@@ -119,6 +146,7 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
 
     };
 
+    deviceFSService.initDeviceFS();
     return deviceFSService;
 
 });

@@ -1,12 +1,13 @@
-angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLite, cosmicPlayer) {
+angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLite, cosmicPlayer,$cordovaFile,cosmicConfig) {
     var database={
         db: null,
         initDatabase: function(){
             console.log("INIT DATABASE");
             this.db = $cordovaSQLite.openDB("cosmic");
-
         },
+
         flushDatabase: function(){
+            // clear Database
             $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS artist");
             $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS album");
             $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS title");
@@ -22,10 +23,14 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
 
         getArtists: function(){
             // Get all artists from database
-            return $cordovaSQLite.execute(this.db,"SELECT * FROM artist ORDER BY name", []).then(function(res) {
+            var query = "SELECT artist.name, artist.id, MAX(album.id) AS albumId, artwork.file_name AS artwork"+
+                " FROM artist INNER JOIN album ON artist.id = album.artist"+
+                " INNER JOIN artwork ON album.artwork = artwork.id GROUP BY album.artist ORDER BY artist.name";
+            return $cordovaSQLite.execute(this.db,query, []).then(function(res) {
                 var artists=[];
+                var artworkPath=cosmicConfig.appRootStorage + 'artworks/';
                 for (var i=0; i < res.rows.length; ++i){
-                    artists.push(res.rows.item(i));
+                    artists.push({name : res.rows.item(i).name, id :res.rows.item(i).id, artwork : artworkPath+res.rows.item(i).artwork});
                 }
                 return artists;
             });
@@ -41,18 +46,18 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             return $cordovaSQLite.execute(this.db,query, [artistId]).then(function(res) {
                 console.log('Got '+res.rows.length+' titles');
                 console.dir(res.rows.item(0));
-                var albums=[];
-                var viewPlaylist=[];
+                var albums=[]; // For the scope
+                var viewPlaylist=[]; // For the player service
                 var i = 0;
-                var path=cordova.file.externalRootDirectory+'Music/Mymusic/';
+                var artworkPath=cosmicConfig.appRootStorage + 'artworks/';
                 while (i<res.rows.length){
                     var currentAlbumId=res.rows.item(i).albumId;
-                    var currentAlbum={name: res.rows.item(i).albumName, id : res.rows.item(i).albumId, artwork : path+res.rows.item(i).artworkFileName};
+                    var currentAlbum={name: res.rows.item(i).albumName, id : res.rows.item(i).albumId, artwork : artworkPath+res.rows.item(i).artworkFileName};
                     var titles= [];
                     while (i<res.rows.length && res.rows.item(i).albumId==currentAlbumId){
                         titles.push({name:res.rows.item(i).titleName, id: res.rows.item(i).titleId, index : i, artwork: res.rows.item(i).artworkFileName});
                         // Index is the position of the song in the playlist
-                        viewPlaylist.push({name:res.rows.item(i).titleName, album: res.rows.item(i).albumName,artist : res.rows.item(i).artistName, path : res.rows.item(i).path ,id: res.rows.item(i).titleId, artwork : path+res.rows.item(i).artworkFileName});
+                        viewPlaylist.push({name:res.rows.item(i).titleName, album: res.rows.item(i).albumName,artist : res.rows.item(i).artistName, path : res.rows.item(i).path ,id: res.rows.item(i).titleId, artwork : artworkPath+res.rows.item(i).artworkFileName});
                         i++;
                     }
                     currentAlbum.titles=titles;
@@ -67,21 +72,19 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
         },
 
         getArtistId: function(artistName){
-            console.log('get id from'+artistName);
             var dbService=this;
             return $cordovaSQLite.execute(dbService.db, "SELECT * FROM artist WHERE name=?", [artistName]).then(function(res) {
                 if (res.rows.length>0){
                     // Existing artist
-                    console.log(JSON.stringify(res.rows.item(0)));
                     return res.rows.item(0).id;
                 } else {
                     // No artist
-                    console.log('no artist');
                     return 0;
                 }
             });
 
         },
+
         getAlbumId: function(albumName,artistId){
             var dbService=this;
             return $cordovaSQLite.execute(dbService.db, "SELECT * FROM album WHERE name=? AND artist=?", [albumName,artistId]).then(function(res) {
@@ -160,6 +163,9 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                     .then(function(res) {
                         console.log(res);
                         console.log('Inserted title '+ title.title);
+                        if (title.artwork){
+                            $cordovaFile.removeFile(cosmicConfig.appRootStorage+ 'tmp/', title.artwork);
+                        }
                         defered.resolve(res.insertId);
                     }, function (err){
                         console.dir(err);
@@ -180,7 +186,10 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             if (fileName){
                 $cordovaSQLite.execute(self.db,"INSERT INTO artwork (file_name) VALUES (?)", [fileName]).then(function(res) {
                     console.log("INSERT ARTWORK ID -> " + res.insertId);
-                    defered.resolve(res.insertId);
+                    var dataPath = cosmicConfig.appRootStorage;
+                    $cordovaFile.moveFile(dataPath+'tmp/',fileName,dataPath + 'artworks/',fileName).then(function(){
+                        defered.resolve(res.insertId);
+                    });
                 });
             } else {
                 defered.resolve(1);
