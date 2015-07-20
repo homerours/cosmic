@@ -7795,10 +7795,6 @@ a.button {
       width: 100%;
       height: 100%;
       border-style: none; }
-    .title-list .song-title .link:active {
-      background-color: #444; }
-    .title-list .song-title .link:hover {
-      background-color: #444; }
   .title-list .album-header {
     font-size: 16px;
     font-weight: bold;

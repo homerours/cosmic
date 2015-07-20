@@ -6,14 +6,21 @@ angular.module('cosmic.services').factory("ID3Tags", function($q,cosmicConfig) {
             var self = this;
             var defered=$q.defer();
 
-            ID3.loadTags(fileName,function() {
 
-                var tags = ID3.getAllTags(fileName);
+            // Generate file key for the tags databse
+            var d=new Date();
+            var tagsKey='fileName'+(d.getTime()).toString();
+
+            ID3.loadTags(tagsKey,function() {
+
+                console.log('Got tags for '+fileName);
+                var tags = ID3.getAllTags(tagsKey);
+                ID3.clearTags(tagsKey);
                 var currentTitle={title:tags.title,album: tags.album, artist:tags.artist,track:tags.track,year:tags.year};
                 var image = tags.picture;
 
                 // If album cover
-                if (false){
+                if (tags.image){
                     console.log('This title has an artwork!');
                     self.storeArtwork(image).then(function(imageFileName){
                         currentTitle.artwork=imageFileName;
@@ -27,7 +34,7 @@ angular.module('cosmic.services').factory("ID3Tags", function($q,cosmicConfig) {
                 dataReader:FileAPIReader(file),
                 onError: function(reason) {
                     console.log('Error in ID3 tags reading : '+ reason);
-                    defered.reject(reason);
+                    defered.resolve(reason);
                 }
             });
             return defered.promise;

@@ -33,6 +33,7 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
             var self=this;
             var hDeferred=$q.defer();
             var fileName = entry.name;
+            var name=fileName.substr(0,fileName.lastIndexOf('.'));
             var extension=fileName.substr(fileName.lastIndexOf('.')+1);
             console.log('exploring '+fileName+', ext : ' + extension);
             // Audio file
@@ -43,6 +44,9 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
                         var fileBegining=file.slice(0,500000);
                         var fileEnd=file.slice(-500);
                         file=[];
+
+                                //results.push({title: "leo"});
+                                //hDeferred.resolve();
 
                         ID3Tags.readTags(fileName,fileBegining).then(function(tags){
                             if (tags.title){

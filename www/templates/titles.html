@@ -1,29 +1,29 @@
 <ion-view view-title="Titles">
     <ion-content class="title-list">
 
-        <div ng-repeat="album in albums">
+        <div ng-repeat="album in ::albums">
             <div class="row album-header">
                 <div class="col col-67 album-title">
-                    {{album.name}}
+                    {{::album.name}}
                 </div>
                 <div class="col nb-songs" >
-                    {{album.titles.length}} <span ng-if="album.titles.length>1">songs</span><span ng-if="album.titles.length==1">song</span>
+                    {{::album.titles.length}} <span ng-if="::album.titles.length>1">songs</span><span ng-if="::album.titles.length==1">song</span>
                 </div>
             </div>
             <div class="album-separator"></div>
 
-            <div ng-repeat="title in album.titles">
+            <div ng-repeat="title in ::album.titles">
 
                 <div ng-if="$index>0" class="title-separator"></div>
 
                 <div class="row" >
                     <div class="col">
-                        <img  ng-if="$index==0" ng-src="{{album.artwork}}" class="artwork" />
+                        <img  ng-if="$index==0" ng-src="{{::album.artwork}}" class="artwork" />
                         <div ng-if="$index>0" class="blank-artwork"></div>
                     </div>
                     <div class="col col-80 col-center song-title" ng-click="playTitle(title.index)">
                         <ion-item  class="link" >
-                            {{title.name}}
+                            {{::title.name}}
                         </ion-item>
                     </div>
                 </div>

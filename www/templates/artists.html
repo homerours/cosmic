@@ -5,9 +5,9 @@
 
         <ion-list>
 
-            <ion-item ng-repeat="artist in artists" class="item-thumbnail-left" ng-href="#/tab/artists/{{artist.id}}">
-                <img ng-src="{{artist.artwork}}">
-                <h2>{{artist.name}}</h2>
+            <ion-item ng-repeat="artist in ::artists" class="item-thumbnail-left" ng-href="#/tab/artists/{{::artist.id}}">
+                <img ng-src="{{::artist.artwork}}">
+                <h2>{{::artist.name}}</h2>
                 <!--<p><b>{{artist.nb_albums}}</b> albums, <b>{{artist.nb_titles}}</b> songs</p>-->
             </ion-item>
 
