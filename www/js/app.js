@@ -77,7 +77,6 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
 
 })
 .config(['$ionicConfigProvider', function($ionicConfigProvider) {
-
     if(!ionic.Platform.isIOS())$ionicConfigProvider.scrolling.jsScrolling(false); // native scrolling
     $ionicConfigProvider.tabs.position('bottom'); // other values: top
 

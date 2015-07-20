@@ -6,6 +6,7 @@ angular.module('cosmic.controllers').controller('ArtistsCtrl', function($scope,$
     $scope.doRefresh =function(){
         cosmicDB.getArtists().then(function(artists){
             $scope.artists=artists;
+            $scope.$broadcast('scroll.refreshComplete');
         });
 
     };

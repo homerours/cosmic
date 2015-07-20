@@ -13,7 +13,7 @@ angular.module('cosmic.services').factory("ID3Tags", function($q,cosmicConfig) {
                 var image = tags.picture;
 
                 // If album cover
-                if (image){
+                if (false){
                     console.log('This title has an artwork!');
                     self.storeArtwork(image).then(function(imageFileName){
                         currentTitle.artwork=imageFileName;
@@ -68,7 +68,8 @@ angular.module('cosmic.services').factory("ID3Tags", function($q,cosmicConfig) {
         storeArtwork: function(image){
             var self=this;
             var defered=$q.defer();
-            var format = self.pictureFormat(image.format);
+            var imgformat = (image.format || "jpg");
+            var format = self.pictureFormat(imgformat);
             // Process the data
             var base64String = "";
             for (var i = 0; i < image.data.length; i++) {

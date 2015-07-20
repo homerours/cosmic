@@ -7721,6 +7721,9 @@ a.button {
   font-family: 'OmnesExtraLight';
   src: url('fonts/omnes_extralight-webfont.ttf'); }
 
+* {
+  box-shadow: none !important; }
+
 .player {
   color: #444; }
   .player .top {
@@ -7750,7 +7753,11 @@ a.button {
     color: #E12F56;
     padding-bottom: 4px;
     line-height: 33px;
-    background: url("../img/blur.png") top left repeat; }
+    background: url("../img/blur.png") top left repeat;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 100%; }
   .player .blur {
     background: url("../img/flou4.png") top right repeat;
     height: 100%;
@@ -7762,7 +7769,8 @@ a.button {
     color: white;
     opacity: 0.7;
     bottom: 3px;
-    font-size: 30px; }
+    font-size: 30px;
+    text-shadow: 0 0 1px black; }
   .player .current-time {
     left: 3px; }
   .player .total-duration {
@@ -7787,6 +7795,10 @@ a.button {
       width: 100%;
       height: 100%;
       border-style: none; }
+    .title-list .song-title .link:active {
+      background-color: #444; }
+    .title-list .song-title .link:hover {
+      background-color: #444; }
   .title-list .album-header {
     font-size: 16px;
     font-weight: bold;
@@ -7804,6 +7816,6 @@ a.button {
     margin-right: auto;
     height: 0; }
   .title-list .title-separator {
-    border-bottom: solid 1px #ddd; }
+    border-bottom: solid 0.5px #ddd; }
   .title-list .album-separator {
-    border-bottom: solid 2px #ddd; }
+    border-bottom: solid 1px #ddd; }

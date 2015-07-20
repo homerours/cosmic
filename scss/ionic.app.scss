@@ -68,6 +68,9 @@ $player-title-size        : 36px;
     src: url('fonts/omnes_extralight-webfont.ttf');
 }
 
+*{
+    box-shadow : none !important;
+}
 // Music Player
 .player{
     color: $dark;
@@ -105,6 +108,10 @@ $player-title-size        : 36px;
         padding-bottom : 4px;
         line-height    : ($player-icon-size - 2px);
         background     : url($player-title-blur-path) top left repeat;
+        white-space    : nowrap;
+        text-overflow  : ellipsis;
+        overflow       : hidden;
+        max-width      : 100%;
     }
     .blur{
         background : url($player-blur-path) top right repeat;
@@ -114,11 +121,12 @@ $player-title-size        : 36px;
         right      : 0;
     }
     .time{
-        position  : absolute;
-        color     : $player-time-color;
-        opacity   : $player-time-opacity;
-        bottom    : 3px;
-        font-size : $player-time-font-size;
+        position    : absolute;
+        color       : $player-time-color;
+        opacity     : $player-time-opacity;
+        bottom      : 3px;
+        font-size   : $player-time-font-size;
+        text-shadow : 0 0 1px black;
     }
     .current-time{
         @extend .time;
@@ -157,6 +165,12 @@ $player-title-size        : 36px;
             height:100%;
             border-style : none;
         }
+        .link:active{
+            background-color: $dark;
+        }
+        .link:hover{
+            background-color: $dark;
+        }
     }
 
     .album-header{
@@ -183,11 +197,11 @@ $player-title-size        : 36px;
     }
     .title-separator{
         @extend .separator-line;
-        border-bottom: solid 1px #ddd;
+        border-bottom: solid 0.5px #ddd;
     }
 
     .album-separator{
         @extend .separator-line;
-        border-bottom: solid 2px #ddd;
+        border-bottom: solid 1px #ddd;
     }
 }

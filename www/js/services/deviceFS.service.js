@@ -46,7 +46,6 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
 
                         ID3Tags.readTags(fileName,fileBegining).then(function(tags){
                             if (tags.title){
-                                console.log('Got tags :',tags);
                                 var title  = tags.title || name;
                                 var artist = tags.artist || 'Unknown Artist';
                                 var album  = tags.album || 'Unknown Album';
@@ -82,7 +81,7 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
 
             //Directory
             if (entry.isDirectory){
-                console.log('path: '+entry.nativeURL);
+                //console.log('path: '+entry.nativeURL);
                 self.scanDirectory(entry.nativeURL,results).then(function(res){
                     hDeferred.resolve();
                 });
@@ -90,7 +89,7 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
             return hDeferred.promise;
         },
         scanDirectory: function(path,results){
-            console.log('SCAN: '+path );
+            //console.log('SCAN: '+path );
             var self=this;
             var d= $q.defer();
             var promises = [];
@@ -99,16 +98,16 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
                 var directoryReader = fileSystem.createReader();
 
                 directoryReader.readEntries(function(entries) {
-                    console.log("readEntries");
-                    console.dir(entries);
+                    //console.log("readEntries");
+                    //console.dir(entries);
 
                     for (var index=0;index<entries.length;index++){
                         promises.push(self.handleItem(entries[index],results));
                     }
                     var sz=promises.length;
-                    console.log(sz+' promises to resolve');
+                    //console.log(sz+' promises to resolve');
                     $q.all(promises).then(function(res){
-                        console.log('all done: '+sz);
+                        //console.log('all done: '+sz);
                         d.resolve();
                     });
                 },function(err){
