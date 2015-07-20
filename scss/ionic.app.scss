@@ -191,7 +191,7 @@ $player-title-size        : 36px;
     }
     .title-separator{
         @extend .separator-line;
-        border-bottom: solid 0.5px #ddd;
+        border-bottom: solid 1px #ddd;
     }
 
     .album-separator{

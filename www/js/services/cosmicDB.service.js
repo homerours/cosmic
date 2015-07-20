@@ -19,18 +19,38 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artwork (id integer primary key autoincrement, file_name text)").then(function(){
                 $cordovaSQLite.execute(self.db, "INSERT INTO artwork (file_name) VALUES (?)",['default_artwork.jpg']);
             });
+
+
+
+        },
+        removeAllArtworks : function(){
+            var d=$q.defer();
+            $cordovaSQLite.execute(this.db, "SELECT file_name FROM artwork WHERE id>1",[]).then(function(res){
+                var promises=[];
+                var artworkDir = cosmicConfig.appRootStorage + 'artworks/';
+                for (var i=0; i < res.rows.length; ++i){
+                    promises.push($cordovaFile.removeFile(artworkDir,res.rows.item(i).file_name));
+                }
+                $q.all(promises).then(function(res){
+                    d.resolve();
+                });
+            });
+            return d.promise;
         },
 
         getArtists: function(){
             // Get all artists from database
-            var query = "SELECT artist.name, artist.id, MAX(album.id) AS albumId, artwork.file_name AS artwork"+
-                " FROM artist INNER JOIN album ON artist.id = album.artist"+
-                " INNER JOIN artwork ON album.artwork = artwork.id GROUP BY album.artist ORDER BY artist.name";
+            var query = "SELECT artist.name AS name, artist.id AS id, MAX(artwork.id) AS albumId, COUNT(alb.id) AS nbAlbums,"+
+                " SUM(alb.nbTitles) AS nbTitles, artwork.file_name AS artwork"+
+                " FROM artist INNER JOIN"+
+                " (SELECT COUNT(title.id) AS nbTitles, album.id AS id, album.artwork, album.artist FROM album INNER JOIN title ON title.album=album.id GROUP BY title.album) alb"+
+                " ON artist.id = alb.artist"+
+                " INNER JOIN artwork ON alb.artwork = artwork.id GROUP BY alb.artist ORDER BY artist.name";
             return $cordovaSQLite.execute(this.db,query, []).then(function(res) {
                 var artists=[];
                 var artworkPath=cosmicConfig.appRootStorage + 'artworks/';
                 for (var i=0; i < res.rows.length; ++i){
-                    artists.push({name : res.rows.item(i).name, id :res.rows.item(i).id, artwork : artworkPath+res.rows.item(i).artwork});
+                    artists.push({name : res.rows.item(i).name, id :res.rows.item(i).id, artwork : artworkPath+res.rows.item(i).artwork, nbAlbums : res.rows.item(i).nbAlbums, nbTitles : res.rows.item(i).nbTitles});
                 }
                 return artists;
             });
@@ -196,6 +216,28 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             }
             return defered.promise;
         },
+        addTitleList : function(titleList){
+            var self=this;
+            var d=$q.defer();
+            var syncLoop = function(i){
+                if (i>= titleList.length){
+                    d.resolve();
+                } else {
+                    self.addTitle(titleList[i]).then(function(){
+                        i++;
+                        syncLoop(i);
+                    });
+                }
+            };
+            syncLoop(0);
+            return d.promise;
+        },
+        isInDatabase : function(path){
+            var self=this;
+            return $cordovaSQLite.execute(self.db,"SELECT id FROM title WHERE path=?", [path]).then(function(res) {
+                return (res.rows.length == 1);
+            });
+        }
     };
     database.initDatabase();
     return database;

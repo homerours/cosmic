@@ -1,9 +1,11 @@
 <ion-view view-title="Settings">
-    <ion-content  scroll="false">
+        <div class="bar bar-header bar-light">
+            <h1 class="title">Settings</h1>
+        </div>
+    <ion-content  scroll="false" class="has-header">
         <div>
-            <button class="button button-light" ng-click="scan();">Scan</button>
-            <button class="button button-light" ng-click="flush();">Flush</button>
-            <button class="button button-light" ng-click="notif();">Notif</button>
+            <button class="button button-full button-balanced" ng-click="scan();">Scan Music Folder</button>
+            <button class="button button-full button-assertive" ng-click="flush();">Clear Database</button>
         </div>
     </ion-content>
 </ion-view>

@@ -7812,6 +7812,6 @@ a.button {
     margin-right: auto;
     height: 0; }
   .title-list .title-separator {
-    border-bottom: solid 0.5px #ddd; }
+    border-bottom: solid 1px #ddd; }
   .title-list .album-separator {
     border-bottom: solid 1px #ddd; }

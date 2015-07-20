@@ -3,12 +3,20 @@ angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,
     $ionicPlatform.ready(function() {
         $scope.flush= function(){
             console.log('Flush database');
-            cosmicDB.flushDatabase();
+            cosmicDB.removeAllArtworks().then(function(){
+                cosmicDB.flushDatabase();
+                $cordovaToast.showShortTop('Database cleared !');
+            });
         };
-        $scope.scan= function(){
+        var startScan = function(){
+            $scope.scan=null;
             console.log('start scan');
-            deviceFS.startScan();
+            deviceFS.scanMusicFolder().then(function(){
+                $scope.scan=startScan;
+            });
         };
+        $scope.scan=startScan;
+
         $scope.notif= function(){
             $cordovaToast.showShortTop('Here is a message').then(function(success) {
             }, function (error) {

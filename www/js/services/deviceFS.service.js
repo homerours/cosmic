@@ -32,60 +32,26 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
             var extensionsAudio=cosmicConfig.extensionsAudio;
             var self=this;
             var hDeferred=$q.defer();
-            var fileName = entry.name;
-            var name=fileName.substr(0,fileName.lastIndexOf('.'));
-            var extension=fileName.substr(fileName.lastIndexOf('.')+1);
-            console.log('exploring '+fileName+', ext : ' + extension);
             // Audio file
             if (entry.isFile) {
+                var fileName = entry.name;
+                var extension=fileName.substr(fileName.lastIndexOf('.')+1);
+                console.log('exploring '+fileName+', ext : ' + extension);
                 if (extensionsAudio.indexOf(extension.toLowerCase())!=-1){
-
-                    entry.file(function(file){
-                        var fileBegining=file.slice(0,500000);
-                        var fileEnd=file.slice(-500);
-                        file=[];
-
-                                //results.push({title: "leo"});
-                                //hDeferred.resolve();
-
-                        ID3Tags.readTags(fileName,fileBegining).then(function(tags){
-                            if (tags.title){
-                                var title  = tags.title || name;
-                                var artist = tags.artist || 'Unknown Artist';
-                                var album  = tags.album || 'Unknown Album';
-                                var track  = tags.track || 1;
-                                var year = tags.year;
-                                var currentTitle={title:title,album: album, artist:artist,track:track,year:year,path:entry.nativeURL,artwork:tags.artwork};
-                                results.push(currentTitle);
-                                hDeferred.resolve();
-                            } else {
-                                ID3Tags.readTags(fileName,fileEnd).then(function(tags2){
-                                    var title  = tags2.title || name;
-                                    var artist = tags2.artist || 'Unknown Artist';
-                                    var album  = tags2.album || 'Unknown Album';
-                                    var track  = tags2.track || 1;
-                                    var year = tags2.year;
-                                    var currentTitle={title:title,album: album, artist:artist,track:track,year:year,path:entry.nativeURL, artwork : tags2.artwork};
-                                    results.push(currentTitle);
-                                    console.log(title);
-                                    hDeferred.resolve();
-                                });
-                            }
-                        });
-
-                    },function(err){
-                        console.log('Error: hashtag in path');
-                        //console.dir(err);
-                        hDeferred.resolve();
+                    cosmicDB.isInDatabase(entry.nativeURL).then(function(res){
+                        if (res){
+                            hDeferred.resolve();
+                        } else {
+                            results.push(entry.nativeURL);
+                            hDeferred.resolve();
+                        }
                     });
                 } else {
                     hDeferred.resolve();
                 }
             }
-
             //Directory
             if (entry.isDirectory){
-                //console.log('path: '+entry.nativeURL);
                 self.scanDirectory(entry.nativeURL,results).then(function(res){
                     hDeferred.resolve();
                 });
@@ -93,7 +59,6 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
             return hDeferred.promise;
         },
         scanDirectory: function(path,results){
-            //console.log('SCAN: '+path );
             var self=this;
             var d= $q.defer();
             var promises = [];
@@ -102,16 +67,12 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
                 var directoryReader = fileSystem.createReader();
 
                 directoryReader.readEntries(function(entries) {
-                    //console.log("readEntries");
-                    //console.dir(entries);
 
                     for (var index=0;index<entries.length;index++){
                         promises.push(self.handleItem(entries[index],results));
                     }
                     var sz=promises.length;
-                    //console.log(sz+' promises to resolve');
                     $q.all(promises).then(function(res){
-                        //console.log('all done: '+sz);
                         d.resolve();
                     });
                 },function(err){
@@ -122,29 +83,26 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
             });
             return d.promise;
         },
-        startScan: function(){
+
+        scanMusicFolder: function(){
+            var d=$q.defer();
             var path=cordova.file.externalRootDirectory+'Music/Mymusic/';
             var results=[];
             console.log('ROOT: '+cordova.file.externalRootDirectory);
+            $cordovaToast.showShortCenter('Start to scan the directory');
             this.scanDirectory(path,results).then(function(res){
-                console.dir(results);
                 console.log('DONE SCAN');
-                var syncLoop = function(i){
-                    if (i>= results.length){
-                        $cordovaToast.showShortCenter('Database Ready !');
-                        console.log('DATABASE READY');
-                    } else {
-                        cosmicDB.addTitle(results[i]).then(function(){
-                            i++;
-                            syncLoop(i);
-                        });
-                    }
-                };
-                syncLoop(0);
-
-            },function(err){
-                console.error(err);
+                $cordovaToast.showShortCenter('Find '+results.length+' music files to add !');
+                return ID3Tags.readTagsFromFileList(results);
+            }).then(function(tagList){
+                $cordovaToast.showShortCenter('ID3 Tags Loaded !');
+                return cosmicDB.addTitleList(tagList);
+            }).then(function(){
+                $cordovaToast.showShortCenter('Database Ready !');
+                console.log('DATABASE READY');
+                d.resolve();
             });
+            return d.promise;
         }
 
     };
