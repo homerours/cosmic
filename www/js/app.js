@@ -1,7 +1,8 @@
 angular.module('cosmic.controllers', []);
-angular.module('cosmic.services', ['ngCordova']);
+angular.module('cosmic.directives', []);
+angular.module('cosmic.services', []);
 
-angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.services'])
+angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.services','cosmic.directives'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
