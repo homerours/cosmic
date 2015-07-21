@@ -3,8 +3,11 @@ angular.module('cosmic.directives').directive('playlistBar',function(cosmicPlaye
         restrict: 'E',
         templateUrl: 'templates/playlistBar.html',
         //transclude : true,
+        scope: {
+            player:'='
+        },
         link : function (scope,element,attrs){
-            scope.playlist=cosmicPlayer.playlist;
+            //scope.playlist=cosmicPlayer.playlist;
         }
     };
 

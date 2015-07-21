@@ -7735,7 +7735,7 @@ a.button {
     font-size: 35px; }
   .player .controls {
     position: absolute;
-    bottom: 0;
+    bottom: 130px;
     width: 100%; }
     .player .controls .row .col {
       padding-bottom: 0;
