@@ -1,13 +1,13 @@
 <ion-view view-title="Artists">
     <ion-content has-bouncing="true">
-        <ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()"></ion-refresher>
+        <!--<ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()"></ion-refresher>-->
 
         <ion-list>
 
-            <ion-item ng-repeat="artist in ::artists" class="item-thumbnail-left" ng-href="#/tab/artists/{{::artist.id}}">
-                <img ng-src="{{::artist.artwork}}">
-                <h2>{{::artist.name}}</h2>
-                <p><b>{{::artist.nbAlbums}}</b> albums, <b>{{::artist.nbTitles}}</b> songs</p>
+            <ion-item collection-repeat="artist in artists" class="item-thumbnail-left" ng-href="#/tab/artists/{{artist.id}}">
+                <img ng-src="{{artist.artwork}}">
+                <h2>{{artist.name}}</h2>
+                <p><b>{{artist.nbAlbums}}</b> albums, <b>{{artist.nbTitles}}</b> songs</p>
             </ion-item>
 
         </ion-list>

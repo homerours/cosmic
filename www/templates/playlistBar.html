@@ -1,10 +1,13 @@
 <div>
-<ion-scroll direction="x" has-bouncing="true" scrollbar-x="false" scrollbar-y="false" style="position : absolute; bottom : 1px; height: 125px; width : 100%; border-top: solid 1px black; padding-top:5px; overflow: hidden; white-space: nowrap">
-    <div ng-repeat="title in player.playlist" ng-click="player.goToTitle($index)" style="height : 125px; overflow: hidden; width: 100px; display: inline-block;  margin-right: 5px; margin-left: 5px" >
-        <img style="width: 100; height:95px; margin-left: auto; margin-right:auto" ng-src="{{title.artwork}}"></img>
-        <div style=" height: 20px; width : 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap"> {{title.name}}</div>
+    <!--<div style="position : absolute; bottom : 1px; height: 125px; width : 100%; border-top: solid 1px black; padding-top:5px; overflow: hidden; white-space: nowrap">-->
+        <ion-scroll direction="x" has-bouncing="true" scrollbar-x="false" scrollbar-y="false" style="position : absolute; bottom : 1px; height: 125px; width : 100%; border-top: solid 1px black; padding-top:5px; overflow: hidden; white-space: nowrap">
+            <div collection-repeat="title in player.playlist" ng-click="player.goToTitle($index)" style="height : 125px !important; overflow: hidden; width: 100px !important; display: inline-block;  margin-right: 5px; margin-left: 5px" >
+                <!--<div style="height: 125px; width: 100px; overflow: hidden; display: inline-block">-->
+                    <img style="width: 100; height:95px; margin-left: auto; margin-right:auto" ng-src="{{title.artwork}}"></img>
+                    <div style=" height: 20px; width : 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap"> {{title.name}}</div>
 
+                </div>
+            <!--</div>-->
+            <!--{{player.playlist[player.playlistIndex].name }}-->
+        </ion-scroll>
     </div>
-<!--{{player.playlist[player.playlistIndex].name }}-->
-</ion-scroll>
-</div>

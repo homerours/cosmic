@@ -6,7 +6,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
         isWatchingTime: null,
         duration:0,
         media: null,
-        playlist: [{artist:'Muse',title:'Time is Running Out',artwork : 'www/data/artwork/1.jpg'},{artist:'Muse',title:'Time is Running Out',artwork : 'www/data/artwork/1.jpg'},{artist:'Muse',title:'Time is Running Out',artwork : 'www/data/artwork/1.jpg'},{artist:'Muse',title:'Time is Running Out',artwork : 'www/data/artwork/1.jpg'},{artist:'Muse',title:'Time is Running Out',artwork : 'www/data/artwork/1.jpg'},{artist:'Muse',title:'Time is Running Out',artwork : 'www/data/artwork/1.jpg'},{artist:'Muse',title:'Time is Running Out',artwork : 'www/data/artwork/1.jpg'}],
+        playlist: [{artist:'Muse',name:'Time is Running Out',artwork : 'data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',artwork : 'data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',artwork : 'data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',artwork : 'data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',artwork : '/data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',artwork : 'data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',artwork : 'data/artwork/1.jpg'}],
         viewPlaylist: [],
         playlistIndex: 0,
         volume: 70,
