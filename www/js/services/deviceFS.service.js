@@ -8,6 +8,7 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
             var path = cosmicConfig.appRootStorage;
             var dirName = 'artworks';
             var dirName2 = 'tmp';
+            var dirName3 = 'miniatures';
             console.log('Initialisation : '+ path);
 
             window.resolveLocalFileSystemURL(path, function (fileSystem) {
@@ -15,7 +16,12 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
                     console.log('Create folder : ' + dirName);
                     fileSystem.getDirectory(dirName2, {create : true, exclusive : false}, function (result) {
                         console.log('Create folder : ' + dirName2);
-                        q.resolve();
+                        fileSystem.getDirectory(dirName3, {create : true, exclusive : false}, function (result) {
+                            console.log('Create folder : ' + dirName3);
+                            q.resolve();
+                        }, function (error) {
+                            q.reject('Directory Initialisation failed : '+error);
+                        });
                     }, function (error) {
                         q.reject('Directory Initialisation failed : '+error);
                     });

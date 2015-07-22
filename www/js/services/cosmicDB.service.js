@@ -1,4 +1,4 @@
-angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLite, cosmicPlayer,$cordovaFile,cosmicConfig) {
+angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLite, cosmicPlayer,$cordovaFile,cosmicConfig,imageService) {
     var database={
         db: null,
         initDatabase: function(){
@@ -48,7 +48,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 " INNER JOIN artwork ON alb.artwork = artwork.id GROUP BY alb.artist ORDER BY artist.name";
             return $cordovaSQLite.execute(this.db,query, []).then(function(res) {
                 var artists=[];
-                var artworkPath=cosmicConfig.appRootStorage + 'artworks/';
+                var artworkPath=cosmicConfig.appRootStorage + 'miniatures/';
                 for (var i=0; i < res.rows.length; ++i){
                     artists.push({name : res.rows.item(i).name, id :res.rows.item(i).id, artwork : artworkPath+res.rows.item(i).artwork, nbAlbums : res.rows.item(i).nbAlbums, nbTitles : res.rows.item(i).nbTitles});
                 }
@@ -208,7 +208,9 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                     console.log("INSERT ARTWORK ID -> " + res.insertId);
                     var dataPath = cosmicConfig.appRootStorage;
                     $cordovaFile.moveFile(dataPath+'tmp/',fileName,dataPath + 'artworks/',fileName).then(function(){
-                        defered.resolve(res.insertId);
+                        imageService.makeMiniature(fileName).then(function(){
+                            defered.resolve(res.insertId);
+                        });
                     });
                 });
             } else {
