@@ -69,6 +69,8 @@ $playlist-bar-card-height: ($playlist-bar-card-width + 3 * $playlist-bar-card-pa
 *{
     box-shadow : none !important;
 }
+
+
 // Playlist Bar
 .playlist-bar{
 
@@ -107,7 +109,7 @@ $playlist-bar-card-height: ($playlist-bar-card-width + 3 * $playlist-bar-card-pa
     }
 }
 // Music Player
-.player{
+#player{
     color: $dark;
 
     .top{

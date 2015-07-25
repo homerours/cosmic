@@ -1,5 +1,5 @@
 // Player
-angular.module('cosmic.controllers').controller('PlayerCtrl', function($scope,$stateParams,cosmicPlayer) {
+angular.module('cosmic.controllers').controller('PlayerCtrl', function($scope,$stateParams,cosmicPlayer,$ionicHistory,$ionicGesture) {
     console.log('load Player Ctrl');
 
     $scope.playlistBarControls = {};
@@ -19,17 +19,22 @@ angular.module('cosmic.controllers').controller('PlayerCtrl', function($scope,$s
         cosmicPlayer.getDuration().then(function(duration){
             $scope.duration=duration;
         });
-        //$scope.playlistBarControls.scrollToCurrentTitle();
     };
     onNewTitle();
     cosmicPlayer.setOnUpdate(onUpdate);
     cosmicPlayer.setOnTitleChange(onNewTitle);
     $scope.seek = function($event) {
-        console.log('Seek');
         var current_percent = $event.clientX / $event.currentTarget.offsetWidth;
         $scope.progress=current_percent;
         cosmicPlayer.seek(current_percent);
     };
+
+    var playerContainer=angular.element(document.getElementById('player'));
+    $ionicGesture.on('swipedown',function(e){
+        console.log('Swipe down');
+        console.dir($ionicHistory.viewHistory());
+        $ionicHistory.goBack(-1);
+    }, playerContainer);
 });
 
 

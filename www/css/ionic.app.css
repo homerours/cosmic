@@ -7748,26 +7748,26 @@ a.button {
       white-space: nowrap;
       margin-top: -6px; }
 
-.player {
+#player {
   color: #444; }
-  .player .top {
+  #player .top {
     position: relative; }
-  .player .icon {
+  #player .icon {
     cursor: pointer;
     display: block;
     color: #444;
     font-size: 35px; }
-  .player .controls {
+  #player .controls {
     position: absolute;
     bottom: 130px;
     width: 100%; }
-    .player .controls .row .col {
+    #player .controls .row .col {
       padding-bottom: 0;
       padding-top: 0;
       text-align: center; }
-  .player .artwork {
+  #player .artwork {
     padding-top: 100%; }
-  .player .title {
+  #player .title {
     font-family: "OmnesLight";
     letter-spacing: -1px;
     position: absolute;
@@ -7782,22 +7782,22 @@ a.button {
     text-overflow: ellipsis;
     overflow: hidden;
     max-width: 100%; }
-  .player .blur {
+  #player .blur {
     background: url("../img/flou4.png") top right repeat;
     height: 100%;
     position: absolute;
     top: 0;
     right: 0; }
-  .player .time, .player .current-time, .player .total-duration {
+  #player .time, #player .current-time, #player .total-duration {
     position: absolute;
     color: white;
     opacity: 0.7;
     bottom: 3px;
     font-size: 30px;
     text-shadow: 0 0 1px black; }
-  .player .current-time {
+  #player .current-time {
     left: 3px; }
-  .player .total-duration {
+  #player .total-duration {
     right: 3px; }
 
 .title-list {

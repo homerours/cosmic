@@ -6,7 +6,7 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
     });
     $scope.playTitle = function (index){
         cosmicPlayer.launchPlayer(index);
-        $state.go('tab.player');
+        $state.go('player');
     };
 });
 
