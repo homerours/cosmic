@@ -2,7 +2,8 @@ angular.module('cosmic.services').factory("ID3Tags", function($q,cosmicConfig,im
 
     var ID3Service={
 
-        readTags : function (fileName,file){
+        handleArtworks : true,
+        readTags : function (fileName,file,getArtwork){
             var self = this;
             var defered=$q.defer();
 
@@ -20,7 +21,7 @@ angular.module('cosmic.services').factory("ID3Tags", function($q,cosmicConfig,im
                 var currentTitle={title:tags.title,album: tags.album, artist:tags.artist,track:tags.track,year:tags.year};
 
                 // If album cover
-                if (image){
+                if (image && self.handleArtworks){
                     console.log('This title has an artwork!');
                     imageService.storeArtwork(image).then(function(imageFileName){
                         currentTitle.artwork=imageFileName;
@@ -48,7 +49,7 @@ angular.module('cosmic.services').factory("ID3Tags", function($q,cosmicConfig,im
                 var fileName = entry.name;
                 var name=fileName.substr(0,fileName.lastIndexOf('.'));
                 entry.file(function(file){
-                    var fileBegining=file.slice(0,400000);
+                    var fileBegining=file.slice(0,600000);
                     var fileEnd=file.slice(-500);
                     file=[];
 

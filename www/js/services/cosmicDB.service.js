@@ -1,4 +1,4 @@
-angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLite, cosmicPlayer,$cordovaFile,cosmicConfig,imageService) {
+angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLite, cosmicPlayer,$cordovaFile,cosmicConfig,imageService,onlineArtwork) {
     var database={
         db: null,
         initDatabase: function(){
@@ -141,7 +141,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 if (!album){
                     // New album
                     if (albumCover){ // Store cover
-                        dbService.addArtwork(albumCover).then(function(artworkId){
+                        dbService.addArtworkScan(albumCover).then(function(artworkId){
                             $cordovaSQLite.execute(dbService.db,"INSERT INTO album (name,artist,artwork) VALUES (?,?,?)", [albumName,artistId,artworkId]).then(function(res) {
                                 console.log('insert album '+albumName+' with id '+res.insertId+' for artistid '+artistId);
                                 defered.resolve(res.insertId);
@@ -155,7 +155,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                     }
                 } else {
                     if (albumCover && album.artwork==1){ // Store cover
-                        dbService.addArtwork(albumCover).then(function(artworkId){
+                        dbService.addArtworkScan(albumCover).then(function(artworkId){
                             $cordovaSQLite.execute(dbService.db,"UPDATE album SET artwork = ? WHERE id = ?", [artworkId,album.id]).then(function(res) {
                                 console.log('Updated album cover');
                                 defered.resolve(album.id);
@@ -200,21 +200,84 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             });
             return defered.promise;
         },
+        downloadMissingArtworks : function(){
+            var self=this;
+            var query = "SELECT artist.name AS artist, album.id AS albumId, album.name AS album FROM album"+
+                " INNER JOIN artist ON artist.id = album.artist WHERE album.artwork=1";
+            var d=$q.defer();
+            $cordovaSQLite.execute(self.db,query, []).then(function(res) {
+                var promises=[];
+                var results=[];
+                console.log('Got '+res.rows.length +' albums without cover');
+                for (i=0; i<res.rows.length; i++){
+                    promises.push(self.downloadArtwork(res.rows.item(i),results));
+                }
+                $q.all(promises).then(function(){
+                    var syncLoop = function(i){
+                        if (i>= results.length){
+                            d.resolve();
+                        } else {
+                            self.addArtwork(results[i].artworkFile).then(function(artworkId){
+                                self.addArtworkToAlbum(results[i].albumId,artworkId).then(function(){
+                                    i++;
+                                    syncLoop(i);
+                                });
+                            });
+                        }
+                    };
+                    syncLoop(0);
+                });
+            });
+            return d.promise;
 
-        addArtwork: function(fileName){
+        },
+        downloadArtwork : function(item,results){
+            var d=$q.defer();
+            var self = this;
+            onlineArtwork.downloadArtworkFromItunes({artist : item.artist, album : item.album}).then(function(fileName){
+                results.push({albumId : item.albumId, artworkFile : fileName});
+                d.resolve();
+            }, function(error){
+                console.log(error);
+                d.resolve();
+            });
+
+            return d.promise;
+
+        },
+        addArtworkToAlbum : function(albumId,artworkId){
+            var self=this;
+            var d=$q.defer();
+            $cordovaSQLite.execute(self.db,"UPDATE album SET artwork=? WHERE id=?", [artworkId,albumId]).then(function() {
+                console.log('album '+ albumId + ' update, artwork = '+artworkId);
+                d.resolve();
+            });
+            return d.promise;
+        },
+        addArtwork : function(fileName){
+            var self=this;
+            var d=$q.defer();
+            $cordovaSQLite.execute(self.db,"INSERT INTO artwork (file_name) VALUES (?)", [fileName]).then(function(res) {
+                console.log("INSERT ARTWORK ID -> " + res.insertId);
+                d.resolve(res.insertId);
+            });
+            return d.promise;
+        },
+
+        addArtworkScan: function(fileName){
             var self=this;
             var defered=$q.defer();
             if (fileName){
-                $cordovaSQLite.execute(self.db,"INSERT INTO artwork (file_name) VALUES (?)", [fileName]).then(function(res) {
-                    console.log("INSERT ARTWORK ID -> " + res.insertId);
+                self.addArtwork(fileName).then(function(insertId) {
+                    // move temporary artwork files to the storage directory
                     var dataPath = cosmicConfig.appRootStorage;
                     $cordovaFile.moveFile(dataPath+'tmp/',fileName,dataPath + 'artworks/',fileName).then(function(){
                         imageService.makeMiniature(fileName).then(function(){
-                            defered.resolve(res.insertId);
+                            defered.resolve(insertId);
                         },function(error){
                             $cordovaFile.copyFile(dataPath+'artworks/',fileName,dataPath + 'miniatures/',fileName).then(function(){
                                 console.log('Unable to create miniature:  the full image will be used as miniature');
-                                defered.resolve(res.insertId);
+                                defered.resolve(insertId);
                             });
                         });
                     });

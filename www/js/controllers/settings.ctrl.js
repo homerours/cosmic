@@ -1,5 +1,5 @@
 // Settings
-angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,$ionicPlatform,$cordovaSQLite,deviceFS,cosmicDB,$cordovaToast,cosmicConfig, imageService) {
+angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,$ionicPlatform,$cordovaSQLite,deviceFS,cosmicDB,$cordovaToast,cosmicConfig, imageService, onlineArtwork) {
     $ionicPlatform.ready(function() {
         $scope.miniature= function(){
             console.log('Make miniature!');
@@ -8,6 +8,17 @@ angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,
                     imageService.makeMiniature(res.rows.item(i).file_name);
                 }
             });
+        };
+        $scope.findAlbumCovers = function(){
+            cosmicDB.downloadMissingArtworks().then(function(){
+                console.log('Success itunes');
+
+            },function(error){
+                console.log(error);
+
+            });
+
+
         };
         $scope.flush= function(){
             console.log('Flush database');
