@@ -2,6 +2,7 @@
 angular.module('cosmic.controllers').controller('PlayerCtrl', function($scope,$stateParams,cosmicPlayer) {
     console.log('load Player Ctrl');
 
+    $scope.playlistBarControls = {};
     var onUpdate = function(position){
         $scope.position=position;
         if ($scope.duration>0){
@@ -18,6 +19,7 @@ angular.module('cosmic.controllers').controller('PlayerCtrl', function($scope,$s
         cosmicPlayer.getDuration().then(function(duration){
             $scope.duration=duration;
         });
+        //$scope.playlistBarControls.scrollToCurrentTitle();
     };
     onNewTitle();
     cosmicPlayer.setOnUpdate(onUpdate);

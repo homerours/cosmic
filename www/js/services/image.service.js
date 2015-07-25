@@ -52,8 +52,8 @@ angular.module('cosmic.services').factory("imageService", function($q,cosmicConf
                         defered.resolve(data.imageData);
                     });
                 }, function (error) {
-                    console.log("Error : " + error);
-                    defered.resolve();
+                    console.log("Error making miniature : "+ fileName + "   " + error);
+                    defered.reject(error);
                 }, imageUrl, 80,80, options);
 
                 return defered.promise;

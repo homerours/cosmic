@@ -1,13 +1,13 @@
 // Settings
-angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,$ionicPlatform,deviceFS,cosmicDB,$cordovaToast,cosmicConfig, imageService) {
+angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,$ionicPlatform,$cordovaSQLite,deviceFS,cosmicDB,$cordovaToast,cosmicConfig, imageService) {
     $ionicPlatform.ready(function() {
         $scope.miniature= function(){
             console.log('Make miniature!');
-                imageService.makeMiniature('default_artwork.jpg').then(function(b64i){
-                    $cordovaToast.showShortTop('Miniature maked');
-                    var image = document.getElementById('myImage');
-                    image.src = "data:image/jpeg;base64," + b64i;
-                });
+            $cordovaSQLite.execute(cosmicDB.db, "SELECT file_name FROM artwork WHERE id>1",[]).then(function(res){
+                for (var i=0; i < res.rows.length; ++i){
+                    imageService.makeMiniature(res.rows.item(i).file_name);
+                }
+            });
         };
         $scope.flush= function(){
             console.log('Flush database');

@@ -31,9 +31,9 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 for (var i=0; i < res.rows.length; ++i){
                     promises.push($cordovaFile.removeFile(artworkDir,res.rows.item(i).file_name));
                 }
-                $q.all(promises).then(function(res){
-                    d.resolve();
-                });
+                //$q.all(promises).then(function(res){
+                d.resolve();
+                //});
             });
             return d.promise;
         },
@@ -70,14 +70,15 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 var viewPlaylist=[]; // For the player service
                 var i = 0;
                 var artworkPath=cosmicConfig.appRootStorage + 'artworks/';
+                var miniaturePath=cosmicConfig.appRootStorage + 'miniatures/';
                 while (i<res.rows.length){
                     var currentAlbumId=res.rows.item(i).albumId;
-                    var currentAlbum={name: res.rows.item(i).albumName, id : res.rows.item(i).albumId, artwork : artworkPath+res.rows.item(i).artworkFileName};
+                    var currentAlbum={name: res.rows.item(i).albumName, id : res.rows.item(i).albumId, artwork : miniaturePath+res.rows.item(i).artworkFileName};
                     var titles= [];
                     while (i<res.rows.length && res.rows.item(i).albumId==currentAlbumId){
-                        titles.push({name:res.rows.item(i).titleName, id: res.rows.item(i).titleId, index : i, artwork: res.rows.item(i).artworkFileName});
+                        titles.push({name:res.rows.item(i).titleName, id: res.rows.item(i).titleId, index : i});
                         // Index is the position of the song in the playlist
-                        viewPlaylist.push({name:res.rows.item(i).titleName, album: res.rows.item(i).albumName,artist : res.rows.item(i).artistName, path : res.rows.item(i).path ,id: res.rows.item(i).titleId, artwork : artworkPath+res.rows.item(i).artworkFileName});
+                        viewPlaylist.push({name:res.rows.item(i).titleName, album: res.rows.item(i).albumName,artist : res.rows.item(i).artistName, path : res.rows.item(i).path ,id: res.rows.item(i).titleId, artwork : artworkPath+res.rows.item(i).artworkFileName, miniature : miniaturePath + res.rows.item(i).artworkFileName});
                         i++;
                     }
                     currentAlbum.titles=titles;
@@ -210,6 +211,11 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                     $cordovaFile.moveFile(dataPath+'tmp/',fileName,dataPath + 'artworks/',fileName).then(function(){
                         imageService.makeMiniature(fileName).then(function(){
                             defered.resolve(res.insertId);
+                        },function(error){
+                            $cordovaFile.copyFile(dataPath+'artworks/',fileName,dataPath + 'miniatures/',fileName).then(function(){
+                                console.log('Unable to create miniature:  the full image will be used as miniature');
+                                defered.resolve(res.insertId);
+                            });
                         });
                     });
                 });
