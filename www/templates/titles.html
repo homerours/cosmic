@@ -1,5 +1,5 @@
 <ion-view view-title="Titles">
-    <ion-content class="title-list" has-bouncing="true" >
+    <ion-content class="title-list" scroll="true" has-bouncing="true" >
 
         <div ng-repeat="album in ::albums">
             <div class="row album-header">
@@ -22,7 +22,7 @@
                         <div ng-if="$index>0" class="blank-artwork"></div>
                     </div>
                     <div class="col col-80 col-center song-title" ng-click="playTitle(title.index)">
-                        <ion-item  class="link" >
+                        <ion-item  class="link">
                             {{::title.name}}
                         </ion-item>
                     </div>

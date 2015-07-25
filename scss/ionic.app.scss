@@ -19,6 +19,7 @@ $dark:                            #444 !default;
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 $pink                     : #E12F56;
+$light-grey: #b2b2b2;
 $font-size-xlarge         : 20px !default;
 $font-size-medium         : 16px !default;
 $artwork-list-width       : 80% !default;
@@ -38,6 +39,13 @@ $player-title-size        : 36px;
 $playlist-bar-card-width: 100px;
 $playlist-bar-card-padding: 5px;
 $playlist-bar-card-height: ($playlist-bar-card-width + 3 * $playlist-bar-card-padding);
+
+// Play bar
+$play-bar-padding : 5px;
+$play-bar-image-top:( $play-bar-padding / 2 );
+$play-bar-height : 55px;
+$play-bar-next-font-size : 30px;
+
 
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
@@ -70,6 +78,47 @@ $playlist-bar-card-height: ($playlist-bar-card-width + 3 * $playlist-bar-card-pa
     box-shadow : none !important;
 }
 
+// Play Bar
+play-bar{
+    position    : absolute;
+    bottom      : 0px;
+    height: $play-bar-height;
+    border-top  : solid 1px $light-grey;
+    width :100%;
+    img{
+        position      : absolute;
+        top           : $play-bar-image-top;
+        left          : $play-bar-padding;
+        width     : ($play-bar-height -  2 * $play-bar-image-top - 1px);
+        height    : ($play-bar-height -  2 * $play-bar-image-top - 1px);
+        border-radius : ( ($play-bar-height - 2 * $play-bar-image-top - 1px) / 2 );
+    }
+    .song{
+        padding-left  : ($play-bar-height + 2 * $play-bar-padding);
+        padding-right : ($play-bar-height + 2 * $play-bar-padding);
+        padding-top   : 12px;
+        line-height   : 15px;
+        overflow      : hidden;
+        text-overflow : ellipsis;
+        white-space   : nowrap;
+        .title{
+            font-size: $font-size-medium;
+        }
+        .artist{
+            color: $dark;
+        }
+    }
+    .next{
+        position: absolute;
+        top: ( ( $play-bar-height - $play-bar-next-font-size - $play-bar-padding) / 2 );
+        right: ( 2 * $play-bar-padding );
+        .icon{
+            font-size:  $play-bar-next-font-size;
+            color: $dark;
+        }
+    }
+
+}
 
 // Playlist Bar
 .playlist-bar{
@@ -79,7 +128,7 @@ $playlist-bar-card-height: ($playlist-bar-card-width + 3 * $playlist-bar-card-pa
     bottom      : 0px;
     height      : ( $playlist-bar-card-height ) !important;
     width       : 100%;
-    border-top  : solid 1px $dark;
+    border-top  : solid 1px $light-grey;
     overflow    : hidden;
     white-space : nowrap;
 
@@ -196,7 +245,7 @@ $playlist-bar-card-height: ($playlist-bar-card-width + 3 * $playlist-bar-card-pa
 
     .song-title{
         font-family: $font-family-sans-serif;
-        font-size: $font-size-xlarge;
+        /*font-size: $font-size-xlarge;*/
         .link{
             width:100%;
             height:100%;

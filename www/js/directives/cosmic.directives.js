@@ -1,36 +1,37 @@
-angular.module('cosmic.directives').directive('playlistBar',function(cosmicPlayer, $ionicScrollDelegate,$location,$anchorScroll){
+angular.module('cosmic.directives').directive('playlistBar',function($ionicScrollDelegate,$timeout){
     return {
         restrict: 'E',
         templateUrl: 'templates/playlistBar.html',
-        //transclude : true,
         scope: {
-            player:'=',
-            controls :'='
+            player:'='
         },
-        controller : function($scope,$ionicScrollDelegate,$location,$anchorScroll){
+        controller : function($scope,$ionicScrollDelegate){
             var scrollToCurrentTitle=function(){
-                var targetId='playBarTitle_'+cosmicPlayer.playlistIndex;
-                console.log('Scrolling to '+targetId);
-                //$location.hash(targetId);
-                console.log('Hash');
                 var delegate = $ionicScrollDelegate.$getByHandle('playlistBarScroll');
-                //var pos= delegate.getScrollPosition();
-                //console.log('Position: '+pos.left);
-                delegate.scrollTo(cosmicPlayer.playlistIndex * 100,0,true);
+                delegate.scrollTo($scope.player.playlistIndex * 100,0,true);
             };
-            setTimeout(function(){
-                console.log('go timeout');
+            $timeout(function(){
                 $scope.$watch('player.playlistIndex',scrollToCurrentTitle);
                 scrollToCurrentTitle();
-            }, 1000);
-            //scrollToCurrentTitle();
+            }, 700);
         }
-        //link      : function (scope, element, attrs) {
-        //scope.innerControls = scope.controls || {};
-        //scope.innerControls.scrollToCurrentTitle = function(){
+    };
 
-        //};
-        //}
+});
+
+angular.module('cosmic.directives').directive('playBar',function($state,$ionicViewSwitcher){
+    return {
+        restrict: 'E',
+        templateUrl: 'templates/playBar.html',
+        scope: {
+            player:'='
+        },
+        controller : function($scope){
+            $scope.openPlayer=function(){
+                $ionicViewSwitcher.nextDirection('forward');
+                $state.go('player');
+            };
+        }
     };
 
 });

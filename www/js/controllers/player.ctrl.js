@@ -1,5 +1,5 @@
 // Player
-angular.module('cosmic.controllers').controller('PlayerCtrl', function($scope,$stateParams,cosmicPlayer,$ionicHistory,$ionicGesture) {
+angular.module('cosmic.controllers').controller('PlayerCtrl', function($scope,$stateParams,cosmicPlayer,$ionicHistory,$ionicGesture,$ionicViewSwitcher) {
     console.log('load Player Ctrl');
 
     $scope.playlistBarControls = {};
@@ -32,7 +32,7 @@ angular.module('cosmic.controllers').controller('PlayerCtrl', function($scope,$s
     var playerContainer=angular.element(document.getElementById('player'));
     $ionicGesture.on('swipedown',function(e){
         console.log('Swipe down');
-        console.dir($ionicHistory.viewHistory());
+        $ionicViewSwitcher.nextDirection('back');
         $ionicHistory.goBack(-1);
     }, playerContainer);
 });
