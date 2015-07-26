@@ -20,7 +20,8 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
     .state('tab', {
         url: "/tab",
         abstract: true,
-        templateUrl: "templates/tabs.html"
+        templateUrl: "templates/tabs.html",
+        controller : 'TabsCtrl'
     })
 
     .state('tab.playlists', {

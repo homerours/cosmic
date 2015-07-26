@@ -16,15 +16,10 @@
 
                 <div ng-if="$index>0" class="title-separator"></div>
 
-                <div class="row" >
-                    <div class="col">
-                        <img  ng-if="$index==0" ng-src="{{::album.artwork}}" class="artwork" />
-                        <div ng-if="$index>0" class="blank-artwork"></div>
-                    </div>
-                    <div class="col col-80 col-center song-title" ng-click="playTitle(title.index)">
-                        <ion-item  class="link">
-                            {{::title.name}}
-                        </ion-item>
+                <div class="title-row" >
+                    <img  ng-if="$index==0" ng-src="{{::album.artwork}}" class="artwork" />
+                    <div class="song-title click-effect" ng-click="playTitle(title.index)">
+                        {{::title.name}}
                     </div>
                 </div>
 

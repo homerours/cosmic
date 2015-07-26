@@ -18,12 +18,12 @@ $dark:                            #444 !default;
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
-$pink                     : #E12F56;
-$light-grey: #b2b2b2;
-$font-size-xlarge         : 20px !default;
-$font-size-medium         : 16px !default;
-$artwork-list-width       : 80% !default;
-$separator-line-width     : 95%;
+$pink                 : #E12F56;
+$light-grey           : #b2b2b2;
+$font-size-xlarge     : 20px !default;
+$font-size-medium     : 16px !default;
+$artwork-list-width   : 80% !default;
+$separator-line-width : 95%;
 
 // Player
 $player-icon-size         : 35px;
@@ -41,10 +41,10 @@ $playlist-bar-card-padding: 5px;
 $playlist-bar-card-height: ($playlist-bar-card-width + 3 * $playlist-bar-card-padding);
 
 // Play bar
-$play-bar-padding : 5px;
-$play-bar-image-top:( $play-bar-padding / 2 );
-$play-bar-height : 55px;
-$play-bar-next-font-size : 30px;
+$play-bar-height             : 50px;
+$play-bar-horizontal-padding : 15px;
+$play-bar-image-diameter     : 40px;
+$play-bar-next-font-size     : 30px;
 
 
 // Include all of Ionic
@@ -78,29 +78,55 @@ $play-bar-next-font-size : 30px;
     box-shadow : none !important;
 }
 
+.has-tabs{
+    bottom: ($tabs-height + $play-bar-height) !important;
+}
+.physical-pixel-border-top {
+    background-image: linear-gradient(0deg, #b2b2b2, #b2b2b2 50%, transparent 50%);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: top;
+}
+
 // Play Bar
 play-bar{
-    position    : absolute;
-    bottom      : 0px;
-    height: $play-bar-height;
-    border-top  : solid 1px $light-grey;
+    position     : absolute;
+    bottom       : $tabs-height;
+    height       : $play-bar-height;
+    z-index      : 10;
+    display      : table;
+    table-layout : fixed;
+    //border-top  : solid 1px $light-grey;
+    @extend .physical-pixel-border-top;
     width :100%;
-    img{
+    .image{
         position      : absolute;
-        top           : $play-bar-image-top;
-        left          : $play-bar-padding;
-        width     : ($play-bar-height -  2 * $play-bar-image-top - 1px);
-        height    : ($play-bar-height -  2 * $play-bar-image-top - 1px);
-        border-radius : ( ($play-bar-height - 2 * $play-bar-image-top - 1px) / 2 );
+        top           : (($play-bar-height - $play-bar-image-diameter) / 2);
+        left          : $play-bar-horizontal-padding;
+        width         : $play-bar-image-diameter;
+        height        : $play-bar-image-diameter;
+        border-radius : ( $play-bar-image-diameter / 2 );
+        display       : table;
+        table-layout  : fixed;
+        .icon{
+            text-shadow    : 0 0 1px black;
+            font-size      : 25px;
+            text-align     : center;
+            vertical-align : middle;
+            display        : table-cell;
+            color          : white;
+        }
     }
     .song{
-        padding-left  : ($play-bar-height + 2 * $play-bar-padding);
-        padding-right : ($play-bar-height + 2 * $play-bar-padding);
-        padding-top   : 12px;
-        line-height   : 15px;
-        overflow      : hidden;
-        text-overflow : ellipsis;
-        white-space   : nowrap;
+        width          : 100%;
+        padding-left   : ($play-bar-image-diameter + 2 * $play-bar-horizontal-padding);
+        padding-right  : ($play-bar-image-diameter + 2 * $play-bar-horizontal-padding);
+        vertical-align : middle;
+        display        : table-cell;
+        line-height    : 16px;
+        overflow       : hidden;
+        text-overflow  : ellipsis;
+        white-space    : nowrap;
         .title{
             font-size: $font-size-medium;
         }
@@ -109,12 +135,16 @@ play-bar{
         }
     }
     .next{
-        position: absolute;
-        top: ( ( $play-bar-height - $play-bar-next-font-size - $play-bar-padding) / 2 );
-        right: ( 2 * $play-bar-padding );
+        position     : absolute;
+        display      : table;
+        table-layout : fixed;
+        height       : 100%;
+        right        : ( $play-bar-horizontal-padding );
         .icon{
-            font-size:  $play-bar-next-font-size;
-            color: $dark;
+            vertical-align : middle;
+            display        : table-cell;
+            font-size      : $play-bar-next-font-size;
+            color          : $dark;
         }
     }
 
@@ -128,6 +158,7 @@ play-bar{
     bottom      : 0px;
     height      : ( $playlist-bar-card-height ) !important;
     width       : 100%;
+    /*@extend .physical-pixel-border-top;*/
     border-top  : solid 1px $light-grey;
     overflow    : hidden;
     white-space : nowrap;
@@ -224,33 +255,50 @@ play-bar{
     }
 }
 
+.click-effect{
+    -webkit-transition : background-color 500ms; /* Safari */
+    transition         : background-color 500ms;
+    -webkit-transition-timing-function : ease; /* Safari and Chrome */
+    transition-timing-function         : ease;
+}
+
+.click-effect.activated{
+    background-color: #e0e0e0;
+
+}
+
 // Title list
 .title-list{
     color: $dark;
-    .row{
-        padding-bottom:0;
-        padding-top: 0;
+    .title-row{
+        position      : relative;
+        display       : table;
+        table-layout  : fixed;
+        width         : 100%;
+        height        : 60px;
+        overflow      : hidden;
+        text-overflow : ellipsis;
+        white-space   : nowrap;
     }
 
     .artwork{
-        vertical-align: middle;
-        width: $artwork-list-width;
-        margin-left: ((100% - $artwork-list-width) / 2);
-    }
-
-    .blank-artwork{
-        width: $artwork-list-width;
-        padding-top: $artwork-list-width;
+        max-width  : 50px;
+        max-height : 50px;
+        position   : absolute;
+        top        : 5px;
+        left       : 10px;
     }
 
     .song-title{
-        font-family: $font-family-sans-serif;
-        /*font-size: $font-size-xlarge;*/
-        .link{
-            width:100%;
-            height:100%;
-            border-style : none;
-        }
+        font-size      : $item-font-size;
+        width          : 100%;
+        padding-left   : 70px;
+        padding-right  : 30px;
+        display        : table-cell;
+        vertical-align : middle;
+        overflow       : hidden;
+        text-overflow  : ellipsis;
+        white-space    : nowrap;
     }
 
     .album-header{
