@@ -38,7 +38,6 @@ $player-title-size        : 36px;
 // Playlist bar
 $playlist-bar-card-width: 100px;
 $playlist-bar-card-padding: 5px;
-$playlist-bar-card-height: ($playlist-bar-card-width + 3 * $playlist-bar-card-padding);
 
 // Play bar
 $play-bar-height             : 50px;
@@ -152,39 +151,40 @@ play-bar{
 
 // Playlist Bar
 .playlist-bar{
-
     padding     : 0;
     position    : absolute;
     bottom      : 0px;
-    height      : ( $playlist-bar-card-height ) !important;
+    height      : ( $playlist-bar-card-width ) !important;
     width       : 100%;
     /*@extend .physical-pixel-border-top;*/
     border-top  : solid 1px $light-grey;
     overflow    : hidden;
-    white-space : nowrap;
 
     .card{
         width          : $playlist-bar-card-width !important;
-        height         : $playlist-bar-card-height !important;
+        height         : $playlist-bar-card-width !important;
         overflow       : hidden;
         display        : inline-block;
-        padding-left   : $playlist-bar-card-padding;
-        padding-right  : $playlist-bar-card-padding;
-        padding-top    : $playlist-bar-card-padding;
-        padding-bottom : 0px;
+        padding: $playlist-bar-card-padding;
         margin         : 0;
 
-        img{
+        .image{
+            position: relative;
             width  : ($playlist-bar-card-width - 2 * $playlist-bar-card-padding) !important;
             height : ($playlist-bar-card-width - 2 * $playlist-bar-card-padding)!important;
         }
         .song-title{
-            height        : (4 * $playlist-bar-card-padding);
-            width         : ($playlist-bar-card-width - 2 * $playlist-bar-card-padding);
-            overflow      : hidden;
-            text-overflow : ellipsis;
-            white-space   : nowrap;
-            margin-top    : -6px;
+            position       : absolute;
+            top            : 5px;
+            left           : 0;
+            color          : $pink;
+            background     : url($player-title-blur-path) top left repeat;
+            max-width      : 100%;
+            height         : (4 * $playlist-bar-card-padding);
+            width          : ($playlist-bar-card-width - 2 * $playlist-bar-card-padding);
+            overflow       : hidden;
+            text-overflow  : ellipsis;
+            white-space    : nowrap;
         }
     }
 }

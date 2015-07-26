@@ -2,12 +2,13 @@
     <i class="icon ion-ios-play" ng-click="player.play()" ng-hide="player.playing"></i>
     <i class="icon ion-ios-pause" ng-click="player.pause()" ng-show="player.playing"></i>
 </div>
-<!--<img  ng-src="{{player.playlist[player.playlistIndex].miniature}}"></img>-->
+
 <div class="song" ng-click="openPlayer()">
     <span class="title">{{player.playlist[player.playlistIndex].name}}</span>
     <br>
     <span class="artist">{{player.playlist[player.playlistIndex].artist}}</span>
 </div>
+
 <div class="next">
     <i class="icon ion-ios-fastforward" ng-click="player.next()"></i>
 </div>

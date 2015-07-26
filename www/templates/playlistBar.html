@@ -1,6 +1,7 @@
 <ion-scroll class="playlist-bar" direction="x" delegate-handle="playlistBarScroll" has-bouncing="true" scrollbar-x="false" scrollbar-y="false" >
     <div collection-repeat="title in player.playlist" ng-click="player.goToTitle($index)" class="card" >
-        <img  ng-src="{{title.miniature}}"></img>
-        <div class="song-title"> {{title.name}}</div>
+        <div class="image" ng-style="{'background':'url('+title.miniature+') left','background-size':'100%'}">
+            <div class="song-title"> {{title.name}}</div>
+        </div>
     </div>
 </ion-scroll>
