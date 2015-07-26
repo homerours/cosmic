@@ -64,16 +64,6 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
         }
     })
 
-    //.state('tab.player', {
-    //url: '/player',
-    //views: {
-    //'tab-player': {
-    //templateUrl: 'templates/player.html',
-    //controller: 'PlayerCtrl'
-    //}
-    //}
-    //})
-
     .state('player', {
         url: '/player',
         templateUrl: 'templates/player.html',
@@ -87,7 +77,9 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
 .config(['$ionicConfigProvider', function($ionicConfigProvider) {
     //if(!ionic.Platform.isIOS())$ionicConfigProvider.scrolling.jsScrolling(false); // native scrolling
     $ionicConfigProvider.tabs.position('bottom'); // other values: top
-    $ionicConfigProvider.tabs.style('standard'); // other values: top
-    $ionicConfigProvider.views.transition('ios'); // other values: top
+    $ionicConfigProvider.tabs.style('standard');
+    $ionicConfigProvider.views.transition('ios');
+    $ionicConfigProvider.views.swipeBackEnabled(true);
+    $ionicConfigProvider.views.swipeBackHitWidth(80);
 
 }]);

@@ -30,8 +30,8 @@ angular.module('cosmic.controllers').controller('PlayerCtrl', function($scope,$s
     };
 
     var playerContainer=angular.element(document.getElementById('player'));
-    $ionicGesture.on('swipedown',function(e){
-        console.log('Swipe down');
+    $ionicGesture.on('swiperight',function(e){
+        //console.dir($ionicHistory.viewHistory());
         $ionicViewSwitcher.nextDirection('back');
         $ionicHistory.goBack(-1);
     }, playerContainer);
