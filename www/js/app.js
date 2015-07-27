@@ -93,3 +93,18 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
     $ionicConfigProvider.views.swipeBackHitWidth(80);
 
 }]);
+
+function bootstrapAngular(){
+    console.log('Bootstrap Angular App');
+    var domElement = document.querySelector('body');
+    angular.bootstrap(domElement, ['cosmic']);
+}
+
+if (document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1) {
+    console.log("URL: Running in Cordova/PhoneGap");
+document.addEventListener("deviceready", bootstrapAngular, false);
+} else {
+    console.log("URL: Running in browser");
+    document.addEventListener("DOMContentLoaded", bootstrapAngular, false);
+    //bootstrapAngular();
+}

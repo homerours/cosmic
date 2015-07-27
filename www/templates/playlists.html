@@ -1,7 +1,9 @@
-<ion-view view-title="Playlists">
+<ion-view view-title="Playlists" class="playlists">
 
     <ion-content has-bouncing="true">
         <ion-list>
+
+            <button class="button button-full button-balanced" ng-click="newPlaylist();">New Playlist ...</button>
 
             <ion-item collection-repeat="playlist in playlists" class="item-thumbnail-left" ng-href="#/tab/playlists/{{playlist.id}}">
                 <img ng-src="{{playlist.artwork}}">

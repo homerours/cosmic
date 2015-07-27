@@ -314,12 +314,15 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             });
         },
         addPlaylist : function (playlistName){
+            console.log('Add playlist');
             var self=this;
             var d=$q.defer();
             $cordovaSQLite.execute(self.db,"SELECT id FROM playlist WHERE name=?", [playlistName]).then(function(res) {
-                if (res.rows.lenght > 0){
+                console.log('check done');
+                if (res.rows.length > 0){
                     d.reject('This playlist name is already used !');
                 } else {
+                    console.log('Playlist name ok');
                     $cordovaSQLite.execute(self.db,"INSERT INTO playlist (name) VALUES (?)", [playlistName]).then(function(res) {
                         d.resolve(res.insertId);
                     });
