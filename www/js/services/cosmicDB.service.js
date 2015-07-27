@@ -12,6 +12,8 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS album");
             $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS title");
             $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS artwork");
+            $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS playlist");
+            $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS playlist-item");
             $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artist (id integer primary key autoincrement, name text)");
             $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS album (id integer primary key autoincrement, name text, artist integer, artwork integer default 1)");
             $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS title (id integer primary key autoincrement, name text, album integer, track integer, year integer,path text)");
@@ -19,6 +21,8 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artwork (id integer primary key autoincrement, file_name text)").then(function(){
                 $cordovaSQLite.execute(self.db, "INSERT INTO artwork (file_name) VALUES (?)",['default_artwork.jpg']);
             });
+            $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS playlist (id integer primary key autoincrement, name text)");
+            $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS playlist-item (playlist integer, title integer, order integer)");
 
 
 
@@ -308,6 +312,60 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             return $cordovaSQLite.execute(self.db,"SELECT id FROM title WHERE path=?", [path]).then(function(res) {
                 return (res.rows.length == 1);
             });
+        },
+        addPlaylist : function (playlistName){
+            var self=this;
+            var d=$q.defer();
+            $cordovaSQLite.execute(self.db,"SELECT id FROM playlist WHERE name=?", [playlistName]).then(function(res) {
+                if (res.rows.lenght > 0){
+                    d.reject('This playlist name is already used !');
+                } else {
+                    $cordovaSQLite.execute(self.db,"INSERT INTO playlist (name) VALUES (?)", [playlistName]).then(function(res) {
+                        d.resolve(res.insertId);
+                    });
+                }
+            });
+            return d.promise;
+        },
+        addTitleToPlaylist : function(playlistId, titleId){
+            var self=this;
+            return $cordovaSQLite.execute(self.db,"SELECT COUNT(*) AS playlistSize FROM playlist-item WHERE playlist=?", [playlistId]).then(function(res){
+                return $cordovaSQLite.execute(self.db,"INSERT INTO playlist-item (playlist,title,order) VALUES (?,?,?)", [playlistId,titleId,res.rows.item(0).playlistSize]);
+            });
+        },
+        getPlaylists : function(){
+            var self=this;
+            var d=$q.defer();
+
+            $cordovaSQLite.execute(self.db,"SELECT * FROM playlist", []).then(function(res){
+                var playlists=[];
+                for (var i=0; i<res.rows.length; i++){
+                    playlists.push(res.rows.item(i));
+                }
+                d.resolve(playlists);
+            });
+            return d.promise;
+        },
+        getPlaylistItems : function(playlistId){
+            var self=this;
+            var d=$q.defer();
+
+            var query= "SELECT title.name AS name, title.id AS id, title.path AS path, artwork.file_name AS artwork, album.name AS albumName,"+
+                " album.id AS albumId , artist.name AS artist, items.order AS order FROM"+
+                " (SELECT * from playlist-items WHERE playlist = ?) AS items INNER JOIN"+
+                " title ON items.title = title.id INNER JOIN"+
+                " album ON title.album = album.id INNER JOIN"+
+                " artist ON album.artist = artist.id INNER JOIN"+
+                " artwork ON album.artwork = artwork.id"+
+                " ORDER BY items.order";
+            $cordovaSQLite.execute(self.db,"SELECT * FROM playlist-items", [playlistId]).then(function(res){
+                var playlist=[];
+                for (var i=0; i<res.rows.length; i++){
+                    playlist.push(res.rows.item(i));
+                }
+                d.resolve(playlist);
+            });
+            return d.promise;
         }
     };
     database.initDatabase();

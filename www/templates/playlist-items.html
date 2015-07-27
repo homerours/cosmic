@@ -1,0 +1,29 @@
+<ion-view view-title="PlaylistItems" id="playlist-items-view">
+    <ion-content class="title-list" scroll="true" has-bouncing="true" >
+
+        <!--<div class="row album-header">-->
+            <!--<div class="col col-67 album-title">-->
+                <!--{{::album.name}}-->
+            <!--</div>-->
+            <!--<div class="col nb-songs" >-->
+                <!--{{::album.titles.length}} <span ng-if="::album.titles.length>1">songs</span><span ng-if="::album.titles.length==1">song</span>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="album-separator"></div>-->
+
+        <div ng-repeat="title in ::playlist">
+
+            <div ng-if="$index>0" class="title-separator"></div>
+
+            <div class="title-row" >
+                <img  ng-src="{{::title.artwork}}" class="artwork" />
+                <div class="song-title click-effect" ng-click="playTitle(title.order)">
+                    {{::title.name}}
+                </div>
+            </div>
+
+        </div>
+
+    </ion-content>
+</ion-view>
+

@@ -1,9 +1,17 @@
 <ion-view view-title="Playlists">
-    <ion-content scroll="false">
-        <div style="position : absolute; top: 0; left: 0; height : 100px; width: 100%; border-bottom : solid 1px black;" ng-click="alert('yo')" class="click-effect">
-            Click Me
-            </div>
-        <!--<playlist-bar player="player"></playlist-bar>-->
+
+    <ion-content has-bouncing="true">
+        <ion-list>
+
+            <ion-item collection-repeat="playlist in playlists" class="item-thumbnail-left" ng-href="#/tab/playlists/{{playlist.id}}">
+                <img ng-src="{{playlist.artwork}}">
+                <h2>{{playlist.name}}</h2>
+                <!--<p><b>{{artist.nbAlbums}}</b> albums, <b>{{artist.nbTitles}}</b> songs</p>-->
+            </ion-item>
+
+        </ion-list>
 
     </ion-content>
+
+
 </ion-view>
