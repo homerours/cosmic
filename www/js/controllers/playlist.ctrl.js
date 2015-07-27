@@ -1,5 +1,5 @@
 // Playlists
-angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope, cosmicPlayer, cosmicDB,$ionicActionSheet,$timeout,$ionicPopup,$cordovaToast) {
+angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope, cosmicPlayer, cosmicDB,$ionicActionSheet,$timeout,$ionicPopup,$cordovaToast,$rootScope) {
 
     cosmicDB.getPlaylists().then(function(playlists){
         $scope.playlists=playlists;

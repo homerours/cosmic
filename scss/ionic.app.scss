@@ -281,6 +281,17 @@ play-bar{
         overflow      : hidden;
         text-overflow : ellipsis;
         white-space   : nowrap;
+        .checkbox-container{
+            height       : 100%;
+            position     : absolute;
+            right        : 10px;
+            display      : table;
+            table-layout : fixed;
+            .checkbox{
+                display: table-cell;
+                vertical-align: middle;
+            }
+        }
     }
 
     .artwork{

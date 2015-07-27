@@ -21,6 +21,11 @@
                     <div class="song-title click-effect" ng-click="playTitle(title.index)">
                         {{::title.name}}
                     </div>
+                    <div ng-if="showCheckBoxes" class="checkbox-container">
+                        <label class="checkbox">
+                            <input type="checkbox" ng-model="title.isChecked">
+                        </label>
+                    </div>
                 </div>
 
             </div>
