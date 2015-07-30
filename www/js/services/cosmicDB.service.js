@@ -86,8 +86,8 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                     currentAlbum.titles=titles;
                     albums.push(currentAlbum);
                 }
-                cosmicPlayer.loadViewPlaylist(viewPlaylist);
-                return albums;
+                //cosmicPlayer.loadViewPlaylist(viewPlaylist);
+                return {albums : albums, playlist : viewPlaylist};
             },function(err){
                 console.log('error');
                 console.dir(err);
@@ -397,7 +397,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             var d=$q.defer();
 
             var query= "SELECT title.name AS name, title.id AS id, title.path AS path, artwork.file_name AS artwork, album.name AS albumName,"+
-                " album.id AS albumId , artist.name AS artist, items.position FROM"+
+                " album.id AS albumId , artist.name AS artist, items.position AS position FROM"+
                 " (SELECT * from playlist_item WHERE playlist = ?) items INNER JOIN"+
                 " title ON items.title = title.id INNER JOIN"+
                 " album ON title.album = album.id INNER JOIN"+
@@ -410,8 +410,24 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 for (var i=0; i<res.rows.length; i++){
                     playlist.push(res.rows.item(i));
                 }
-                cosmicPlayer.loadViewPlaylist(playlist);
+                //cosmicPlayer.loadViewPlaylist(playlist);
                 d.resolve(playlist);
+            },function(err){
+                console.error(err);
+            });
+            return d.promise;
+        },
+
+        removeTitleFromPlaylist : function(playlistId,titlePosition){
+            console.log('Remove position '+titlePosition+' from playlist '+playlistId);
+            var self=this;
+            var d=$q.defer();
+            $cordovaSQLite.execute(self.db,"DELETE from playlist_item WHERE playlist = ? AND position = ?", [playlistId,titlePosition]).then(function(res){
+                $cordovaSQLite.execute(self.db,"UPDATE playlist_item SET position = (position - 1) WHERE playlist = ? AND position > ?", [playlistId,titlePosition]).then(function(res){
+                    d.resolve();
+                },function(err){
+                    console.error(err);
+                });
             },function(err){
                 console.error(err);
             });

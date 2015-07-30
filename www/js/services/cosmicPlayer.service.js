@@ -7,7 +7,6 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
         duration:0,
         media: null,
         playlist: [{artist:'Muse',name:'Time is Running Out',miniature : 'data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',miniature : 'data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',miniature : 'data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',miniature : 'data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',miniature : '/data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',miniature : 'data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',miniature : 'data/artwork/1.jpg'}],
-        viewPlaylist: [],
         playlistIndex: 0,
         volume: 70,
         setIndex : function(index){
@@ -18,17 +17,14 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             this.media.setVolume(this.volume/100);
         },
 
-        loadPlaylist: function() {
-            console.log('Load playlist, size: '+this.viewPlaylist.length);
-            player.playlist = player.viewPlaylist;
+        loadPlaylist: function(playlist) {
+            console.log('Load playlist, size: '+playlist.length);
+            player.playlist = playlist;
             console.dir(this.playlist);
         },
-        loadViewPlaylist: function(playlist) {
-            player.viewPlaylist = playlist;
-        },
         // add an item of current view as next
-        setNext: function(index){
-            this.playlist.splice(this.playlistIndex+1,0,this.viewPlaylist[index]);
+        setNext: function(title){
+            this.playlist.splice(this.playlistIndex+1,0,title);
         },
 
         initMedia: function() {
@@ -58,7 +54,6 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
         launchPlayer: function(index) {
             var self=this;
             self.setIndex(index);
-            self.loadPlaylist();
             self.initMedia();
         },
         goToTitle : function(index){
@@ -154,7 +149,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
                     counter++;
                 },500);
             } else {
-                defered.resole(-1000);
+                defered.resolve(-1000);
             }
             return defered.promise;
         }

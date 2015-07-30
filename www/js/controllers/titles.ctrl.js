@@ -3,10 +3,14 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
 
     $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
     var artistId=$stateParams.artistId;
-    cosmicDB.getTitles(artistId).then(function(albums){
-        $scope.albums=albums;
+    cosmicDB.getTitles(artistId).then(function(data){
+        console.log('DATA :');
+        console.log(data);
+        $scope.albums=data.albums;
+        $scope.playlist=data.playlist;
     });
     $scope.playTitle = function (index){
+        cosmicPlayer.loadPlaylist($scope.playlist);
         cosmicPlayer.launchPlayer(index);
         //$ionicViewSwitcher.nextTransition('ios');
         $ionicViewSwitcher.nextDirection('forward');
@@ -22,8 +26,7 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
 
 
     // Popover
-    var selectedTitleId;
-    var selectedTitleIndex;
+    var selectedTitle;
     var event;
     document.body.classList.remove('platform-ios');
     document.body.classList.remove('platform-android');
@@ -33,11 +36,10 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
         scope: $scope,
     }).then(function(popover) {
         $scope.popover = popover;
-        $scope.showPopover = function(ev,index,titleId){
+        $scope.showPopover = function(ev,title){
             ev.stopPropagation();
             event = ev;
-            selectedTitleId = titleId;
-            selectedTitleIndex = index;
+            selectedTitle = title;
             popover.show(event);
         };
 
@@ -53,9 +55,8 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
                     $scope.playlists = playlists;
                     playlistPopover.show(event);
                     $scope.addTitleToPlaylist = function(playlistId){
-                        console.log('Selected title id : '+selectedTitleId);
                         console.log('add to playlist '+playlistId);
-                        cosmicDB.addTitleToPlaylist(playlistId,selectedTitleId).then(function(){
+                        cosmicDB.addTitleToPlaylist(playlistId,selectedTitle.id).then(function(){
                             $cordovaToast.showShortTop('Done !');
                             playlistPopover.remove();
                         });
@@ -67,7 +68,7 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
         };
         // Add the current title as next on the current playlist
         $scope.addNext = function(){
-            cosmicPlayer.setNext(selectedTitleIndex);
+            cosmicPlayer.setNext(selectedTitle);
             popover.hide();
             $cordovaToast.showShortTop('Done !');
         };
