@@ -1,10 +1,12 @@
 // Playlists
 angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope, cosmicPlayer, cosmicDB,$ionicActionSheet,$timeout,$ionicPopup,$cordovaToast,$rootScope) {
 
+    $scope.showCheckBoxes = false;
     cosmicDB.getPlaylists().then(function(playlists){
         $scope.playlists=playlists;
     });
 
+    // New playlist popup
     $scope.newPlaylist = function (){
         $scope.dataPopup={};
         var myPopup = $ionicPopup.show({

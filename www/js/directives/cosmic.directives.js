@@ -1,4 +1,4 @@
-angular.module('cosmic.directives').directive('playlistBar',function($ionicScrollDelegate,$timeout){
+angular.module('cosmic.directives').directive('playlistBar',function($ionicScrollDelegate,$timeout,cosmicConfig){
     return {
         restrict: 'E',
         templateUrl: 'templates/playlistBar.html',
@@ -6,6 +6,7 @@ angular.module('cosmic.directives').directive('playlistBar',function($ionicScrol
             player:'='
         },
         controller : function($scope,$ionicScrollDelegate){
+            $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
             var scrollToCurrentTitle=function(){
                 var delegate = $ionicScrollDelegate.$getByHandle('playlistBarScroll');
                 delegate.scrollTo($scope.player.playlistIndex * 100,0,true);
@@ -19,14 +20,15 @@ angular.module('cosmic.directives').directive('playlistBar',function($ionicScrol
 
 });
 
-angular.module('cosmic.directives').directive('playBar',function($state,$ionicViewSwitcher){
+angular.module('cosmic.directives').directive('playBar',function($state,$ionicViewSwitcher,cosmicConfig,cosmicPlayer){
     return {
         restrict: 'E',
         templateUrl: 'templates/playBar.html',
         scope: {
-            player:'='
         },
         controller : function($scope){
+            $scope.player = cosmicPlayer;
+            $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
             $scope.openPlayer=function(){
                 $ionicViewSwitcher.nextDirection('forward');
                 $state.go('player');
@@ -35,3 +37,4 @@ angular.module('cosmic.directives').directive('playBar',function($state,$ionicVi
     };
 
 });
+

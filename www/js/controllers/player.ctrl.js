@@ -1,7 +1,8 @@
 // Player
-angular.module('cosmic.controllers').controller('PlayerCtrl', function($scope,$stateParams,cosmicPlayer,$ionicHistory,$ionicGesture,$ionicViewSwitcher) {
+angular.module('cosmic.controllers').controller('PlayerCtrl', function($scope,$stateParams,cosmicPlayer,$ionicHistory,$ionicGesture,$ionicViewSwitcher,cosmicConfig) {
     console.log('load Player Ctrl');
 
+    $scope.artworksPath = cosmicConfig.appRootStorage + 'artworks/';
     $scope.playlistBarControls = {};
     var onUpdate = function(position){
         $scope.position=position;
@@ -30,7 +31,7 @@ angular.module('cosmic.controllers').controller('PlayerCtrl', function($scope,$s
     };
 
     var playerContainer=angular.element(document.getElementById('player'));
-    $ionicGesture.on('swiperight',function(e){
+    $ionicGesture.on('swipedown',function(e){
         //console.dir($ionicHistory.viewHistory());
         $ionicViewSwitcher.nextDirection('back');
         $ionicHistory.goBack(-1);

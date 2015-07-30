@@ -7718,6 +7718,19 @@ a.button {
 * {
   box-shadow: none !important; }
 
+ion-popover-view.fit {
+  height: auto !important; }
+
+ion-popover-view.fit ion-content {
+  position: relative !important; }
+
+.platform-android ion-popover-view.fit {
+  margin-top: 10px !important; }
+
+.popover-item {
+  padding-bottom: 0px;
+  padding-top: 0px; }
+
 .has-tabs {
   bottom: 99px !important; }
 
@@ -7726,6 +7739,34 @@ a.button {
   background-size: 100% 1px;
   background-repeat: no-repeat;
   background-position: top; }
+
+.item-song, .item-song .item-content, .item-song-left, .item-song-left .item-content {
+  padding-left: 70px;
+  padding-right: 70px;
+  height: 60px !important; }
+  .item-song > img:first-child, .item-song .item-image, .item-song .item-content > img:first-child, .item-song .item-content .item-image, .item-song-left > img:first-child, .item-song-left .item-image, .item-song-left .item-content > img:first-child, .item-song-left .item-content .item-image {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    max-width: 50px;
+    max-height: 50px;
+    width: 100%;
+    height: 100%; }
+  .item-song button, .item-song .item-content button, .item-song-left button, .item-song-left .item-content button {
+    font-size: 20px;
+    color: #444;
+    position: absolute;
+    right: 25px;
+    top: 7px; }
+
+.item-song.two-lines {
+  padding-top: 10px; }
+
+.item-song.one-line {
+  padding-top: 18px; }
+
+.album-header {
+  font-size: 20px; }
 
 play-bar {
   position: absolute;
@@ -7766,17 +7807,12 @@ play-bar {
       font-size: 16px; }
     play-bar .song .artist {
       color: #444; }
-  play-bar .next {
+  play-bar .button {
     position: absolute;
-    display: table;
-    table-layout: fixed;
-    height: 100%;
-    right: 15px; }
-    play-bar .next .icon {
-      vertical-align: middle;
-      display: table-cell;
-      font-size: 30px;
-      color: #444; }
+    right: 15px;
+    top: 5px;
+    font-size: 30px;
+    color: #444; }
 
 .playlist-bar {
   padding: 0;
@@ -7815,9 +7851,7 @@ play-bar {
   color: #444; }
   #player .top {
     position: relative; }
-  #player .icon {
-    cursor: pointer;
-    display: block;
+  #player button {
     color: #444;
     font-size: 35px; }
   #player .controls {
@@ -7874,66 +7908,21 @@ play-bar {
 .click-effect.activated {
   background-color: #e0e0e0; }
 
-.title-list {
-  color: #444; }
-  .title-list .title-row {
-    position: relative;
-    display: table;
-    table-layout: fixed;
+.action-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: white;
+  height: 49px;
+  width: 100%;
+  z-index: 100; }
+  .action-bar .button-bar {
     width: 100%;
-    height: 60px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap; }
-    .title-list .title-row .checkbox-container {
-      height: 100%;
-      position: absolute;
-      right: 10px;
-      display: table;
-      table-layout: fixed; }
-      .title-list .title-row .checkbox-container .checkbox {
-        display: table-cell;
-        vertical-align: middle; }
-  .title-list .artwork {
-    max-width: 50px;
-    max-height: 50px;
-    position: absolute;
-    top: 5px;
-    left: 10px; }
-  .title-list .song-title {
-    font-size: 16px;
-    width: 100%;
-    padding-left: 70px;
-    padding-right: 30px;
-    display: table-cell;
-    vertical-align: middle;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap; }
-  .title-list .album-header {
-    font-size: 16px;
-    font-weight: bold;
-    padding-bottom: 0; }
-    .title-list .album-header .album-title {
-      padding-bottom: 0;
-      padding-left: 2.5%; }
-    .title-list .album-header .nb-songs {
-      padding-bottom: 0;
-      text-align: right;
-      padding-right: 2.5%; }
-  .title-list .separator-line, .title-list .title-separator, .title-list .album-separator {
-    width: 95%;
-    margin-left: auto;
-    margin-right: auto;
-    height: 0; }
-  .title-list .title-separator {
-    border-bottom: solid 1px #ddd; }
-  .title-list .album-separator {
-    border-bottom: solid 1px #ddd; }
+    height: 100%; }
 
 .playlists {
   color: #444; }
-  .playlists .separator-line, .playlists .title-list .title-separator, .title-list .playlists .title-separator, .playlists .title-list .album-separator, .title-list .playlists .album-separator {
+  .playlists .separator-line {
     width: 95%;
     margin-left: auto;
     margin-right: auto;

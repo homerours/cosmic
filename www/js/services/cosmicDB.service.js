@@ -8,23 +8,23 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
 
         flushDatabase: function(){
             // clear Database
-            $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS artist");
-            $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS album");
-            $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS title");
-            $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS artwork");
-            $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS playlist");
-            $cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS playlist-item");
-            $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artist (id integer primary key autoincrement, name text)");
-            $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS album (id integer primary key autoincrement, name text, artist integer, artwork integer default 1)");
-            $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS title (id integer primary key autoincrement, name text, album integer, track integer, year integer,path text)");
             var self=this;
-            $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artwork (id integer primary key autoincrement, file_name text)").then(function(){
-                $cordovaSQLite.execute(self.db, "INSERT INTO artwork (file_name) VALUES (?)",['default_artwork.jpg']);
-            });
-            $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS playlist (id integer primary key autoincrement, name text)");
-            $cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS playlist-item (playlist integer, title integer, order integer)");
-
-
+            var promises = [];
+            promises.push($cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS artist"));
+            promises.push($cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS album"));
+            promises.push($cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS title"));
+            promises.push($cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS artwork"));
+            promises.push($cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS playlist"));
+            promises.push($cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS playlist_item"));
+            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artist (id integer primary key autoincrement, name text)"));
+            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS album (id integer primary key autoincrement, name text, artist integer, artwork integer default 1)"));
+            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS title (id integer primary key autoincrement, name text, album integer, track integer, year integer,path text)"));
+            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artwork (id integer primary key autoincrement, file_name text)").then(function(){
+                return $cordovaSQLite.execute(self.db, "INSERT INTO artwork (file_name) VALUES (?)",['default_artwork.jpg']);
+            }));
+            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS playlist (id integer primary key autoincrement, name text)"));
+            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS playlist_item (playlist integer, title integer, position integer)"));
+            return $q.all(promises);
 
         },
         removeAllArtworks : function(){
@@ -52,9 +52,8 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 " INNER JOIN artwork ON alb.artwork = artwork.id GROUP BY alb.artist ORDER BY artist.name";
             return $cordovaSQLite.execute(this.db,query, []).then(function(res) {
                 var artists=[];
-                var artworkPath=cosmicConfig.appRootStorage + 'miniatures/';
                 for (var i=0; i < res.rows.length; ++i){
-                    artists.push({name : res.rows.item(i).name, id :res.rows.item(i).id, artwork : artworkPath+res.rows.item(i).artwork, nbAlbums : res.rows.item(i).nbAlbums, nbTitles : res.rows.item(i).nbTitles});
+                    artists.push(res.rows.item(i));
                 }
                 return artists;
             });
@@ -62,27 +61,26 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
 
         getTitles:  function(artistId){
             // Get all titles from artist
-            var query= "SELECT t.name AS titleName, t.id AS titleId,t.track, t.path AS path, art.file_name AS artworkFileName, albumName , albumId , artistName FROM"+
-                " title t INNER JOIN"+
-                " (SELECT ar.name AS artistName, al.name AS albumName, al.id AS albumId, al.artwork FROM"+
-                " (SELECT * FROM artist WHERE id=?) ar INNER JOIN album al ON al.artist=ar.id) a"+
-                " ON t.album=a.albumId INNER JOIN artwork art ON a.artwork = art.id ORDER BY albumName,t.track";
+            var query= "SELECT title.name AS name, title.id AS id, title.track, title.path AS path, artwork.file_name AS artwork, album.name AS album,"+
+                " album.id AS albumId , arti.artist AS artist FROM"+
+                " (SELECT  artist.name AS artist, artist.id FROM artist WHERE id=?) arti INNER JOIN"+
+                " album ON album.artist = arti.id INNER JOIN"+
+                " title ON title.album = album.id INNER JOIN"+
+                " artwork ON album.artwork = artwork.id ORDER BY album.name,title.track";
             return $cordovaSQLite.execute(this.db,query, [artistId]).then(function(res) {
                 console.log('Got '+res.rows.length+' titles');
                 console.dir(res.rows.item(0));
                 var albums=[]; // For the scope
                 var viewPlaylist=[]; // For the player service
                 var i = 0;
-                var artworkPath=cosmicConfig.appRootStorage + 'artworks/';
-                var miniaturePath=cosmicConfig.appRootStorage + 'miniatures/';
                 while (i<res.rows.length){
                     var currentAlbumId=res.rows.item(i).albumId;
-                    var currentAlbum={name: res.rows.item(i).albumName, id : res.rows.item(i).albumId, artwork : miniaturePath+res.rows.item(i).artworkFileName};
+                    var currentAlbum={name: res.rows.item(i).album, id : res.rows.item(i).albumId, artwork : res.rows.item(i).artwork};
                     var titles= [];
                     while (i<res.rows.length && res.rows.item(i).albumId==currentAlbumId){
-                        titles.push({name:res.rows.item(i).titleName, id: res.rows.item(i).titleId, index : i});
+                        titles.push({name:res.rows.item(i).name, id: res.rows.item(i).id, index : i});
                         // Index is the position of the song in the playlist
-                        viewPlaylist.push({name:res.rows.item(i).titleName, album: res.rows.item(i).albumName,artist : res.rows.item(i).artistName, path : res.rows.item(i).path ,id: res.rows.item(i).titleId, artwork : artworkPath+res.rows.item(i).artworkFileName, miniature : miniaturePath + res.rows.item(i).artworkFileName});
+                        viewPlaylist.push(res.rows.item(i));
                         i++;
                     }
                     currentAlbum.titles=titles;
@@ -332,8 +330,11 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
         },
         addTitleToPlaylist : function(playlistId, titleId){
             var self=this;
-            return $cordovaSQLite.execute(self.db,"SELECT COUNT(*) AS playlistSize FROM playlist-item WHERE playlist=?", [playlistId]).then(function(res){
-                return $cordovaSQLite.execute(self.db,"INSERT INTO playlist-item (playlist,title,order) VALUES (?,?,?)", [playlistId,titleId,res.rows.item(0).playlistSize]);
+            console.log('add title '+titleId +' to playlist '+playlistId);
+            return $cordovaSQLite.execute(self.db,"SELECT COUNT(*) AS playlistSize FROM playlist_item WHERE playlist=?", [playlistId]).then(function(res){
+                return $cordovaSQLite.execute(self.db,"INSERT INTO playlist_item (playlist,title,position) VALUES (?,?,?)", [playlistId,titleId,res.rows.item(0).playlistSize]);
+            },function(err){
+                console.error(err);
             });
         },
         getPlaylists : function(){
@@ -354,19 +355,23 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             var d=$q.defer();
 
             var query= "SELECT title.name AS name, title.id AS id, title.path AS path, artwork.file_name AS artwork, album.name AS albumName,"+
-                " album.id AS albumId , artist.name AS artist, items.order AS order FROM"+
-                " (SELECT * from playlist-items WHERE playlist = ?) AS items INNER JOIN"+
+                " album.id AS albumId , artist.name AS artist, items.position FROM"+
+                " (SELECT * from playlist_item WHERE playlist = ?) items INNER JOIN"+
                 " title ON items.title = title.id INNER JOIN"+
                 " album ON title.album = album.id INNER JOIN"+
                 " artist ON album.artist = artist.id INNER JOIN"+
                 " artwork ON album.artwork = artwork.id"+
-                " ORDER BY items.order";
-            $cordovaSQLite.execute(self.db,"SELECT * FROM playlist-items", [playlistId]).then(function(res){
+                " ORDER BY items.position";
+            $cordovaSQLite.execute(self.db,query, [playlistId]).then(function(res){
                 var playlist=[];
+                //var viewPlaylist=[];
                 for (var i=0; i<res.rows.length; i++){
                     playlist.push(res.rows.item(i));
                 }
+                cosmicPlayer.loadViewPlaylist(playlist);
                 d.resolve(playlist);
+            },function(err){
+                console.error(err);
             });
             return d.promise;
         }

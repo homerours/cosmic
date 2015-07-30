@@ -1,0 +1,14 @@
+<ion-popover-view >
+    <ion-content >
+        <ul class="list">
+            <li ng-repeat="playlist in playlists" class="item popover-item">
+            <button class="button button-clear button-balanced" ng-click="addTitleToPlaylist(playlist.id)">
+                {{playlist.name}}
+            </button>
+            </li>
+        </ul>
+    </div>
+</ion-content>
+</ion-popover-view>
+
+

@@ -1,4 +1,4 @@
-<div class="image" ng-style="{'background':'url('+player.playlist[player.playlistIndex].miniature+') left','background-size':'100%'}">
+<div class="image" ng-style="{'background':'url('+miniaturesPath+player.playlist[player.playlistIndex].artwork+') left','background-size':'100%'}">
     <i class="icon ion-ios-play" ng-click="player.play()" ng-hide="player.playing"></i>
     <i class="icon ion-ios-pause" ng-click="player.pause()" ng-show="player.playing"></i>
 </div>
@@ -9,6 +9,4 @@
     <span class="artist">{{player.playlist[player.playlistIndex].artist}}</span>
 </div>
 
-<div class="next">
-    <i class="icon ion-ios-fastforward" ng-click="player.next()"></i>
-</div>
+<button class="button button-icon ion-ios-fastforward" ng-click="player.next()"></button>

@@ -23,8 +23,11 @@ angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,
         $scope.flush= function(){
             console.log('Flush database');
             cosmicDB.removeAllArtworks().then(function(){
-                cosmicDB.flushDatabase();
-                $cordovaToast.showShortTop('Database cleared !');
+                cosmicDB.flushDatabase().then(function(){
+                    $cordovaToast.showShortTop('Database cleared !');
+                },function(err){
+                    console.error(err);
+                });
             });
         };
         var startScan = function(){

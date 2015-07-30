@@ -3,9 +3,9 @@
         <ion-list>
 
             <ion-item collection-repeat="artist in artists" class="item-thumbnail-left" ng-href="#/tab/artists/{{artist.id}}">
-                <img ng-src="{{artist.artwork}}">
+                <img ng-src="{{::miniaturesPath}}{{artist.artwork}}">
                 <h2>{{artist.name}}</h2>
-                <p><b>{{artist.nbAlbums}}</b> albums, <b>{{artist.nbTitles}}</b> songs</p>
+                <p><b>{{artist.nbAlbums}}</b> album<span ng-if="artist.nbAlbums>1">s</span>, <b>{{artist.nbTitles}}</b> song<span ng-if="artist.nbTitles>1">s</span></p>
             </ion-item>
 
         </ion-list>

@@ -2,33 +2,22 @@
     <ion-content class="title-list" scroll="true" has-bouncing="true" >
 
         <div ng-repeat="album in ::albums">
-            <div class="row album-header">
-                <div class="col col-67 album-title">
-                    {{::album.name}}
-                </div>
-                <div class="col nb-songs" >
-                    {{::album.titles.length}} <span ng-if="::album.titles.length>1">songs</span><span ng-if="::album.titles.length==1">song</span>
-                </div>
-            </div>
-            <div class="album-separator"></div>
+            <ion-item class="item-divider album-header">
+                {{::album.name}}
+            </ion-item>
 
-            <div ng-repeat="title in ::album.titles">
+            <ion-list>
+                <ion-item class="item-song one-line" ng-repeat="title in ::album.titles" ng-click="playTitle(title.index)">
 
-                <div ng-if="$index>0" class="title-separator"></div>
+                    <img  ng-if="$index==0" ng-src="{{::miniaturesPath}}{{::album.artwork}}" />
+                    <h2>{{::title.name}}</h2>
+                    <!--<p>{{::title.artist}}</p>-->
 
-                <div class="title-row" >
-                    <img  ng-if="$index==0" ng-src="{{::album.artwork}}" class="artwork" />
-                    <div class="song-title click-effect" ng-click="playTitle(title.index)">
-                        {{::title.name}}
-                    </div>
-                    <div ng-if="showCheckBoxes" class="checkbox-container">
-                        <label class="checkbox">
-                            <input type="checkbox" ng-model="title.isChecked">
-                        </label>
-                    </div>
-                </div>
+                    <button class="button button-icon ion-more" ng-click="showPopover($event,title.id)"></button>
 
-            </div>
+                </ion-item>
+            </ion-list>
+
         </div>
 
     </ion-content>
