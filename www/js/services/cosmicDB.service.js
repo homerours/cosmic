@@ -337,19 +337,43 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 console.error(err);
             });
         },
+        // Get all playlists
         getPlaylists : function(){
             var self=this;
             var d=$q.defer();
 
-            $cordovaSQLite.execute(self.db,"SELECT * FROM playlist", []).then(function(res){
+            var query="SELECT playlist.id AS id, playlist.name AS name, artwork.file_name AS artwork, c.nbTitles AS nbTitles  FROM playlist INNER JOIN"+
+                " playlist_item ON playlist_item.playlist = playlist.id INNER JOIN"+
+                " (SELECT COUNT(*) AS nbTitles, playlist_item.playlist AS playlist FROM playlist_item GROUP BY playlist_item.playlist) c ON c.playlist = playlist.id INNER JOIN"+
+                " title ON title.id = playlist_item.title INNER JOIN"+
+                " album ON album.id = title.album INNER JOIN"+
+                " artwork ON artwork.id = album.artwork WHERE playlist_item.position<7";
+            $cordovaSQLite.execute(self.db,query, []).then(function(res){
                 var playlists=[];
-                for (var i=0; i<res.rows.length; i++){
-                    playlists.push(res.rows.item(i));
+                var i = 0;
+                while (i<res.rows.length){
+                    var currentPlaylistId=res.rows.item(i).id;
+                    var currentPlaylist={name: res.rows.item(i).name, id : res.rows.item(i).id, nbTitles : res.rows.item(i).nbTitles};
+                    var artworks= [];
+                    while (i<res.rows.length && res.rows.item(i).id==currentPlaylistId){
+                        artworks.push(res.rows.item(i).artwork);
+                        i++;
+                    }
+                    while (artworks.length <4){
+                        artworks.push('default_artwork.jpg');
+                    }
+                    currentPlaylist.artworks=artworks;
+                    playlists.push(currentPlaylist);
                 }
+                console.log(playlists);
                 d.resolve(playlists);
+            },function(err){
+                console.log(err);
+                d.reject(err);
             });
             return d.promise;
         },
+        // Get songs from a playlist
         getPlaylistItems : function(playlistId){
             var self=this;
             var d=$q.defer();

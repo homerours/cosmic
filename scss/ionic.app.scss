@@ -152,6 +152,31 @@ ion-popover-view.fit ion-content {
     font-size: 20px;
 }
 
+// Playlists
+.item-image{
+    .miniature{
+        position : absolute;
+        width  : ( $item-thumbnail-width / 2 ) !important;
+        height : ( $item-thumbnail-height / 2 ) !important;
+    }
+    .top-left{
+        top        : 0;
+        left       : 0;
+    }
+    .top-right{
+        top  : 0;
+        left : ( $item-thumbnail-width / 2 ) !important;
+    }
+    .bottom-left{
+        top  : ( $item-thumbnail-height / 2 ) !important;
+        left : 0;
+    }
+    .bottom-right{
+        top  : ( $item-thumbnail-height / 2 ) !important;
+        left : ( $item-thumbnail-width / 2 ) !important;
+    }
+}
+
 // Play Bar
 play-bar{
     position     : absolute;

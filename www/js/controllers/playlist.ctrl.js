@@ -1,7 +1,7 @@
 // Playlists
-angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope, cosmicPlayer, cosmicDB,$ionicActionSheet,$timeout,$ionicPopup,$cordovaToast,$rootScope) {
+angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope, cosmicPlayer, cosmicDB,$ionicActionSheet,$timeout,$ionicPopup,$cordovaToast,$rootScope, cosmicConfig) {
 
-    $scope.showCheckBoxes = false;
+    $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
     cosmicDB.getPlaylists().then(function(playlists){
         $scope.playlists=playlists;
     });

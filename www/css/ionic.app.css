@@ -7768,6 +7768,23 @@ ion-popover-view.fit ion-content {
 .album-header {
   font-size: 20px; }
 
+.item-image .miniature {
+  position: absolute;
+  width: 40px !important;
+  height: 40px !important; }
+.item-image .top-left {
+  top: 0;
+  left: 0; }
+.item-image .top-right {
+  top: 0;
+  left: 40px !important; }
+.item-image .bottom-left {
+  top: 40px !important;
+  left: 0; }
+.item-image .bottom-right {
+  top: 40px !important;
+  left: 40px !important; }
+
 play-bar {
   position: absolute;
   bottom: 49px;

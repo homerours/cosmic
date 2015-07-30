@@ -6,9 +6,14 @@
             <button class="button button-full button-balanced" ng-click="newPlaylist();">New Playlist ...</button>
 
             <ion-item collection-repeat="playlist in playlists" class="item-thumbnail-left" ng-href="#/tab/playlists/{{playlist.id}}">
-                <img ng-src="{{playlist.artwork}}">
+                <div class="item-image" >
+                    <img ng-src="{{miniaturesPath}}{{playlist.artworks[0]}}" class="miniature top-left">
+                    <img ng-src="{{miniaturesPath}}{{playlist.artworks[1]}}" class="miniature top-right">
+                    <img ng-src="{{miniaturesPath}}{{playlist.artworks[2]}}" class="miniature bottom-left">
+                    <img ng-src="{{miniaturesPath}}{{playlist.artworks[3]}}" class="miniature bottom-right">
+                </div>
                 <h2>{{playlist.name}}</h2>
-                <!--<p><b>{{artist.nbAlbums}}</b> albums, <b>{{artist.nbTitles}}</b> songs</p>-->
+                <p><b>{{playlist.nbTitles}}</b> song<span ng-if="playlist.nbTitles>1">s</span></p>
             </ion-item>
 
         </ion-list>
