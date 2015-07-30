@@ -74,6 +74,16 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
         }
     })
 
+    .state('tab.search', {
+        url: '/search',
+        views: {
+            'tab-search': {
+                templateUrl: 'templates/search.html',
+                controller: 'SearchCtrl'
+            }
+        }
+    })
+
     .state('player', {
         url: '/player',
         templateUrl: 'templates/player.html',

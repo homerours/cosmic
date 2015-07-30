@@ -12,7 +12,6 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
     $scope.playTitle = function (index){
         cosmicPlayer.loadPlaylist($scope.playlist);
         cosmicPlayer.launchPlayer(index);
-        //$ionicViewSwitcher.nextTransition('ios');
         $ionicViewSwitcher.nextDirection('forward');
         $state.go('player');
     };

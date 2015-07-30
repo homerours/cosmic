@@ -1,0 +1,29 @@
+<ion-view view-title="Search">
+
+        <div class="bar bar-header item-input-inset">
+            <label class="item-input-wrapper">
+                <i class="icon ion-ios-search placeholder-icon"></i>
+                <input type="search" placeholder="Search" ng-model="search">
+            </label>
+            <button class="button button-clear">
+                Cancel
+            </button>
+        </div>
+
+    <ion-content has-bouncing="true" class="has-header">
+
+        <ion-list >
+            <ion-item class="item-song two-lines" ng-repeat="title in titles" ng-click="playTitle($index)">
+
+                <img  ng-src="{{miniaturesPath}}{{::title.artwork}}" />
+                <h2>{{::title.name}}</h2>
+                <p>{{::title.artist}}</p>
+
+                <button class="button button-icon ion-more" ng-click="showPopover($event,title)"></button>
+
+            </ion-item>
+        </ion-list>
+
+    </ion-content>
+</ion-view>
+
