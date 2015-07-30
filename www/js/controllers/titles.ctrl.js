@@ -23,6 +23,7 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
 
     // Popover
     var selectedTitleId;
+    var selectedTitleIndex;
     var event;
     document.body.classList.remove('platform-ios');
     document.body.classList.remove('platform-android');
@@ -32,12 +33,11 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
         scope: $scope,
     }).then(function(popover) {
         $scope.popover = popover;
-        $scope.showPopover = function(ev,titleId){
+        $scope.showPopover = function(ev,index,titleId){
             ev.stopPropagation();
-            console.log('show popover of '+titleId);
-            //$scope.selectedId = titleId;
             event = ev;
             selectedTitleId = titleId;
+            selectedTitleIndex = index;
             popover.show(event);
         };
 
@@ -49,7 +49,7 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
                 scope: $scope,
             }).then(function(playlistPopover) {
                 // Get playlists
-                cosmicDB.getPlaylists().then(function(playlists){
+                cosmicDB.getPlaylistsNames().then(function(playlists){
                     $scope.playlists = playlists;
                     playlistPopover.show(event);
                     $scope.addTitleToPlaylist = function(playlistId){
@@ -64,6 +64,12 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
 
             });
 
+        };
+        // Add the current title as next on the current playlist
+        $scope.addNext = function(){
+            cosmicPlayer.setNext(selectedTitleIndex);
+            popover.hide();
+            $cordovaToast.showShortTop('Done !');
         };
     });
 

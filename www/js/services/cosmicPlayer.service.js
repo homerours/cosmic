@@ -26,15 +26,17 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
         loadViewPlaylist: function(playlist) {
             player.viewPlaylist = playlist;
         },
+        // add an item of current view as next
+        setNext: function(index){
+            this.playlist.splice(this.playlistIndex+1,0,this.viewPlaylist[index]);
+        },
 
         initMedia: function() {
             var self=this;
             self.clearMedia();
             console.log('init media');
             var mypath=this.playlist[self.playlistIndex].path;
-            self.media=new Media(mypath,function(leo){
-            },function(err){
-            });
+            self.media=new Media(mypath);
             self.play();
             self.onTitleChange();
         },
@@ -65,14 +67,14 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             self.initMedia();
         },
         play: function() {
+            player.playing = true;
             this.startWatchTime();
             this.media.play();
-            player.playing = true;
         },
         pause: function() {
+            player.playing = false;
             this.media.pause();
             this.stopWatchTime();
-            player.playing = false;
         },
         stop: function() {
             this.media.stop();
@@ -80,11 +82,13 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             player.playing = false;
         },
         seek: function(percent) {
-            console.log(percent);
             var self=this;
+            console.log(percent);
+            console.log('Duration: '+self.duration);
             if (self.duration >0){
                 var newPosition=percent*self.duration;
                 self.media.seekTo(newPosition);
+                console.log('seek to '+newPosition);
                 self.onUpdate(newPosition);
             }
         },
@@ -96,6 +100,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
                     self.initMedia(self.playlistIndex);
                 } else {
                     self.seek(0);
+                    self.play();
                 }
             });
         },

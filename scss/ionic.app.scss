@@ -104,6 +104,11 @@ ion-popover-view.fit ion-content {
     padding-top: 0px;
 }
 
+.popover-button{
+    width     : 100%;
+    font-size : 18px;
+}
+
 .has-tabs{
     bottom: ($tabs-height + $play-bar-height) !important;
 }
@@ -288,10 +293,35 @@ play-bar{
         position : absolute;
         bottom   : 130px;
         width    : 100%;
-        .row .col{
-            padding-bottom : 0;
-            padding-top    : 0;
-            text-align     : center;
+        .control-box{
+            position : relative;
+            margin   : auto;
+            height   : 70px;
+            width    : 240px;
+            .play{
+                position  : absolute;
+                top       : 0;
+                left      : 105px;
+                font-size : 50px;
+            }
+            .pause{
+                position  : absolute;
+                top       : 0;
+                left      : 100px;
+                font-size : 50px;
+            }
+            .forward{
+                position  : absolute;
+                top       : 5px;
+                left      : 190px;
+                font-size : 40px;
+            }
+            .backward{
+                position  : absolute;
+                top       : 5px;
+                left      : 0;
+                font-size : 40px;
+            }
         }
     }
     .artwork{
@@ -335,32 +365,6 @@ play-bar{
     .total-duration{
         @extend .time;
         right :3px;
-    }
-}
-
-.click-effect{
-    -webkit-transition : background-color 500ms; /* Safari */
-    transition         : background-color 500ms;
-    -webkit-transition-timing-function : ease; /* Safari and Chrome */
-    transition-timing-function         : ease;
-}
-
-.click-effect.activated{
-    background-color: #e0e0e0;
-
-}
-
-.action-bar{
-    position         : absolute;
-    bottom           : 0;
-    left             : 0;
-    background-color : $white;
-    height           : $tabs-height;
-    width: 100%;
-    z-index          : 100;
-    .button-bar{
-        width  : 100%;
-        height : 100%;
     }
 }
 

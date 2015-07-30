@@ -338,16 +338,34 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             });
         },
         // Get all playlists
+        getPlaylistsNames : function(){
+            var self=this;
+            var d=$q.defer();
+
+            $cordovaSQLite.execute(self.db,"SELECT * FROM playlist", []).then(function(res){
+                var playlists=[];
+                for (var i=0; i< res.rows.length; i++){
+                    playlists.push(res.rows.item(i));
+                }
+                console.log(playlists);
+                d.resolve(playlists);
+            },function(err){
+                console.log(err);
+                d.reject(err);
+            });
+            return d.promise;
+        },
+        // Get all playlists
         getPlaylists : function(){
             var self=this;
             var d=$q.defer();
 
-            var query="SELECT playlist.id AS id, playlist.name AS name, artwork.file_name AS artwork, c.nbTitles AS nbTitles  FROM playlist INNER JOIN"+
-                " playlist_item ON playlist_item.playlist = playlist.id INNER JOIN"+
-                " (SELECT COUNT(*) AS nbTitles, playlist_item.playlist AS playlist FROM playlist_item GROUP BY playlist_item.playlist) c ON c.playlist = playlist.id INNER JOIN"+
-                " title ON title.id = playlist_item.title INNER JOIN"+
-                " album ON album.id = title.album INNER JOIN"+
-                " artwork ON artwork.id = album.artwork WHERE playlist_item.position<7";
+            var query="SELECT playlist.id AS id, playlist.name AS name, IFNULL(artwork.file_name,'default_artwork.jpg') AS artwork, IFNULL(c.nbTitles, 0) AS nbTitles, IFNULL(playlist_item.position, 0) AS position FROM playlist LEFT OUTER JOIN"+
+                " (SELECT COUNT(*) AS nbTitles, playlist_item.playlist AS playlist FROM playlist_item GROUP BY playlist_item.playlist) c ON c.playlist = playlist.id LEFT OUTER JOIN"+
+                " playlist_item ON playlist_item.playlist = playlist.id LEFT OUTER JOIN"+
+                " title ON title.id = playlist_item.title LEFT OUTER JOIN"+
+                " album ON album.id = title.album LEFT OUTER JOIN"+
+                " artwork ON artwork.id = album.artwork WHERE position < 4 OR position IS NULL ORDER BY name,id,position";
             $cordovaSQLite.execute(self.db,query, []).then(function(res){
                 var playlists=[];
                 var i = 0;
