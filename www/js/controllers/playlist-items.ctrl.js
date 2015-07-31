@@ -30,10 +30,10 @@ angular.module('cosmic.controllers').controller('PlaylistItemsCtrl', function($s
     // Popover
     var selectedTitle;
     var event;
-    document.body.classList.remove('platform-ios');
-    document.body.classList.remove('platform-android');
-    document.body.classList.remove('platform-ionic');
-    document.body.classList.add('platform-ios');
+    //document.body.classList.remove('platform-ios');
+    //document.body.classList.remove('platform-android');
+    //document.body.classList.remove('platform-ionic');
+    //document.body.classList.add('platform-ios');
     $ionicPopover.fromTemplateUrl('templates/playlist-item-popover.html', {
         scope: $scope,
     }).then(function(popover) {

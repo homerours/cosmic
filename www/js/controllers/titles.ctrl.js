@@ -27,10 +27,10 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
     // Popover
     var selectedTitle;
     var event;
-    document.body.classList.remove('platform-ios');
-    document.body.classList.remove('platform-android');
-    document.body.classList.remove('platform-ionic');
-    document.body.classList.add('platform-ios');
+    //document.body.classList.remove('platform-ios');
+    //document.body.classList.remove('platform-android');
+    //document.body.classList.remove('platform-ionic');
+    //document.body.classList.add('platform-ios');
     $ionicPopover.fromTemplateUrl('templates/title-popover.html', {
         scope: $scope,
     }).then(function(popover) {
@@ -67,6 +67,8 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
         };
         // Add the current title as next on the current playlist
         $scope.addNext = function(){
+            console.log('select title : ');
+            console.log(selectedTitle);
             cosmicPlayer.setNext(selectedTitle);
             popover.hide();
             $cordovaToast.showShortTop('Done !');

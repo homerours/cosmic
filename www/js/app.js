@@ -101,7 +101,7 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
     $ionicConfigProvider.views.transition('ios');
     $ionicConfigProvider.views.swipeBackEnabled(true);
     $ionicConfigProvider.views.swipeBackHitWidth(80);
-
+    ionic.Platform.isFullScreen = true;
 }]);
 
 function bootstrapAngular(){

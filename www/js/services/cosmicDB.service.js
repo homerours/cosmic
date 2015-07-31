@@ -78,9 +78,10 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                     var currentAlbum={name: res.rows.item(i).album, id : res.rows.item(i).albumId, artwork : res.rows.item(i).artwork};
                     var titles= [];
                     while (i<res.rows.length && res.rows.item(i).albumId==currentAlbumId){
-                        titles.push({name:res.rows.item(i).name, id: res.rows.item(i).id, index : i});
-                        // Index is the position of the song in the playlist
-                        viewPlaylist.push(res.rows.item(i));
+                        var item = res.rows.item(i);
+                        viewPlaylist.push(item);
+                        item.index = i;// Index is the position of the song in the playlist
+                        titles.push(item);
                         i++;
                     }
                     currentAlbum.titles=titles;

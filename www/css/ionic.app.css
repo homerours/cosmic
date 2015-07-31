@@ -7877,7 +7877,7 @@ play-bar {
     font-size: 35px; }
   #player .controls {
     position: absolute;
-    bottom: 130px;
+    bottom: 115px;
     width: 100%; }
     #player .controls .control-box {
       position: relative;
@@ -7887,21 +7887,21 @@ play-bar {
       #player .controls .control-box .play {
         position: absolute;
         top: 0;
-        left: 105px;
-        font-size: 50px; }
+        left: 107px;
+        font-size: 40px; }
       #player .controls .control-box .pause {
         position: absolute;
         top: 0;
-        left: 100px;
-        font-size: 50px; }
+        left: 105px;
+        font-size: 40px; }
       #player .controls .control-box .forward {
         position: absolute;
-        top: 5px;
+        top: 0px;
         left: 190px;
         font-size: 40px; }
       #player .controls .control-box .backward {
         position: absolute;
-        top: 5px;
+        top: 0px;
         left: 0;
         font-size: 40px; }
   #player .artwork {
