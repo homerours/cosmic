@@ -23,6 +23,7 @@ angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,
         $scope.flush= function(){
             console.log('Flush database');
             cosmicDB.removeAllArtworks().then(function(){
+                console.log('Artworks removed');
                 cosmicDB.flushDatabase().then(function(){
                     $cordovaToast.showShortTop('Database cleared !');
                 },function(err){

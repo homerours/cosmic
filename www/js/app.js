@@ -74,6 +74,16 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
         }
     })
 
+    .state('tab.manage-directories', {
+        url: '/settings/manage-directories',
+        views: {
+            'tab-settings': {
+                templateUrl: 'templates/manage-directories.html',
+                controller: 'ManageDirectoriesCtrl'
+            }
+        }
+    })
+
     .state('tab.search', {
         url: '/search',
         views: {

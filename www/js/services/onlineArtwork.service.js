@@ -19,8 +19,8 @@ angular.module('cosmic.services').factory("onlineArtwork", function($q,cosmicCon
                         var dt=new Date();
                         var options = {};
                         var imageFileName='artwork_'+(dt.getTime()).toString()+'.jpg';
-                        var p1 = $cordovaFileTransfer.download(url300,cosmicConfig.appRootStorage + 'artworks/'+imageFileName,options,trustHosts);
-                        var p2 = $cordovaFileTransfer.download(url100,cosmicConfig.appRootStorage + 'miniatures/'+imageFileName,options,trustHosts);
+                        var p1 = $cordovaFileTransfer.download(url600,cosmicConfig.appRootStorage + 'artworks/'+imageFileName,options,trustHosts);
+                        var p2 = $cordovaFileTransfer.download(url300,cosmicConfig.appRootStorage + 'miniatures/'+imageFileName,options,trustHosts);
                         $q.all([p1,p2]).then(function(){
                             d.resolve(imageFileName);
                         },function(error){

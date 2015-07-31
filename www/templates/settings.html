@@ -3,11 +3,19 @@
             <h1 class="title">Settings</h1>
         </div>
     <ion-content  scroll="false" class="has-header">
-        <div>
-            <button class="button button-full button-balanced" ng-click="scan();">Scan Music Folder</button>
-            <button class="button button-full button-assertive" ng-click="flush();">Clear Database</button>
-            <button class="button button-full button-positive" ng-click="findAlbumCovers();">Find album covers</button>
-            <img id="myImage"></img>
-        </div>
+        <!--<div>-->
+            <!--<button class="button button-full button-balanced" ng-click="scan();">Scan Music Folder</button>-->
+            <!--<button class="button button-full button-assertive" ng-click="flush();">Clear Database</button>-->
+            <!--<button class="button button-full button-positive" ng-click="findAlbumCovers();">Find album covers</button>-->
+            <!--<img id="myImage"></img>-->
+        <!--</div>-->
+
+        <ion-list>
+            <ion-item class="item-icon-left item-icon-right" ng-href="#/tab/settings/manage-directories">
+                <i class="icon ion-ios-folder"></i>
+                Manage Music Directories
+                <i class="icon ion-ios-arrow-right"></i>
+            </ion-item>
+        </ion-list>
     </ion-content>
 </ion-view>

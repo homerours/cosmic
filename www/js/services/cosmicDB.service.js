@@ -28,8 +28,10 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
 
         },
         removeAllArtworks : function(){
+            console.log('Remove all artworks !');
             var d=$q.defer();
             $cordovaSQLite.execute(this.db, "SELECT file_name FROM artwork WHERE id>1",[]).then(function(res){
+                console.log('got all artworks');
                 var promises=[];
                 var artworkDir = cosmicConfig.appRootStorage + 'artworks/';
                 for (var i=0; i < res.rows.length; ++i){
@@ -38,6 +40,9 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 //$q.all(promises).then(function(res){
                 d.resolve();
                 //});
+            },function(err){
+                console.log(err);
+                d.resolve();
             });
             return d.promise;
         },
