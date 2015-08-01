@@ -4,9 +4,9 @@
         <h1 class="title">Music directories</h1>
         <button class="button button-icon ion-ios-plus-outline" ng-click="openModal()"></button>
     </div>
-    <ion-content  scroll="false" class="has-header">
-        <ion-list can-swipe="true">
-            <ion-item class="item-icon-right" ng-repeat="directory in directories track by directory.fullPath" delegate-handle="directory-list">
+        <ion-content  scroll="false" class="has-header" has-bouncing="true">
+        <ion-list can-swipe="true" delegate-handle="directory-list">
+            <ion-item class="item-icon-right" ng-repeat="directory in directories track by directory.fullPath" >
                 {{directory.fullPath}}
                 <ion-spinner ng-if="directory.isLoading" class="icon ios"></ion-spinner>
                 <ion-option-button class="button-assertive"

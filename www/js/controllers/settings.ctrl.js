@@ -1,14 +1,16 @@
 // Settings
-angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,$ionicPlatform,$cordovaSQLite,deviceFS,cosmicDB,$cordovaToast,cosmicConfig, imageService, onlineArtwork,$ionicPopup,$localstorage) {
+angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,deviceFS,cosmicDB,$cordovaToast,  $ionicPopup,$localstorage) {
 
     $scope.isSearchingArtworks = false;
+
+    // Find missing album covers
     $scope.findMissingArtworks = function(){
         if ( ! $scope.isSearchingArtworks){
             $scope.isSearchingArtworks = true;
-            cosmicDB.downloadMissingArtworks().then(function(){
-                $cordovaToast.showShortTop('Finished !');
-                console.log('Success itunes');
+            cosmicDB.downloadMissingArtworks().then(function(nbArtworks){
                 $scope.isSearchingArtworks = false;
+                $cordovaToast.showShortTop('Downloaded '+nbArtworks+' new album covers !');
+                console.log('Success itunes');
             },function(error){
                 console.log(error);
                 $scope.isSearchingArtworks = false;

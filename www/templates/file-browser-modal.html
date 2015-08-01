@@ -1,9 +1,10 @@
 <ion-modal-view>
-    <ion-header-bar>
+    <div class="bar bar-header">
+        <button class="button button-icon ion-ios-arrow-left" ng-if="hasParent" ng-click="getContents(backURL)"></button>
         <h1 class="title">Select a directory</h1>
         <button class="button button-icon ion-ios-close-outline"ng-click="closeModal()"></button>
-    </ion-header-bar>
-    <ion-content>
+    </div>
+    <ion-content class="has-header" has-bouncing="true">
 
         <div class="list">
             <div ng-repeat="file in files">

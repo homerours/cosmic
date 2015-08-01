@@ -8,7 +8,7 @@ angular.module('cosmic.services').factory("fileFactory", function($q) {
             var deferred = $q.defer();
             window.resolveLocalFileSystemURL(path, function(fileSystem) {
                 fileSystem.getParent(function(result) {
-                    deferred.resolve(result);
+                        deferred.resolve(result);
                 }, function(error) {
                     deferred.reject(error);
                 });

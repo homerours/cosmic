@@ -84,6 +84,7 @@ angular.module('cosmic.controllers').controller('ManageDirectoriesCtrl', functio
 
     fs.getEntriesAtRoot().then(function(result) {
         $scope.files = result;
+        $scope.hasParent = false;
     }, function(error) {
         console.error(error);
     });
@@ -91,10 +92,13 @@ angular.module('cosmic.controllers').controller('ManageDirectoriesCtrl', functio
     $scope.getContents = function(path) {
         fs.getEntries(path).then(function(result) {
             $scope.files = result;
-            $scope.files.unshift({name: "[parent]"});
             fs.getParentDirectory(path).then(function(result) {
-                result.name = "[parent]";
-                $scope.files[0] = result;
+                if (result.nativeURL == path){
+                    $scope.hasParent = false;
+                } else {
+                    $scope.hasParent = true;
+                    $scope.backURL = result.nativeURL;
+                }
             });
         });
     };

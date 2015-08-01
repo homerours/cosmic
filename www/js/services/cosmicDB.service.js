@@ -229,7 +229,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 $q.all(promises).then(function(){
                     var syncLoop = function(i){
                         if (i>= results.length){
-                            d.resolve();
+                            d.resolve(results.length);
                         } else {
                             self.addArtwork(results[i].artworkFile).then(function(artworkId){
                                 self.addArtworkToAlbum(results[i].albumId,artworkId).then(function(){
