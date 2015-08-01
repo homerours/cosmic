@@ -90,11 +90,10 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
             return d.promise;
         },
 
-        scanMusicFolder: function(){
+        scanMusicFolder: function(path){
             var d=$q.defer();
-            var path=cordova.file.externalRootDirectory+'Music/Mymusic/';
+            //var path=cordova.file.externalRootDirectory+'Music/Mymusic/';
             var results=[];
-            console.log('ROOT: '+cordova.file.externalRootDirectory);
             $cordovaToast.showShortCenter('Start to scan the directory');
             this.scanDirectory(path,results).then(function(res){
                 console.log('DONE SCAN');

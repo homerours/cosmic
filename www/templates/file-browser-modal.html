@@ -1,8 +1,19 @@
 <ion-modal-view>
     <ion-header-bar>
-        <h1 class="title">My Modal title</h1>
+        <h1 class="title">Select a directory</h1>
+        <button class="button button-icon ion-ios-close-outline"ng-click="closeModal()"></button>
     </ion-header-bar>
     <ion-content>
-        Hello!
+
+        <div class="list">
+            <div ng-repeat="file in files">
+                <a class="item item-icon-left" href="#" ng-click="getContents(file.nativeURL)" on-hold="addDirectory(file)">
+                    <i ng-show="file.isDirectory" class="icon ion-folder" ></i>
+                    <i ng-show="file.isFile" class="icon ion-document"></i>
+                    {{file.name}}
+                </a>
+            </div>
+        </div>
+
     </ion-content>
 </ion-modal-view>

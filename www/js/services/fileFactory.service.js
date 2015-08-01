@@ -6,7 +6,7 @@ angular.module('cosmic.services').factory("fileFactory", function($q) {
 
         getParentDirectory: function(path) {
             var deferred = $q.defer();
-            window.resolveLocalFileSystemURI(path, function(fileSystem) {
+            window.resolveLocalFileSystemURL(path, function(fileSystem) {
                 fileSystem.getParent(function(result) {
                     deferred.resolve(result);
                 }, function(error) {
@@ -35,7 +35,7 @@ angular.module('cosmic.services').factory("fileFactory", function($q) {
 
         getEntries: function(path) {
             var deferred = $q.defer();
-            window.resolveLocalFileSystemURI(path, function(fileSystem) {
+            window.resolveLocalFileSystemURL(path, function(fileSystem) {
                 var directoryReader = fileSystem.createReader();
                 directoryReader.readEntries(function(entries) {
                     deferred.resolve(entries);

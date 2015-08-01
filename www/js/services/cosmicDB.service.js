@@ -34,12 +34,18 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 console.log('got all artworks');
                 var promises=[];
                 var artworkDir = cosmicConfig.appRootStorage + 'artworks/';
+                var miniaturesDir = cosmicConfig.appRootStorage + 'miniatures/';
                 for (var i=0; i < res.rows.length; ++i){
                     promises.push($cordovaFile.removeFile(artworkDir,res.rows.item(i).file_name));
+                    promises.push($cordovaFile.removeFile(miniaturesDir,res.rows.item(i).file_name));
                 }
-                //$q.all(promises).then(function(res){
-                d.resolve();
-                //});
+                $q.all(promises).then(function(res){
+                    d.resolve();
+                },function(err){
+                    console.log('Error while removing all artworks');
+                    console.error(err);
+                    d.resolve();
+                });
             },function(err){
                 console.log(err);
                 d.resolve();
