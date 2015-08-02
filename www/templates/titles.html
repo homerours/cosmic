@@ -2,12 +2,12 @@
     <ion-content class="title-list" scroll="true" has-bouncing="true" >
 
         <div ng-repeat="album in ::albums">
-            <ion-item class="item-divider album-header">
+            <div class="item item-divider album-header">
                 {{::album.name}}
-            </ion-item>
+            </div>
 
-            <ion-list>
-                <ion-item class="item-song one-line" ng-repeat="title in ::album.titles" ng-click="playTitle(title.index)">
+            <div class="list">
+                <div class="item item-song one-line" ng-repeat="title in ::album.titles" ng-click="playTitle(title.index)">
 
                     <img  ng-if="$index==0" ng-src="{{::miniaturesPath}}{{::album.artwork}}" />
                     <h2>{{::title.name}}</h2>
@@ -15,8 +15,8 @@
 
                     <button class="button button-icon ion-more" ng-click="showPopover($event,title)"></button>
 
-                </ion-item>
-            </ion-list>
+                </div>
+            </div>
 
         </div>
 

@@ -2,8 +2,8 @@
     <ion-content class="title-list" scroll="true" has-bouncing="true" >
 
 
-        <ion-list >
-            <ion-item class="item-song two-lines" ng-repeat="title in playlist" ng-click="playTitle($index)">
+        <div class="list">
+            <div class="item item-song two-lines" ng-repeat="title in playlist" ng-click="playTitle($index)">
 
                 <img  ng-src="{{miniaturesPath}}{{::title.artwork}}" />
                 <h2>{{::title.name}}</h2>
@@ -11,8 +11,8 @@
 
                 <button class="button button-icon ion-more" ng-click="showPopover($event,title)"></button>
 
-            </ion-item>
-        </ion-list>
+            </div>
+        </div>
 
     </ion-content>
 </ion-view>

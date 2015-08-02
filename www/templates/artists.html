@@ -1,14 +1,14 @@
 <ion-view view-title="Artists">
     <ion-content has-bouncing="true">
-        <ion-list>
+        <div class="list">
 
-            <ion-item collection-repeat="artist in artists" class="item-thumbnail-left" ng-href="#/tab/artists/{{artist.id}}">
+            <a collection-repeat="artist in artists" class="item item-thumbnail-left" ng-href="#/tab/artists/{{artist.id}}">
                 <img ng-src="{{::miniaturesPath}}{{artist.artwork}}">
                 <h2>{{artist.name}}</h2>
                 <p><b>{{artist.nbAlbums}}</b> album<span ng-if="artist.nbAlbums>1">s</span>, <b>{{artist.nbTitles}}</b> song<span ng-if="artist.nbTitles>1">s</span></p>
-            </ion-item>
+            </a>
 
-        </ion-list>
+        </div>
 
     </ion-content>
 </ion-view>

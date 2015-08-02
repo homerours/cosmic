@@ -5,7 +5,7 @@
       A simple and efficient music player.
     </description>
   <author email="leo-78@hotmail.fr" href="http://ionicframework.com/">
-      Ionic Framework Team
+      HomerOurs
     </author>
   <content src="index.html"/>
   <access origin="*"/>
@@ -17,6 +17,7 @@
   <preference name="SplashScreen" value="screen"/>
   <preference name="SplashScreenDelay" value="3000"/>
   <preference name="orientation" value="portrait"/>
+  <preference name="KeyboardDisplayRequiresUserAction" value="false" />
   <allow-navigation href="data:*"/>
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>

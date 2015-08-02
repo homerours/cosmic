@@ -4,24 +4,24 @@
         </div>
     <ion-content  scroll="false" class="has-header">
 
-        <ion-list>
-            <ion-item class="item-icon-left item-icon-right" ng-href="#/tab/settings/manage-directories">
+        <div class="list">
+            <a class="item item-icon-left item-icon-right" ng-href="#/tab/settings/manage-directories">
                 <i class="icon ion-ios-folder"></i>
                 Manage Music Directories
                 <i class="icon ion-ios-arrow-right"></i>
-            </ion-item>
+            </a>
 
-            <ion-item class="item-icon-left item-icon-right" ng-click="findMissingArtworks()">
+            <div class="item item-icon-left item-icon-right" ng-click="findMissingArtworks()">
                 <i class="icon ion-ios-cloud-download"></i>
                 Find missing album covers online
                 <ion-spinner ng-show="isSearchingArtworks" class="icon ios"></ion-spinner>
-            </ion-item>
+            </div>
 
-            <ion-item class="item-icon-left" ng-click="clearAllDatabase()">
+            <div class="item item-icon-left" ng-click="clearAllDatabase()">
                 <i class="icon ion-ios-trash"></i>
                 Clear All Database
-            </ion-item>
+            </div>
 
-        </ion-list>
+        </div>
     </ion-content>
 </ion-view>

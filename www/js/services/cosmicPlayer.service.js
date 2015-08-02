@@ -18,9 +18,9 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
         },
 
         loadPlaylist: function(playlist) {
+            var playlistCopy = playlist.slice();
             console.log('Load playlist, size: '+playlist.length);
-            player.playlist = playlist;
-            console.dir(this.playlist);
+            player.playlist = playlistCopy;
         },
         // add an item of current view as next
         setNext: function(title){

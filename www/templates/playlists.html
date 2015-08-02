@@ -1,11 +1,12 @@
 <ion-view view-title="Playlists" class="playlists">
 
     <ion-content has-bouncing="true">
-        <ion-list>
+
+        <div class="list">
 
             <button class="button button-full button-balanced" ng-click="newPlaylist();">New Playlist ...</button>
 
-            <ion-item collection-repeat="playlist in playlists" class="item-thumbnail-left" ng-href="#/tab/playlists/{{playlist.id}}">
+            <a collection-repeat="playlist in playlists" class="item item-thumbnail-left" ng-href="#/tab/playlists/{{playlist.id}}">
                 <div class="item-image" >
                     <img ng-src="{{miniaturesPath}}{{playlist.artworks[0]}}" class="miniature top-left">
                     <img ng-src="{{miniaturesPath}}{{playlist.artworks[1]}}" class="miniature top-right">
@@ -14,9 +15,9 @@
                 </div>
                 <h2>{{playlist.name}}</h2>
                 <p><b>{{playlist.nbTitles}}</b> song<span ng-if="playlist.nbTitles>1">s</span></p>
-            </ion-item>
+            </a>
 
-        </ion-list>
+        </div>
 
     </ion-content>
 
