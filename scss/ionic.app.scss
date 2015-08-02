@@ -52,6 +52,10 @@ $item-song-height : 60px;
 $item-song-height: 50px;
 $item-song-width: 50px;
 
+// artwork-mosaic
+$artwork-mosaic-miniature-size : 45px;
+$artwork-mosaic-nb-rows        : 2;
+$artwork-mosaic-nb-cols        : 4;
 
 
 // Include all of Ionic
@@ -181,6 +185,13 @@ ion-popover-view.fit ion-content {
         left : ( $item-thumbnail-width / 2 ) !important;
     }
 }
+.user-playlists-scroll{
+    position : absolute;
+    top      : ( 30px + 5px + ( 2 * $artwork-mosaic-nb-rows * $artwork-mosaic-miniature-size) + $button-height );
+    bottom   : 0;
+    left     : 0;
+    right    : 0;
+}
 
 // Play Bar
 play-bar{
@@ -237,6 +248,38 @@ play-bar{
         color     : $dark;
     }
 
+}
+
+// artwork-mosaic
+.artwork-mosaic{
+    width        : ( $artwork-mosaic-nb-cols * $artwork-mosaic-miniature-size);
+    height       : ( $artwork-mosaic-nb-rows * $artwork-mosaic-miniature-size);
+    line-height  : 0px;
+    position     : relative;
+    margin-left  : auto;
+    margin-right : auto;
+    .miniature{
+        display : inline-block;
+        width   : $artwork-mosaic-miniature-size;
+        height  : $artwork-mosaic-miniature-size;
+        padding : 0;
+        margin  : 0;
+    }
+    .title{
+        position      : absolute;
+        bottom        : 0;
+        font-size     : $font-size-xlarge;
+        left          : 0;
+        color         : $pink;
+        background    : url($player-title-blur-path) top left repeat;
+        max-width     : 100%;
+        line-height   : $font-size-xlarge;
+        white-space   : nowrap;
+        overflow      : hidden;
+        padding-left  : 2px;
+        padding-right : 2px;
+
+    }
 }
 
 // Playlist Bar

@@ -8,12 +8,16 @@ angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope
 
 
     $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
+    cosmicDB.getSpecialPlaylists(8).then(function(specialPlaylists){
+        $scope.specialPlaylists = specialPlaylists;
+    });
     cosmicDB.getPlaylists().then(function(playlists){
         $scope.playlists=playlists;
     });
 
     // New playlist popup
     $scope.newPlaylist = function (){
+        console.log('new playlist');
         $scope.dataPopup={};
         var myPopup = $ionicPopup.show({
             template: '<form ng-submit="submitNewPlaylist()"><input type="text" ng-model="dataPopup.newPlaylistName"></form>',

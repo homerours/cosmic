@@ -38,3 +38,18 @@ angular.module('cosmic.directives').directive('playBar',function($state,$ionicVi
 
 });
 
+angular.module('cosmic.directives').directive('artworkMosaic',function($state,cosmicConfig){
+    return {
+        restrict: 'A',
+        templateUrl: 'templates/artwork-mosaic.html',
+        scope: {
+            title : "@",
+            songs : "="
+        },
+        controller : function($scope){
+            $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
+        }
+    };
+
+});
+

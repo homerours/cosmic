@@ -7789,6 +7789,13 @@ ion-popover-view.fit ion-content {
   top: 40px !important;
   left: 40px !important; }
 
+.user-playlists-scroll {
+  position: absolute;
+  top: 257px;
+  bottom: 0;
+  left: 0;
+  right: 0; }
+
 play-bar {
   position: absolute;
   bottom: 49px;
@@ -7834,6 +7841,33 @@ play-bar {
     top: 5px;
     font-size: 30px;
     color: #444; }
+
+.artwork-mosaic {
+  width: 180px;
+  height: 90px;
+  line-height: 0px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto; }
+  .artwork-mosaic .miniature {
+    display: inline-block;
+    width: 45px;
+    height: 45px;
+    padding: 0;
+    margin: 0; }
+  .artwork-mosaic .title {
+    position: absolute;
+    bottom: 0;
+    font-size: 20px;
+    left: 0;
+    color: #E12F56;
+    background: url("../img/blur.png") top left repeat;
+    max-width: 100%;
+    line-height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-left: 2px;
+    padding-right: 2px; }
 
 .playlist-bar {
   padding: 0;

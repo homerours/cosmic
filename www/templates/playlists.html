@@ -1,23 +1,44 @@
 <ion-view view-title="Playlists" class="playlists">
 
-    <ion-content has-bouncing="true">
+    <ion-content scroll="false">
 
-        <div class="list">
 
-            <button class="button button-full button-balanced" ng-click="newPlaylist();">New Playlist ...</button>
-
-            <a collection-repeat="playlist in playlists" class="item item-thumbnail-left" ng-href="#/tab/playlists/{{playlist.id}}">
-                <div class="item-image" >
-                    <img ng-src="{{miniaturesPath}}{{playlist.artworks[0]}}" class="miniature top-left">
-                    <img ng-src="{{miniaturesPath}}{{playlist.artworks[1]}}" class="miniature top-right">
-                    <img ng-src="{{miniaturesPath}}{{playlist.artworks[2]}}" class="miniature bottom-left">
-                    <img ng-src="{{miniaturesPath}}{{playlist.artworks[3]}}" class="miniature bottom-right">
-                </div>
-                <h2>{{playlist.name}}</h2>
-                <p><b>{{playlist.nbTitles}}</b> song<span ng-if="playlist.nbTitles>1">s</span></p>
-            </a>
+        <div class="row">
+            <div class="col">
+                <a href="#/tab/playlists/special/0" artwork-mosaic title="{{specialPlaylists[0].name}}" songs="specialPlaylists[0].titles"></a>
+            </div>
+            <div class="col">
+                <a href="#/tab/playlists/special/1" artwork-mosaic title="{{specialPlaylists[1].name}}" songs="specialPlaylists[1].titles"></a>
+            </div>
 
         </div>
+        <div class="row">
+            <div class="col">
+                <a href="#/tab/playlists/special/2" artwork-mosaic title="{{specialPlaylists[2].name}}" songs="specialPlaylists[2].titles"></a>
+            </div>
+            <div class="col">
+                <a href="#/tab/playlists/special/3" artwork-mosaic title="{{specialPlaylists[3].name}}" songs="specialPlaylists[3].titles"></a>
+            </div>
+        </div>
+
+        <button class="button button-full button-balanced" ng-click="newPlaylist();" style="margin-top: 0 ; margin-bottom: 0;">New Playlist ...</button>
+
+        <ion-scroll class="user-playlists-scroll" has-bouncing="true">
+            <div class="list" >
+
+                <a collection-repeat="playlist in playlists" class="item item-thumbnail-left" ng-href="#/tab/playlists/user/{{playlist.id}}">
+                    <div class="item-image" >
+                        <img ng-src="{{miniaturesPath}}{{playlist.artworks[0]}}" class="miniature top-left">
+                        <img ng-src="{{miniaturesPath}}{{playlist.artworks[1]}}" class="miniature top-right">
+                        <img ng-src="{{miniaturesPath}}{{playlist.artworks[2]}}" class="miniature bottom-left">
+                        <img ng-src="{{miniaturesPath}}{{playlist.artworks[3]}}" class="miniature bottom-right">
+                    </div>
+                    <h2>{{playlist.name}}</h2>
+                    <p><b>{{playlist.nbTitles}}</b> song<span ng-if="playlist.nbTitles>1">s</span></p>
+                </a>
+
+            </div>
+        </ion-scroll>
 
     </ion-content>
 

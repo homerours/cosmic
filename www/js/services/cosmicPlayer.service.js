@@ -1,4 +1,4 @@
-angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q,$cordovaMedia) {
+angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q,$cordovaMedia,cosmicDB) {
     var player = {
         playing: false,
         onUpdate:function(position){},
@@ -32,6 +32,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             self.clearMedia();
             console.log('init media');
             var mypath=this.playlist[self.playlistIndex].path;
+            cosmicDB.updateTitlePlayStatistics(this.playlist[this.playlistIndex].id);
             self.media=new Media(mypath);
             self.play();
             self.onTitleChange();

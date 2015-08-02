@@ -1,9 +1,10 @@
-angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLite, cosmicPlayer,$cordovaFile,cosmicConfig,imageService,onlineArtwork) {
+angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLite, $cordovaFile,cosmicConfig,imageService,onlineArtwork) {
     var database={
         db: null,
         initDatabase: function(){
             console.log("INIT DATABASE");
             this.db = $cordovaSQLite.openDB("cosmic");
+            this.playlistQueries = this.specialPlaylistQueries();
         },
 
         flushDatabase: function(){
@@ -18,7 +19,12 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             promises.push($cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS playlist_item"));
             promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artist (id integer primary key autoincrement, name text)"));
             promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS album (id integer primary key autoincrement, name text, artist integer, artwork integer default 1)"));
-            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS title (id integer primary key autoincrement, name text, album integer, track integer, year integer,path text)"));
+            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS title (id integer primary key autoincrement, name text, album integer, track integer, year integer,path text, add_time datetime DEFAULT CURRENT_TIMESTAMP, last_play datetime, nb_played integer DEFAULT 0)").then(function(res){
+
+            },function(err){
+                console.log('ERROR');
+                console.log(err);
+            }));
             promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artwork (id integer primary key autoincrement, file_name text)").then(function(){
                 return $cordovaSQLite.execute(self.db, "INSERT INTO artwork (file_name) VALUES (?)",['default_artwork.jpg']);
             }));
@@ -72,12 +78,13 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
 
         getTitles:  function(artistId){
             // Get all titles from artist
-            var query= "SELECT title.name AS name, title.id AS id, title.track, title.path AS path, artwork.file_name AS artwork, album.name AS album,"+
+            var query= "SELECT title.name AS name, title.id AS id, title.nb_played, title.last_play, title.add_time, title.track AS track, title.path AS path, artwork.file_name AS artwork, album.name AS album,"+
                 " album.id AS albumId , arti.artist AS artist FROM"+
                 " (SELECT  artist.name AS artist, artist.id FROM artist WHERE id=?) arti INNER JOIN"+
                 " album ON album.artist = arti.id INNER JOIN"+
                 " title ON title.album = album.id INNER JOIN"+
                 " artwork ON album.artwork = artwork.id ORDER BY album.name,title.track";
+
             return $cordovaSQLite.execute(this.db,query, [artistId]).then(function(res) {
                 console.log('Got '+res.rows.length+' titles');
                 console.dir(res.rows.item(0));
@@ -98,7 +105,8 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                     currentAlbum.titles=titles;
                     albums.push(currentAlbum);
                 }
-                //cosmicPlayer.loadViewPlaylist(viewPlaylist);
+                console.log('Got titles');
+                console.log(viewPlaylist);
                 return {albums : albums, playlist : viewPlaylist};
             },function(err){
                 console.log('error');
@@ -367,6 +375,85 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             });
             return d.promise;
         },
+        getSpecialPlaylists : function(nbTitles){
+            var self=this;
+            var d = $q.defer();
+            var specialPlaylists=[];
+
+            var syncLoop = function(i){
+                if (i>= self.playlistQueries.length){
+                    d.resolve(specialPlaylists);
+                } else {
+                   self.getSpecialPlaylist(i,nbTitles).then(function(res){
+                       specialPlaylists.push(res);
+                        i++;
+                        syncLoop(i);
+                    });
+                }
+            };
+            syncLoop(0);
+
+            return d.promise;
+
+        },
+        getSpecialPlaylist : function(nbPlaylist,nbTitles){
+            var self=this;
+            var d = $q.defer();
+            var query = self.playlistQueries[nbPlaylist];
+            $cordovaSQLite.execute(self.db,query.query,[nbTitles]).then(function(res){
+                var playlist=[];
+                for (var j=0; j<res.rows.length; j++){
+                    playlist.push(res.rows.item(j));
+                }
+                d.resolve({name : query.name, titles : playlist});
+            },function(err){
+                console.error(err);
+                d.reject(err);
+            });
+
+            return d.promise;
+        },
+        specialPlaylistQueries : function(){
+            var queries = [];
+            var query;
+
+            // Last Added
+            query = "SELECT song.name AS name, song.id AS id, song.path AS path, artwork.file_name AS artwork, album.name AS albumName,"+
+                " album.id AS albumId , artist.name AS artist FROM"+
+                " (SELECT * FROM title ORDER BY add_time DESC LIMIT ?) song INNER JOIN"+
+                " album ON song.album = album.id INNER JOIN"+
+                " artist ON album.artist = artist.id INNER JOIN"+
+                " artwork ON album.artwork = artwork.id";
+            queries.push({name : "Last Added", query : query});
+
+            // Last Played
+            query = "SELECT song.name AS name, song.id AS id, song.path AS path, artwork.file_name AS artwork, album.name AS albumName,"+
+                " album.id AS albumId , artist.name AS artist FROM"+
+                " (SELECT * FROM title ORDER BY last_play DESC LIMIT ?) song INNER JOIN"+
+                " album ON song.album = album.id INNER JOIN"+
+                " artist ON album.artist = artist.id INNER JOIN"+
+                " artwork ON album.artwork = artwork.id";
+            queries.push({name : "Last Played", query : query});
+
+            // Top played
+            query = "SELECT song.name AS name, song.id AS id, song.path AS path, artwork.file_name AS artwork, album.name AS albumName,"+
+                " album.id AS albumId , artist.name AS artist FROM"+
+                " (SELECT * FROM title ORDER BY nb_played DESC LIMIT ?) song INNER JOIN"+
+                " album ON song.album = album.id INNER JOIN"+
+                " artist ON album.artist = artist.id INNER JOIN"+
+                " artwork ON album.artwork = artwork.id";
+            queries.push({name : "Top Played", query : query});
+
+
+            query = "SELECT song.name AS name, song.id AS id, song.path AS path, artwork.file_name AS artwork, album.name AS albumName,"+
+                " album.id AS albumId , artist.name AS artist FROM"+
+                " (SELECT * FROM title ORDER BY last_play DESC LIMIT ?) song INNER JOIN"+
+                " album ON song.album = album.id INNER JOIN"+
+                " artist ON album.artist = artist.id INNER JOIN"+
+                " artwork ON album.artwork = artwork.id";
+            queries.push({name : "Last Played", query : query});
+            return queries;
+        },
         // Get all playlists
         getPlaylists : function(){
             var self=this;
@@ -422,7 +509,6 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 for (var i=0; i<res.rows.length; i++){
                     playlist.push(res.rows.item(i));
                 }
-                //cosmicPlayer.loadViewPlaylist(playlist);
                 d.resolve(playlist);
             },function(err){
                 console.error(err);
@@ -477,6 +563,9 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             });
             return d.promise;
 
+        },
+        updateTitlePlayStatistics : function(titleId){
+            $cordovaSQLite.execute(this.db,"UPDATE title SET nb_played = nb_played + 1, last_play = CURRENT_TIMESTAMP WHERE id=?", [titleId]);
         }
     };
     database.initDatabase();
