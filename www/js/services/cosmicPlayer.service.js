@@ -1,27 +1,32 @@
+// Service for playing audio files
 angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q,$cordovaMedia,cosmicDB) {
     var player = {
-        playing: false,
-        onUpdate:function(position){},
-        onTitleChange:function(){},
-        isWatchingTime: null,
-        duration:0,
-        media: null,
-        playlist: [{artist:'',name:'No Media', artwork : 'default_artwork.jpg'}],
-        playlistIndex: 0,
+        playing        : false,
+        onUpdate       : function(position){}, // callback on position update while playing
+        onTitleChange  : function(){}, // callback on title change
+        isWatchingTime : null,
+        duration       : 0,
+        media          : null,
+        playlist       : [{artist              : '',name : 'No Media', artwork : 'default_artwork.jpg'}],
+        playlistIndex  : 0,
+
         setIndex : function(index){
             this.playlistIndex=index;
         },
 
+        // Load a playlist in the player
         loadPlaylist: function(playlist) {
             var playlistCopy = playlist.slice();
             console.log('Load playlist, size: '+playlist.length);
             player.playlist = playlistCopy;
         },
+
         // add an item of current view as next
         setNext: function(title){
             this.playlist.splice(this.playlistIndex+1,0,title);
         },
 
+        // Play playlist item at 'playlistindex' position
         initMedia: function() {
             var self=this;
             self.clearMedia();
@@ -32,6 +37,8 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             self.play();
             self.onTitleChange();
         },
+
+        // Release media
         clearMedia: function(){
             var self=this;
             self.stopWatchTime();
@@ -46,6 +53,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
         setOnTitleChange : function(onTitleChange){
             this.onTitleChange=onTitleChange;
         },
+
         // player launcher for the controller
         launchPlayer: function(index) {
             var self=this;
@@ -72,6 +80,8 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             this.stopWatchTime();
             player.playing = false;
         },
+
+        // seek to percent
         seek: function(percent) {
             var self=this;
             console.log(percent);
@@ -100,6 +110,8 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             self.playlistIndex = (self.playlistIndex + 1) % self.playlist.length;
             self.initMedia(self.playlistIndex);
         },
+
+        // Watch position every 500ms
         startWatchTime: function() {
             var self=this;
             if (self.media){
@@ -112,7 +124,6 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
                             console.log('End of current song --- play next song');
                             self.next();
                         }
-                        //console.log('time : ',pos);
                     });
                 },500);
             } else {
@@ -128,6 +139,8 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             }
             return;
         },
+
+        // get duration of current media
         getDuration: function() {
             var defered=$q.defer();
             var self=this;

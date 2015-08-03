@@ -9,6 +9,7 @@ angular.module('cosmic.controllers').controller('SearchCtrl', function($scope,$q
         cordova.plugins.Keyboard.show();
     },150);
 
+    // Watch for search update
     $scope.$watch('search',function(){
         var search = $scope.search;
         if (search){
@@ -40,6 +41,7 @@ angular.module('cosmic.controllers').controller('SearchCtrl', function($scope,$q
         $state.go('player');
     };
 
+    // Search function
     var searchInDB = function(search){
         if (search == $scope.search && search.length>0){
             console.log('Search: '+search);

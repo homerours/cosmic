@@ -1,8 +1,9 @@
+// Scan recursively a provided local directory and look for music (mp3 and m4a) music files
 angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Tags,cosmicConfig,$cordovaToast) {
 
     var deviceFSService = {
 
-        // Verify that the storage directories exists
+        // Verify that the storage directories exists and create needed directories
         initDeviceFS : function(){
             var q = $q.defer();
             var path = cosmicConfig.appRootStorage;
@@ -34,10 +35,12 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
             return q.promise;
         },
 
+        // Scan entry from local filesystem
         handleItem : function(entry,results){
             var extensionsAudio=cosmicConfig.extensionsAudio;
             var self=this;
             var hDeferred=$q.defer();
+
             // Audio file
             if (entry.isFile) {
                 var fileName = entry.name;
@@ -90,9 +93,9 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
             return d.promise;
         },
 
+        // Start to scan 'path', find music files, extract ID3 tags and add them to database
         scanMusicFolder: function(path){
             var d=$q.defer();
-            //var path=cordova.file.externalRootDirectory+'Music/Mymusic/';
             var results=[];
             $cordovaToast.showShortCenter('Start to scan the directory');
             this.scanDirectory(path,results).then(function(res){

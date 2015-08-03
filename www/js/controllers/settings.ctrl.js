@@ -47,6 +47,7 @@ angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,
 
     };
 
+    // Start recursive scan of a directory
     var startScan = function(){
         $scope.scan=null;
         console.log('start scan');

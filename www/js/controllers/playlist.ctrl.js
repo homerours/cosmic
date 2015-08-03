@@ -1,12 +1,14 @@
 // Playlists
-angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope, cosmicPlayer, cosmicDB,$ionicActionSheet,$timeout,$ionicPopup,$cordovaToast,$rootScope, cosmicConfig,$cordovaStatusbar) {
+angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope, cosmicDB, $ionicPopup,$cordovaToast, cosmicConfig) {
 
+    // For popover styling
     document.body.classList.remove('platform-ios');
     document.body.classList.remove('platform-android');
     document.body.classList.remove('platform-ionic');
     document.body.classList.add('platform-ionic');
 
 
+    // Refresh view
     var refreshData = function(){
 
         $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
@@ -18,6 +20,7 @@ angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope
         });
     };
 
+    // Refresh view on entering on the view
     $scope.$on('$ionicView.enter', function() {
         console.log('Refresh data');
         refreshData();
@@ -68,21 +71,5 @@ angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope
     };
 
 
-    $scope.show= function() {
-        $ionicActionSheet.show({
-            buttons: [
-                { text: 'Complete' }
-            ],
-            destructiveText: 'Delete',
-            titleText: 'Update Todo',
-            cancelText: 'Cancel',
-            buttonClicked: function(index) {
-                return true;
-            }
-        });
-
-    };
-
-    $scope.player = cosmicPlayer;
 });
 

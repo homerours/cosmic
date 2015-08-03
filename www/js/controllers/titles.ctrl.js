@@ -3,12 +3,13 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
 
     $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
     var artistId=$stateParams.artistId;
+
+    // Get artist titles
     cosmicDB.getTitles(artistId).then(function(data){
-        console.log('DATA :');
-        console.log(data);
         $scope.albums=data.albums;
         $scope.playlist=data.playlist;
     });
+    // Start playing titles
     $scope.playTitle = function (index){
         cosmicPlayer.loadPlaylist($scope.playlist);
         cosmicPlayer.launchPlayer(index);
@@ -16,6 +17,7 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
         $state.go('player');
     };
 
+    // Go to player
     var titlesView=angular.element(document.getElementById('titles-view'));
     $ionicGesture.on('swipeleft',function(e){
         console.log('Swipe left');

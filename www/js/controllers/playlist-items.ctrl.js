@@ -1,25 +1,18 @@
 // Playlist-items
-angular.module('cosmic.controllers').controller('PlaylistItemsCtrl', function($scope, $stateParams, $state,cosmicDB,cosmicPlayer,$ionicViewSwitcher,$ionicGesture,cosmicConfig,$ionicPopover,$cordovaToast,$ionicListDelegate) {
+angular.module('cosmic.controllers').controller('PlaylistItemsCtrl', function($scope, $stateParams, $state,cosmicDB,cosmicPlayer,$ionicViewSwitcher,cosmicConfig,$ionicPopover,$cordovaToast) {
 
     var playlistId=$stateParams.playlistId;
     $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
-    console.log('playlist itm ctrl '+ playlistId);
 
+    // Load playlist titles
     var loadPlaylistContent = function(){
         cosmicDB.getPlaylistItems(playlistId).then(function(playlist){
             $scope.playlist=playlist;
-            console.log('Playlist');
-            console.log(playlist);
         });
     };
     loadPlaylistContent();
 
-    //$scope.playlistReorder = function(){
-        //console.log('SHOW REORDER');
-        //var delegate = $ionicListDelegate.$getByHandle('playlist-items');
-        //delegate.showReorder(true);
-    //};
-
+    // Start playing playlist
     $scope.playTitle = function (index){
         cosmicPlayer.loadPlaylist($scope.playlist);
         cosmicPlayer.launchPlayer(index);
@@ -30,10 +23,6 @@ angular.module('cosmic.controllers').controller('PlaylistItemsCtrl', function($s
     // Popover
     var selectedTitle;
     var event;
-    //document.body.classList.remove('platform-ios');
-    //document.body.classList.remove('platform-android');
-    //document.body.classList.remove('platform-ionic');
-    //document.body.classList.add('platform-ios');
     $ionicPopover.fromTemplateUrl('templates/playlist-item-popover.html', {
         scope: $scope,
     }).then(function(popover) {

@@ -1,3 +1,4 @@
+// App database service
 angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLite, $cordovaFile,cosmicConfig,imageService,onlineArtwork) {
     var database={
         db: null,
@@ -19,12 +20,8 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             promises.push($cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS playlist_item"));
             promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artist (id integer primary key autoincrement, name text)"));
             promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS album (id integer primary key autoincrement, name text, artist integer, artwork integer default 1)"));
-            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS title (id integer primary key autoincrement, name text, album integer, track integer, year integer,path text, add_time datetime DEFAULT CURRENT_TIMESTAMP, last_play datetime, nb_played integer DEFAULT 0)").then(function(res){
+            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS title (id integer primary key autoincrement, name text, album integer, track integer, year integer,path text, add_time datetime DEFAULT CURRENT_TIMESTAMP, last_play datetime, nb_played integer DEFAULT 0)"));
 
-            },function(err){
-                console.log('ERROR');
-                console.log(err);
-            }));
             promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artwork (id integer primary key autoincrement, file_name text)").then(function(){
                 return $cordovaSQLite.execute(self.db, "INSERT INTO artwork (file_name) VALUES (?)",['default_artwork.jpg']);
             }));
@@ -33,6 +30,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             return $q.all(promises);
 
         },
+        // delete all artworks files
         removeAllArtworks : function(){
             console.log('Remove all artworks !');
             var d=$q.defer();
@@ -106,7 +104,6 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                     albums.push(currentAlbum);
                 }
                 console.log('Got titles');
-                console.log(viewPlaylist);
                 return {albums : albums, playlist : viewPlaylist};
             },function(err){
                 console.log('error');
@@ -222,6 +219,8 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             });
             return defered.promise;
         },
+
+        // Download missing album covers from the iTunes API
         downloadMissingArtworks : function(){
             var self=this;
             var query = "SELECT artist.name AS artist, album.id AS albumId, album.name AS album FROM album"+
@@ -490,6 +489,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             });
             return d.promise;
         },
+
         // Get songs from a playlist
         getPlaylistItems : function(playlistId){
             var self=this;
@@ -505,7 +505,6 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 " ORDER BY items.position";
             $cordovaSQLite.execute(self.db,query, [playlistId]).then(function(res){
                 var playlist=[];
-                //var viewPlaylist=[];
                 for (var i=0; i<res.rows.length; i++){
                     playlist.push(res.rows.item(i));
                 }
@@ -531,6 +530,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             });
             return d.promise;
         },
+        // search in the whole music database
         search : function(term){
             var words = term.split(' ');
             var self=this;
@@ -540,7 +540,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 " INNER JOIN album ON album.id = title.album"+
                 " INNER JOIN artist ON artist.id = album.artist"+
                 " INNER JOIN artwork ON album.artwork = artwork.id"+
-                " WHERE";//" LIKE ? LIMIT 20";
+                " WHERE";
             for (var i=0; i<words.length; i++){
                 if (i>0){
                     query += ' AND';

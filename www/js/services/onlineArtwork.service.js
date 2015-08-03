@@ -1,3 +1,4 @@
+// Get album covers from iTunes API
 angular.module('cosmic.services').factory("onlineArtwork", function($q,cosmicConfig, $http, $cordovaFileTransfer) {
 
     var onlineArtworkService={
