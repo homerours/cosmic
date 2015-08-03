@@ -32,7 +32,6 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             self.clearMedia();
             console.log('init media');
             var mypath=this.playlist[self.playlistIndex].path;
-            cosmicDB.updateTitlePlayStatistics(this.playlist[this.playlistIndex].id);
             self.media=new Media(mypath);
             self.play();
             self.onTitleChange();
@@ -121,6 +120,8 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
                     self.media.getCurrentPosition(function(pos){
                         self.onUpdate(1000*pos);
                         if (self.duration>0 && 1000*pos>=self.duration-600){
+                            // update Play statistics
+                            cosmicDB.updateTitlePlayStatistics(this.playlist[this.playlistIndex].id);
                             console.log('End of current song --- play next song');
                             self.next();
                         }
