@@ -3,8 +3,8 @@
     <ion-content id="player" scroll="false">
 
         <div class="top">
-            <div class="artwork" ng-click='seek($event);' ng-style="{'background':'url('+artworksPath + player.playlist[player.playlistIndex].artwork+') left','background-size':'100%'}">
-                <div class="blur" ng-style="{'width':100 - progress + '%'}">
+            <div class="artwork" id="artwork" ng-click='seek($event);' ng-style="{'background':'url('+artworksPath + player.playlist[player.playlistIndex].artwork+') left','background-size':'100%'}">
+                <div class="blur" id="blur" >
                 </div>
             </div>
 

@@ -4,6 +4,7 @@
   "gulpStartupTasks": [
     "sass",
     "injection",
+    "generate:cache",
     "watch"
   ],
   "watchPatterns": [

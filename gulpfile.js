@@ -15,7 +15,7 @@ var paths = {
         './www/js/**/*.js']
 };
 
-gulp.task('default', ['sass','injection']);
+gulp.task('default', ['sass','injection','generate:cache']);
 
 // Javascript includes
 gulp.task('injection',function(){
