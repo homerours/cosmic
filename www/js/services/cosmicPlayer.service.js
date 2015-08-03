@@ -121,7 +121,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
                         self.onUpdate(1000*pos);
                         if (self.duration>0 && 1000*pos>=self.duration-600){
                             // update Play statistics
-                            cosmicDB.updateTitlePlayStatistics(this.playlist[this.playlistIndex].id);
+                            cosmicDB.updateTitlePlayStatistics(self.playlist[self.playlistIndex].id);
                             console.log('End of current song --- play next song');
                             self.next();
                         }
