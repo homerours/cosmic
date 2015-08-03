@@ -12,7 +12,7 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
     // Start playing titles
     $scope.playTitle = function (index){
         cosmicPlayer.loadPlaylist($scope.playlist);
-        cosmicPlayer.launchPlayer(index);
+        cosmicPlayer.launchPlayer($scope.playlist[index]);
         $ionicViewSwitcher.nextDirection('forward');
         $state.go('player');
     };

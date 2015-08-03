@@ -7719,10 +7719,10 @@ a.button {
   box-shadow: none !important; }
 
 .pink {
-  color: #E12F56; }
+  color: #E12F56 !important; }
 
 .dark {
-  color: #444; }
+  color: #444 !important; }
 
 ion-popover-view.fit {
   height: auto !important; }
@@ -7908,45 +7908,11 @@ play-bar {
       text-overflow: ellipsis;
       white-space: nowrap; }
 
-#player {
-  color: #444; }
-  #player .top {
-    position: relative; }
-  #player button {
-    color: #444;
-    font-size: 35px; }
-  #player .controls {
-    position: absolute;
-    bottom: 115px;
-    width: 100%; }
-    #player .controls .control-box {
-      position: relative;
-      margin: auto;
-      height: 70px;
-      width: 240px; }
-      #player .controls .control-box .play {
-        position: absolute;
-        top: 0;
-        left: 105px;
-        font-size: 40px; }
-      #player .controls .control-box .pause {
-        position: absolute;
-        top: 0;
-        left: 103px;
-        font-size: 40px; }
-      #player .controls .control-box .forward {
-        position: absolute;
-        top: 0px;
-        left: 185px;
-        font-size: 40px; }
-      #player .controls .control-box .backward {
-        position: absolute;
-        top: 0px;
-        left: 0;
-        font-size: 40px; }
-  #player .artwork {
+.play-square {
+  position: relative; }
+  .play-square .artwork {
     padding-top: 100%; }
-  #player .title {
+  .play-square .title {
     font-family: "OmnesLight";
     letter-spacing: -1px;
     position: absolute;
@@ -7961,23 +7927,68 @@ play-bar {
     text-overflow: ellipsis;
     overflow: hidden;
     max-width: 100%; }
-  #player .blur {
+  .play-square .blur {
     background: url("../img/flou4.png") top right repeat;
     height: 100%;
     position: absolute;
     top: 0;
     right: 0; }
-  #player .time, #player .current-time, #player .total-duration {
+  .play-square .time, .play-square .current-time, .play-square .total-duration {
     position: absolute;
     color: white;
     opacity: 0.7;
     bottom: 3px;
     font-size: 30px;
     text-shadow: 0 0 1px black; }
-  #player .current-time {
+  .play-square .current-time {
     left: 3px; }
-  #player .total-duration {
+  .play-square .total-duration {
     right: 3px; }
+
+#player {
+  color: #444; }
+  #player button {
+    color: #444;
+    font-size: 35px; }
+  #player .controls {
+    position: absolute;
+    bottom: 130px;
+    width: 100%; }
+    #player .controls .shuffle {
+      position: absolute;
+      top: 0px;
+      right: 10px;
+      font-size: 25px; }
+    #player .controls .loop {
+      position: absolute;
+      top: 0px;
+      left: 10px;
+      font-size: 25px; }
+    #player .controls .control-box {
+      position: relative;
+      margin: auto;
+      height: 70px;
+      width: 200px; }
+      #player .controls .control-box .play {
+        position: absolute;
+        top: 0;
+        left: 90px;
+        font-size: 40px; }
+      #player .controls .control-box .pause {
+        position: absolute;
+        top: 0;
+        left: 86px;
+        font-size: 40px; }
+      #player .controls .control-box .forward {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        font-size: 40px; }
+      #player .controls .control-box .backward {
+        position: absolute;
+        top: 0px;
+        left: 0;
+        font-size: 40px; }
 
 .playlists {
   color: #444; }

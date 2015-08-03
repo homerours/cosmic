@@ -13,9 +13,9 @@ angular.module('cosmic.controllers').controller('PlaylistItemsCtrl', function($s
     loadPlaylistContent();
 
     // Start playing playlist
-    $scope.playTitle = function (index){
+    $scope.playTitle = function (title){
         cosmicPlayer.loadPlaylist($scope.playlist);
-        cosmicPlayer.launchPlayer(index);
+        cosmicPlayer.launchPlayer(title);
         $ionicViewSwitcher.nextDirection('forward');
         $state.go('player');
     };

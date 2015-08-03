@@ -91,10 +91,10 @@ $artwork-mosaic-nb-cols        : 4;
 
 // Colors
 .pink{
-    color : $pink;
+    color : $pink !important;
 }
 .dark{
-    color : $dark;
+    color : $dark !important;
 }
 
 // popover height fits content
@@ -328,52 +328,12 @@ play-bar{
         }
     }
 }
-// Music Player
-#player{
-    color: $dark;
 
-    .top{
-        position:relative;
-    }
-    button{
-        color     : $dark;
-        font-size : $player-icon-size;
-    }
-    .controls{
-        position : absolute;
-        bottom   : 115px;
-        width    : 100%;
-        .control-box{
-            position : relative;
-            margin   : auto;
-            height   : 70px;
-            width    : 240px;
-            .play{
-                position  : absolute;
-                top       : 0;
-                left      : 105px;
-                font-size : 40px;
-            }
-            .pause{
-                position  : absolute;
-                top       : 0;
-                left      : 103px;
-                font-size : 40px;
-            }
-            .forward{
-                position  : absolute;
-                top       : 0px;
-                left      : 185px;
-                font-size : 40px;
-            }
-            .backward{
-                position  : absolute;
-                top       : 0px;
-                left      : 0;
-                font-size : 40px;
-            }
-        }
-    }
+
+// Play-Square
+.play-square{
+    position:relative;
+
     .artwork{
         padding-top: 100%;
     }
@@ -415,6 +375,64 @@ play-bar{
     .total-duration{
         @extend .time;
         right :3px;
+    }
+}
+
+
+// Music Player
+#player{
+    color: $dark;
+
+    button{
+        color     : $dark;
+        font-size : $player-icon-size;
+    }
+    .controls{
+        position : absolute;
+        bottom   : 130px;
+        width    : 100%;
+        .shuffle{
+            position  : absolute;
+            top       : 0px;
+            right     : 10px;
+            font-size : 25px;
+        }
+        .loop{
+            position  : absolute;
+            top       : 0px;
+            left      : 10px;
+            font-size : 25px;
+        }
+        .control-box{
+            position : relative;
+            margin   : auto;
+            height   : 70px;
+            width    : 200px;
+            .play{
+                position  : absolute;
+                top       : 0;
+                left      : 90px;
+                font-size : 40px;
+            }
+            .pause{
+                position  : absolute;
+                top       : 0;
+                left      : 86px;
+                font-size : 40px;
+            }
+            .forward{
+                position  : absolute;
+                top       : 0px;
+                right      : 0px;
+                font-size : 40px;
+            }
+            .backward{
+                position  : absolute;
+                top       : 0px;
+                left      : 0;
+                font-size : 40px;
+            }
+        }
     }
 }
 

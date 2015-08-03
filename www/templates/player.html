@@ -2,21 +2,7 @@
 -
     <ion-content id="player" scroll="false">
 
-        <div class="top">
-            <div class="artwork" id="artwork" ng-click='seek($event);' ng-style="{'background':'url('+artworksPath + player.playlist[player.playlistIndex].artwork+') left','background-size':'100%'}">
-                <div class="blur" id="blur" >
-                </div>
-            </div>
-
-            <div class="title">
-                {{player.playlist[player.playlistIndex].artist + ' '}}
-                <br/>
-                {{player.playlist[player.playlistIndex].name + '    '}}
-            </div>
-            <div class="current-time">{{position | date : 'mm:ss'}}</div>
-            <div class="total-duration">{{duration | date : 'mm:ss'}}</div>
-        </div>
-
+        <play-square></play-square>
 
         <div class="controls">
             <div class="control-box">
@@ -25,8 +11,13 @@
                 <button  class="button button-icon ion-ios-pause pause" ng-click="player.pause()" ng-if="player.playing"></button>
                 <button  class="button button-icon ion-ios-fastforward forward" ng-click="player.next()"></button>
             </div>
+
+            <button class="button button-icon loop" ng-class="{'ion-ios-loop': !player.loop, 'ion-ios-loop-strong': player.loop, 'pink' : player.loop }"ng-click="player.toogleLoop()"></button>
+            <button class="button button-icon shuffle" ng-class="{'ion-ios-shuffle': !player.shuffle, 'ion-ios-shuffle-strong': player.shuffle, 'pink' : player.shuffle }"ng-click="player.toogleShuffle()"></button>
+
         </div>
-        <playlist-bar player="player"></playlist-bar>
+
+        <playlist-bar></playlist-bar>
 
     </ion-content>
 </ion-view>

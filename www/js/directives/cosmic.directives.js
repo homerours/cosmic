@@ -2,11 +2,10 @@ angular.module('cosmic.directives').directive('playlistBar',function($ionicScrol
     return {
         restrict: 'E',
         templateUrl: 'templates/playlistBar.html',
-        scope: {
-            player:'='
-        },
-        controller : function($scope,$ionicScrollDelegate){
+        scope: {},
+        controller : function($scope,$ionicScrollDelegate,cosmicPlayer){
             $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
+            $scope.player = cosmicPlayer;
             var scrollToCurrentTitle=function(){
                 var delegate = $ionicScrollDelegate.$getByHandle('playlistBarScroll');
                 delegate.scrollTo($scope.player.playlistIndex * 100,0,true);
@@ -48,6 +47,81 @@ angular.module('cosmic.directives').directive('artworkMosaic',function($state,co
         },
         controller : function($scope){
             $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
+        }
+    };
+
+});
+
+angular.module('cosmic.directives').directive('playSquare',function($state,cosmicPlayer,cosmicConfig){
+    return {
+        restrict: 'E',
+        templateUrl: 'templates/play-square.html',
+        replace : true,
+        scope: {
+        },
+        controller : function($scope,cosmicPlayer,$ionicGesture,cosmicConfig){
+
+            $scope.artworksPath = cosmicConfig.appRootStorage + 'artworks/';
+            var blurElement    = document.getElementById("blur");
+            var artworkElement = angular.element(document.getElementById("artwork"));
+            var windowWidth    = artworkElement[0].clientWidth;
+            $scope.seeking = false;
+
+            function setProgress(width){
+                blurElement.style.width=windowWidth-width +'px';
+            }
+
+            // Update position
+            var onUpdate = function(position){
+                $scope.position=position;
+                if ($scope.duration>0){
+                    setProgress(windowWidth * ($scope.position / $scope.duration));
+                } else {
+                    setProgress(0);
+                }
+            };
+
+            // Update scope on new title
+            var onNewTitle = function(){
+                $scope.player=cosmicPlayer;
+                $scope.position=0;
+                setProgress(0);
+                cosmicPlayer.getDuration().then(function(duration){
+                    $scope.duration=duration;
+                });
+            };
+
+            onNewTitle();
+            cosmicPlayer.setOnUpdate(onUpdate);
+            cosmicPlayer.setOnTitleChange(onNewTitle);
+
+            $ionicGesture.on('dragleft dragright', function (event) {
+                if (! $scope.seeking ){
+                    $scope.seeking = true;
+                    if (cosmicPlayer.playing){
+                        cosmicPlayer.stopWatchTime();
+                        cosmicPlayer.media.pause();
+                    }
+                }
+                $scope.progress = event.gesture.center.pageX / windowWidth;
+                $scope.$apply(function(){
+                    $scope.position = $scope.progress * $scope.duration;
+                });
+                setProgress(event.gesture.center.pageX);
+            }, artworkElement);
+
+            $ionicGesture.on('dragend', function () {
+                console.log('dragEND');
+                if ($scope.seeking){
+                    $scope.seeking = false;
+                    cosmicPlayer.seek($scope.progress);
+                    if (cosmicPlayer.playing){
+                        cosmicPlayer.startWatchTime();
+                        cosmicPlayer.media.play();
+                    }
+                }
+            }, artworkElement);
+
         }
     };
 

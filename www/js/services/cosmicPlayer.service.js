@@ -1,22 +1,54 @@
 // Service for playing audio files
-angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q,$cordovaMedia,cosmicDB) {
+angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q,$cordovaMedia,cosmicDB, $localstorage) {
+    function shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex ;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    }
+
     var player = {
         playing        : false,
+        shuffle        : $localstorage.get('shuffle',false),
+        loop           : $localstorage.get('loop',true),
         onUpdate       : function(position){}, // callback on position update while playing
         onTitleChange  : function(){}, // callback on title change
         isWatchingTime : null,
         duration       : 0,
         media          : null,
-        playlist       : [{artist              : '',name : 'No Media', artwork : 'default_artwork.jpg'}],
+        playlist       : [{artist                                                           : '',name : 'No Media', artwork : 'default_artwork.jpg'}],
         playlistIndex  : 0,
 
-        setIndex : function(index){
-            this.playlistIndex=index;
+        setIndex : function(title){
+            this.playlistIndex=this.playlist.indexOf(title);
+        },
+        toogleShuffle : function(){
+            this.shuffle = ! this.shuffle;
+            $localstorage.set('shuffle',this.shuffle);
+        },
+        toogleLoop : function(){
+            this.loop = ! this.loop;
+            $localstorage.set('loop',this.loop);
         },
 
         // Load a playlist in the player
         loadPlaylist: function(playlist) {
             var playlistCopy = playlist.slice();
+            if (this.shuffle){
+                playlistCopy = shuffle(playlistCopy);
+            }
             console.log('Load playlist, size: '+playlist.length);
             player.playlist = playlistCopy;
         },
@@ -54,14 +86,9 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
         },
 
         // player launcher for the controller
-        launchPlayer: function(index) {
+        launchPlayer: function(title) {
             var self=this;
-            self.setIndex(index);
-            self.initMedia();
-        },
-        goToTitle : function(index){
-            var self=this;
-            self.setIndex(index);
+            self.setIndex(title);
             self.initMedia();
         },
         play: function() {
@@ -108,6 +135,9 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             var self=this;
             self.playlistIndex = (self.playlistIndex + 1) % self.playlist.length;
             self.initMedia(self.playlistIndex);
+            if (self.playlistIndex === 0 && ! self.loop){
+                self.pause();
+            }
         },
 
         // Watch position every 500ms

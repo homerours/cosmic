@@ -3,7 +3,7 @@
 
 
         <div class="list">
-            <div class="item item-song two-lines" ng-repeat="title in playlist" ng-click="playTitle($index)">
+            <div class="item item-song two-lines" ng-repeat="title in playlist" ng-click="playTitle(title)">
 
                 <img  ng-src="{{miniaturesPath}}{{::title.artwork}}" />
                 <h2>{{::title.name}}</h2>

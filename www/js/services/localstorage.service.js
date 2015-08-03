@@ -4,7 +4,12 @@ angular.module('cosmic.services').factory('$localstorage',  function($window) {
             $window.localStorage[key] = value;
         },
         get: function(key, defaultValue) {
-            return $window.localStorage[key] || defaultValue;
+            var val = $window.localStorage[key];
+            if (val === undefined){
+                return defaultValue;
+            } else {
+                return val;
+            }
         },
         setObject: function(key, value) {
             $window.localStorage[key] = JSON.stringify(value);
