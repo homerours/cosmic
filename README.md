@@ -16,11 +16,11 @@ You will find some more screenshots [here](https://github.com/homerours/cosmic/t
 - ID3 Tags reading (including album cover), using [JavaScript-ID3-Reader](https://github.com/aadsm/JavaScript-ID3-Reader).
 - Find missing album covers online, using iTunes API.
 - Navigation by artists, playlists or global search.
-- Uses artwork miniature files (to speed up the views), using [cordova-imageResizer plugin](https://github.com/wymsee/cordova-imageResizer).
+- Uses artwork miniature files (to speed up the views), obtained using [cordova-imageResizer plugin](https://github.com/wymsee/cordova-imageResizer).
 
 ## Development
 
-This app has only been tested on Android 4.4 but all component are compatible with iOS. It is currently at an early development stage, major changes may happen. Contributions and/or ideas are welcome.
+This app has only been tested on Android 4.4 but all components are compatible with iOS. It is currently at an early development stage, major changes may happen. Contributions and/or ideas are welcome.
 
 ## References
 
