@@ -7,12 +7,20 @@ angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope
     document.body.classList.add('platform-ionic');
 
 
-    $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
-    cosmicDB.getSpecialPlaylists(8).then(function(specialPlaylists){
-        $scope.specialPlaylists = specialPlaylists;
-    });
-    cosmicDB.getPlaylists().then(function(playlists){
-        $scope.playlists=playlists;
+    var refreshData = function(){
+
+        $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
+        cosmicDB.getSpecialPlaylists(8).then(function(specialPlaylists){
+            $scope.specialPlaylists = specialPlaylists;
+        });
+        cosmicDB.getPlaylists().then(function(playlists){
+            $scope.playlists=playlists;
+        });
+    };
+
+    $scope.$on('$ionicView.enter', function() {
+        console.log('Refresh data');
+        refreshData();
     });
 
     // New playlist popup

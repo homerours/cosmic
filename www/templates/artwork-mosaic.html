@@ -1,4 +1,4 @@
 <div class="artwork-mosaic">
     <div class="title">{{title}}</div>
-    <img ng-repeat="song in songs track by $index" ng-src="{{miniaturesPath}}{{song.artwork}}" class="miniature">
+    <img ng-repeat="song in songs track by song.id" ng-src="{{miniaturesPath}}{{song.artwork}}" class="miniature">
 </div>
