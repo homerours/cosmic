@@ -89,6 +89,13 @@ $artwork-mosaic-nb-cols        : 4;
     box-shadow : none !important;
 }
 
+// Colors
+.pink{
+    color : $pink;
+}
+.dark{
+    color : $dark;
+}
 
 // popover height fits content
 ion-popover-view.fit {

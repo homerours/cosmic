@@ -6,15 +6,10 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
         isWatchingTime: null,
         duration:0,
         media: null,
-        playlist: [{artist:'Muse',name:'Time is Running Out',miniature : 'data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',miniature : 'data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',miniature : 'data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',miniature : 'data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',miniature : '/data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',miniature : 'data/artwork/1.jpg'},{artist:'Muse',name:'Time is Running Out',miniature : 'data/artwork/1.jpg'}],
+        playlist: [{artist:'',name:'No Media', artwork : 'default_artwork.jpg'}],
         playlistIndex: 0,
-        volume: 70,
         setIndex : function(index){
             this.playlistIndex=index;
-        },
-        setVolume: function() {
-            console.log('New volume: '+ this.volume);
-            this.media.setVolume(this.volume/100);
         },
 
         loadPlaylist: function(playlist) {

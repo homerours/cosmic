@@ -15,9 +15,17 @@ angular.module('cosmic.controllers').controller('SearchCtrl', function($scope,$q
             $timeout(function(){
                 searchInDB(search);
             }, 400);
+        } else {
+            $scope.titles=[];
         }
 
     });
+
+    $scope.cancel = function(){
+        $scope.hideKeyboard();
+        $scope.search = '';
+        $scope.titles = [];
+    };
 
     // Hide keyboard on enter
     $scope.hideKeyboard = function(){
@@ -38,9 +46,6 @@ angular.module('cosmic.controllers').controller('SearchCtrl', function($scope,$q
             cosmicDB.search(search).then(function(titles){
                 $scope.titles = titles;
             });
-
-        } else if (search.length === 0 ){
-            $scope.titles = [];
         }
     };
 

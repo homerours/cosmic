@@ -2,13 +2,13 @@
     <div class="bar bar-header">
         <button class="button button-icon ion-ios-arrow-left" ng-if="hasParent" ng-click="getContents(backURL)"></button>
         <h1 class="title">Select a directory</h1>
-        <button class="button button-icon ion-ios-close-outline"ng-click="closeModal()"></button>
+        <button class="button button-icon assertive ion-ios-close-outline" ng-click="closeModal()"></button>
     </div>
     <ion-content class="has-header" has-bouncing="true">
 
         <div class="list">
             <div ng-repeat="file in files">
-                <a class="item item-icon-left" href="#" ng-click="getContents(file.nativeURL)" on-hold="addDirectory(file)">
+                <a class="item dark item-icon-left" href="#" ng-click="getContents(file.nativeURL)" on-hold="addDirectory(file)">
                     <i ng-show="file.isDirectory" class="icon ion-folder" ></i>
                     <i ng-show="file.isFile" class="icon ion-document"></i>
                     {{file.name}}

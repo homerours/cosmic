@@ -7718,6 +7718,12 @@ a.button {
 * {
   box-shadow: none !important; }
 
+.pink {
+  color: #E12F56; }
+
+.dark {
+  color: #444; }
+
 ion-popover-view.fit {
   height: auto !important; }
 
