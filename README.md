@@ -2,8 +2,8 @@
 
 This is a music player app for smartphones. It is built using Cordova and Ionic Framework.
 
-<img src=”https://github.com/homerours/cosmic/blob/master/screenshots/playlist-home.jpg” style=”display : inline-block; width : 40%” />
-<img src=”https://github.com/homerours/cosmic/blob/master/screenshots/player.jpg” style=”display : inline-block; width : 40%” />
+<img src='https://github.com/homerours/cosmic/blob/master/screenshots/playlist-home.jpg' width='200px' height='350px'>
+<img src='https://github.com/homerours/cosmic/blob/master/screenshots/player.jpg' width='200px' height='350px'>
 <!--![player](https://github.com/homerours/cosmic/blob/master/screenshots/player.jpg =200x)-->
 
 # Features
