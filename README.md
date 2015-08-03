@@ -2,21 +2,25 @@
 
 ## Overview
 
-This is a music player app for smartphones. It is built using Cordova and Ionic Framework.
+This is a music player app for smartphones. It is built using [Apache Cordova](https://cordova.apache.org/) and [Ionic Framework](http://ionicframework.com/). The main goal of this project is to build an user-friendly, nice-looking and efficient music app.
 
 <img src='https://github.com/homerours/cosmic/blob/master/screenshots/playlist-home.jpg' width='200px' height='350px'>
 <img src='https://github.com/homerours/cosmic/blob/master/screenshots/player.jpg' width='200px' height='350px'>
 <img src='https://github.com/homerours/cosmic/blob/master/screenshots/playlist.jpg' width='200px' height='350px'>
 
+You will find some more screenshots [here](https://github.com/homerours/cosmic/tree/master/screenshots).
 
 ## Features
 
-- Scan local directories, load music files into SQLite local database.
+- Scan recursively local directories, load music files into SQLite local database.
 - ID3 Tags reading (including album cover), using [JavaScript-ID3-Reader](https://github.com/aadsm/JavaScript-ID3-Reader).
 - Find missing album covers online, using iTunes API.
-- Navigating by artists, playlists or global search.
-- Uses artwork miniature files, using [cordova-imageResizer plugin](https://github.com/wymsee/cordova-imageResizer).
+- Navigation by artists, playlists or global search.
+- Uses artwork miniature files (to speed up the views), using [cordova-imageResizer plugin](https://github.com/wymsee/cordova-imageResizer).
 
+## Development
+
+This app has only been tested on Android 4.4 but all component are compatible with iOS. It is currently at an early development stage, major changes may happen. Contributions and/or ideas are welcome.
 
 ## References
 
