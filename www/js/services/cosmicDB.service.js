@@ -425,14 +425,14 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 " artwork ON album.artwork = artwork.id";
             queries.push({name : "Last Added", query : query});
 
-            // Last Played
+            // Random
             query = "SELECT song.name AS name, song.id AS id, song.path AS path, artwork.file_name AS artwork, album.name AS albumName,"+
                 " album.id AS albumId , artist.name AS artist FROM"+
-                " (SELECT * FROM title ORDER BY last_play DESC LIMIT ?) song INNER JOIN"+
+                " (SELECT * FROM title ORDER BY RANDOM() DESC LIMIT ?) song INNER JOIN"+
                 " album ON song.album = album.id INNER JOIN"+
                 " artist ON album.artist = artist.id INNER JOIN"+
                 " artwork ON album.artwork = artwork.id";
-            queries.push({name : "Last Played", query : query});
+            queries.push({name : "Random", query : query});
 
             // Top played
             query = "SELECT song.name AS name, song.id AS id, song.path AS path, artwork.file_name AS artwork, album.name AS albumName,"+
