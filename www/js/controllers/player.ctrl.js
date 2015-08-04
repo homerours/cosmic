@@ -9,6 +9,7 @@ angular.module('cosmic.controllers').controller('PlayerCtrl', function($scope,co
         $ionicViewSwitcher.nextDirection('back');
         $ionicHistory.goBack(-1);
     }, playerContainer);
+    console.log($scope.player.loop);
 });
 
 

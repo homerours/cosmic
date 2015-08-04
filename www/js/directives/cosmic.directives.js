@@ -62,22 +62,17 @@ angular.module('cosmic.directives').directive('playSquare',function($state,cosmi
         controller : function($scope,cosmicPlayer,$ionicGesture,cosmicConfig){
 
             $scope.artworksPath = cosmicConfig.appRootStorage + 'artworks/';
-            var blurElement    = document.getElementById("blur");
             var artworkElement = angular.element(document.getElementById("artwork"));
             var windowWidth    = artworkElement[0].clientWidth;
             $scope.seeking = false;
-
-            function setProgress(width){
-                blurElement.style.width=windowWidth-width +'px';
-            }
 
             // Update position
             var onUpdate = function(position){
                 $scope.position=position;
                 if ($scope.duration>0){
-                    setProgress(windowWidth * ($scope.position / $scope.duration));
+                    $scope.progress = ($scope.position / $scope.duration);
                 } else {
-                    setProgress(0);
+                    $scope.progress=0;
                 }
             };
 
@@ -85,7 +80,7 @@ angular.module('cosmic.directives').directive('playSquare',function($state,cosmi
             var onNewTitle = function(){
                 $scope.player=cosmicPlayer;
                 $scope.position=0;
-                setProgress(0);
+                $scope.progress =0;
                 cosmicPlayer.getDuration().then(function(duration){
                     $scope.duration=duration;
                 });
@@ -103,11 +98,10 @@ angular.module('cosmic.directives').directive('playSquare',function($state,cosmi
                         cosmicPlayer.media.pause();
                     }
                 }
-                $scope.progress = event.gesture.center.pageX / windowWidth;
                 $scope.$apply(function(){
+                    $scope.progress = event.gesture.center.pageX / windowWidth;
                     $scope.position = $scope.progress * $scope.duration;
                 });
-                setProgress(event.gesture.center.pageX);
             }, artworkElement);
 
             $ionicGesture.on('dragend', function () {

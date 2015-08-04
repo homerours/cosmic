@@ -21,16 +21,20 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 
     var player = {
         playing        : false,
-        shuffle        : $localstorage.get('shuffle',false),
-        loop           : $localstorage.get('loop',true),
+        shuffle        : false,
+        loop           : true,
         onUpdate       : function(position){}, // callback on position update while playing
         onTitleChange  : function(){}, // callback on title change
         isWatchingTime : null,
         duration       : 0,
         media          : null,
-        playlist       : [{artist                                                           : '',name : 'No Media', artwork : 'default_artwork.jpg'}],
+        playlist       : [{artist : '',name : 'No Media', artwork : 'default_artwork.jpg'}],
         playlistIndex  : 0,
 
+        loadSettings : function(){
+            this.shuffle        = ($localstorage.get('shuffle','false') === 'true');
+            this.loop           = ($localstorage.get('loop','true') === 'true');
+        },
         setIndex : function(title){
             this.playlistIndex=this.playlist.indexOf(title);
         },
@@ -194,6 +198,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             return defered.promise;
         }
     };
+    player.loadSettings();
     return player;
 });
 
