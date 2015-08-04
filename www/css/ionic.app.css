@@ -7956,8 +7956,25 @@ play-bar {
     font-size: 35px; }
   #player .controls {
     position: absolute;
-    bottom: 130px;
+    top: 0;
+    bottom: 0;
+    padding-top: 100%;
+    padding-bottom: 100px;
     width: 100%; }
+    #player .controls .vertical-centering-container {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      display: table;
+      table-layout: fixed; }
+      #player .controls .vertical-centering-container .vertical-centering-content {
+        position: relative;
+        vertical-align: middle;
+        display: table-cell;
+        width: 100%; }
+        #player .controls .vertical-centering-container .vertical-centering-content .control-bar {
+          position: relative;
+          width: 100%; }
     #player .controls .shuffle {
       position: absolute;
       top: 0px;
@@ -7971,7 +7988,7 @@ play-bar {
     #player .controls .control-box {
       position: relative;
       margin: auto;
-      height: 70px;
+      height: 40px;
       width: 200px; }
       #player .controls .control-box .play {
         position: absolute;

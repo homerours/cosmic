@@ -393,9 +393,31 @@ play-bar{
         font-size : $player-icon-size;
     }
     .controls{
-        position : absolute;
-        bottom   : 130px;
-        width    : 100%;
+        position       : absolute;
+        top            : 0;
+        bottom         : 0;
+        padding-top    : 100%;
+        padding-bottom : $playlist-bar-card-width;
+        width          : 100%;
+        .vertical-centering-container{
+            position     : relative;
+            height       : 100%;
+            width        : 100%;
+            display      : table;
+            table-layout : fixed;
+            .vertical-centering-content{
+                position       : relative;
+                vertical-align : middle;
+                display        : table-cell;
+                width          : 100%;
+                .control-bar{
+                    position : relative;
+                    width    : 100%;
+                }
+
+            }
+
+        }
         .shuffle{
             position  : absolute;
             top       : 0px;
@@ -411,7 +433,7 @@ play-bar{
         .control-box{
             position : relative;
             margin   : auto;
-            height   : 70px;
+            height   : 40px;
             width    : 200px;
             .play{
                 position  : absolute;
