@@ -2,6 +2,7 @@
     <div collection-repeat="title in player.playlist" ng-click="player.launchPlayer(title)"  class="card" >
         <div class="image" ng-style="{'background':'url('+miniaturesPath + title.artwork+') left','background-size':'100%'}">
             <div class="song-title"> {{title.name}}</div>
+            <div class="blur" ng-if="player.playlistIndex != $index"></div>
         </div>
     </div>
 </ion-scroll>
