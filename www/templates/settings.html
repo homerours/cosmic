@@ -5,6 +5,9 @@
     <ion-content  scroll="false" class="has-header">
 
         <div class="list">
+
+            <ion-toggle ng-model="statusBarConfig.show" ng-change="toggleStatusBar()" toggle-class="toggle-balanced">Show Statusbar</ion-toggle>
+
             <a class="item dark item-icon-left item-icon-right" ng-href="#/tab/settings/manage-directories">
                 <i class="icon ion-ios-folder"></i>
                 Manage Music Directories
@@ -21,6 +24,7 @@
                 <i class="icon ion-ios-trash assertive"></i>
                 Clear All Database
             </div>
+
 
         </div>
     </ion-content>

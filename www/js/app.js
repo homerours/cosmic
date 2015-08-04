@@ -4,7 +4,7 @@ angular.module('cosmic.services', []);
 
 angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.services','cosmic.directives'])
 
-.run(function($ionicPlatform,$cordovaStatusbar) {
+.run(function($ionicPlatform,$cordovaStatusbar,$localstorage) {
     $ionicPlatform.ready(function() {
         if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -12,7 +12,9 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
         if (window.StatusBar) {
             StatusBar.styleLightContent();
         }
-        $cordovaStatusbar.hide();
+        if ($localstorage.get('showStatusBar','true') === 'false'){
+            $cordovaStatusbar.hide();
+        }
     });
 })
 
