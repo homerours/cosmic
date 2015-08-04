@@ -535,7 +535,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             var words = term.split(' ');
             var self=this;
             var d=$q.defer();
-            var query= "SELECT title.name AS name, title.id AS id, title.track, title.path AS path, artwork.file_name AS artwork, album.name AS album,"+
+            var query= "SELECT title.name AS name, title.id AS id, title.track, title.path AS path, title.nb_played, artwork.file_name AS artwork, album.name AS album,"+
                 " album.id AS albumId , artist.name AS artist, title.name || ' ' || artist.name || ' ' || album.name AS search_field FROM title"+
                 " INNER JOIN album ON album.id = title.album"+
                 " INNER JOIN artist ON artist.id = album.artist"+
@@ -548,7 +548,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 query += ' search_field LIKE ?';
                 words[i]='%'+words[i].replace(/\s/g, '')+'%';
             }
-            query += ' LIMIT 20';
+            query += ' ORDER BY title.nb_played DESC LIMIT 20';
             console.log(query);
             $cordovaSQLite.execute(self.db,query, words).then(function(res){
                 var titles=[];
