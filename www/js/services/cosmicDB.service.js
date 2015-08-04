@@ -6,6 +6,24 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             console.log("INIT DATABASE");
             this.db = $cordovaSQLite.openDB("cosmic");
             this.playlistQueries = this.specialPlaylistQueries();
+            this.createTables();
+        },
+
+        createTables : function(){
+            var self=this;
+            var promises = [];
+            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artist (id integer primary key autoincrement, name text)"));
+            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS album (id integer primary key autoincrement, name text, artist integer, artwork integer default 1)"));
+            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS title (id integer primary key autoincrement, name text, album integer, track integer, year integer,path text, add_time datetime DEFAULT CURRENT_TIMESTAMP, last_play datetime, nb_played integer DEFAULT 0)"));
+
+            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artwork (id integer primary key autoincrement, file_name text unique)").then(function(){
+                return $cordovaSQLite.execute(self.db, "INSERT OR REPLACE INTO artwork (file_name) VALUES (?)",['default_artwork.jpg']);
+            }));
+            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS playlist (id integer primary key autoincrement, name text)"));
+            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS playlist_item (playlist integer, title integer, position integer)"));
+            return $q.all(promises);
+
+
         },
 
         flushDatabase: function(){
@@ -18,15 +36,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             promises.push($cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS artwork"));
             promises.push($cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS playlist"));
             promises.push($cordovaSQLite.execute(this.db, "DROP TABLE IF EXISTS playlist_item"));
-            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artist (id integer primary key autoincrement, name text)"));
-            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS album (id integer primary key autoincrement, name text, artist integer, artwork integer default 1)"));
-            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS title (id integer primary key autoincrement, name text, album integer, track integer, year integer,path text, add_time datetime DEFAULT CURRENT_TIMESTAMP, last_play datetime, nb_played integer DEFAULT 0)"));
-
-            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artwork (id integer primary key autoincrement, file_name text)").then(function(){
-                return $cordovaSQLite.execute(self.db, "INSERT INTO artwork (file_name) VALUES (?)",['default_artwork.jpg']);
-            }));
-            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS playlist (id integer primary key autoincrement, name text)"));
-            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS playlist_item (playlist integer, title integer, position integer)"));
+            promises.push(self.createTables());
             return $q.all(promises);
 
         },

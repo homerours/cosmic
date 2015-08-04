@@ -1,5 +1,5 @@
 // Scan recursively a provided local directory and look for music (mp3 and m4a) music files
-angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Tags,cosmicConfig,$cordovaToast) {
+angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Tags,cosmicConfig,$cordovaToast,$cordovaFile) {
 
     var deviceFSService = {
 
@@ -7,6 +7,7 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
         initDeviceFS : function(){
             var q = $q.defer();
             var path = cosmicConfig.appRootStorage;
+            var dataPath = cosmicConfig.appDataFolder;
             var dirName = 'artworks';
             var dirName2 = 'tmp';
             var dirName3 = 'miniatures';
@@ -19,6 +20,16 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
                         console.log('Create folder : ' + dirName2);
                         fileSystem.getDirectory(dirName3, {create : true, exclusive : false}, function (result) {
                             console.log('Create folder : ' + dirName3);
+
+
+                            $cordovaFile.copyFile(dataPath+'artworks/','default_artwork.jpg',path + 'artworks/','default_artwork.jpg').then(function(){
+                                console.log('Copy default artwork');
+                            });
+                            $cordovaFile.copyFile(dataPath+'miniatures/','default_artwork.jpg',path + 'miniatures/','default_artwork.jpg').then(function(){
+                                console.log('Copy default miniatures');
+                            });
+
+
                             q.resolve();
                         }, function (error) {
                             q.reject('Directory Initialisation failed : '+error);
