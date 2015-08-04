@@ -338,6 +338,7 @@ play-bar{
 // Play-Square
 .play-square{
     position:relative;
+    z-index : 2;
 
     .artwork{
         padding-top: 100%;
@@ -393,6 +394,7 @@ play-bar{
         font-size : $player-icon-size;
     }
     .controls{
+        z-index : 1;
         position       : absolute;
         top            : 0;
         bottom         : 0;

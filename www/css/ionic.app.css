@@ -7913,7 +7913,8 @@ play-bar {
       white-space: nowrap; }
 
 .play-square {
-  position: relative; }
+  position: relative;
+  z-index: 2; }
   .play-square .artwork {
     padding-top: 100%; }
   .play-square .title {
@@ -7955,6 +7956,7 @@ play-bar {
     color: #444;
     font-size: 35px; }
   #player .controls {
+    z-index: 1;
     position: absolute;
     top: 0;
     bottom: 0;
