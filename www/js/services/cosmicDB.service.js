@@ -85,7 +85,6 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
 
             return $cordovaSQLite.execute(this.db,query, [artistId]).then(function(res) {
                 console.log('Got '+res.rows.length+' titles');
-                console.dir(res.rows.item(0));
                 var albums=[]; // For the scope
                 var viewPlaylist=[]; // For the player service
                 var i = 0;
@@ -201,14 +200,12 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                         return $cordovaSQLite.execute(dbService.db,"INSERT INTO title (name,album,track,year,path) VALUES (?,?,?,?,?)", [title.title,albumId,title.track,title.year,title.path]);
                     })
                     .then(function(res) {
-                        console.log(res);
                         console.log('Inserted title '+ title.title);
                         if (title.artwork){
                             $cordovaFile.removeFile(cosmicConfig.appRootStorage+ 'tmp/', title.artwork);
                         }
                         defered.resolve(res.insertId);
                     }, function (err){
-                        console.dir(err);
                         defered.reject(err);
                     });
 
@@ -383,8 +380,8 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 if (i>= self.playlistQueries.length){
                     d.resolve(specialPlaylists);
                 } else {
-                   self.getSpecialPlaylist(i,nbTitles).then(function(res){
-                       specialPlaylists.push(res);
+                    self.getSpecialPlaylist(i,nbTitles).then(function(res){
+                        specialPlaylists.push(res);
                         i++;
                         syncLoop(i);
                     });
@@ -481,7 +478,6 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                     currentPlaylist.artworks=artworks;
                     playlists.push(currentPlaylist);
                 }
-                console.log(playlists);
                 d.resolve(playlists);
             },function(err){
                 console.log(err);
@@ -530,6 +526,21 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             });
             return d.promise;
         },
+        // Delete playlist
+        deletePlaylist : function(playlistId){
+            var self=this;
+            var d=$q.defer();
+            $cordovaSQLite.execute(self.db,"DELETE from playlist_item WHERE playlist = ?", [playlistId]).then(function(res){
+                $cordovaSQLite.execute(self.db,"DELETE FROM playlist WHERE id = ?", [playlistId]).then(function(res){
+                    d.resolve();
+                },function(err){
+                    console.error(err);
+                });
+            },function(err){
+                console.error(err);
+            });
+            return d.promise;
+        },
         // search in the whole music database
         search : function(term){
             var words = term.split(' ');
@@ -549,13 +560,11 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 words[i]='%'+words[i].replace(/\s/g, '')+'%';
             }
             query += ' ORDER BY title.nb_played DESC LIMIT 20';
-            console.log(query);
             $cordovaSQLite.execute(self.db,query, words).then(function(res){
                 var titles=[];
                 for (var i=0; i< res.rows.length; i++){
                     titles.push(res.rows.item(i));
                 }
-                console.log(titles);
                 d.resolve(titles);
 
             },function(err){

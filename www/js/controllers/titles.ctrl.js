@@ -27,10 +27,6 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
 
 
     // Popover
-    document.body.classList.remove('platform-ios');
-    document.body.classList.remove('platform-android');
-    document.body.classList.remove('platform-ionic');
-    document.body.classList.add('platform-ionic');
     var selectedTitle;
     var event;
     $ionicPopover.fromTemplateUrl('templates/title-popover.html', {

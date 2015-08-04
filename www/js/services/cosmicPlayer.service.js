@@ -95,6 +95,10 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             self.setIndex(title);
             self.initMedia();
         },
+        launchPlayerByIndex : function(index){
+            this.playlistIndex = index;
+            this.initMedia();
+        },
         play: function() {
             player.playing = true;
             this.startWatchTime();

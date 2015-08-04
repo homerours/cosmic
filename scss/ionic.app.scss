@@ -296,6 +296,7 @@ play-bar{
     bottom      : 0px;
     height      : ( $playlist-bar-card-width ) !important;
     width       : 100%;
+    z-index     : 2;
     /*@extend .physical-pixel-border-top;*/
     border-top  : solid 1px $light-grey;
     overflow    : hidden;
