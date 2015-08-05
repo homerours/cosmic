@@ -16,8 +16,19 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS album (id integer primary key autoincrement, name text, artist integer, artwork integer default 1)"));
             promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS title (id integer primary key autoincrement, name text, album integer, track integer, year integer,path text, add_time datetime DEFAULT CURRENT_TIMESTAMP, last_play datetime, nb_played integer DEFAULT 0)"));
 
-            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artwork (id integer primary key autoincrement, file_name text unique)").then(function(){
-                return $cordovaSQLite.execute(self.db, "INSERT OR REPLACE INTO artwork (file_name) VALUES (?)",['default_artwork.jpg']);
+            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artwork (id integer primary key autoincrement, file_name text unique)").then(function(res){
+                console.log(res);
+                return $cordovaSQLite.execute(self.db, "INSERT OR REPLACE INTO artwork (id,file_name) VALUES (1,?)",['default_artwork.jpg']).then(function(){
+                    $cordovaSQLite.execute(self.db, "SELECT * from artwork",[]).then(function(res){
+                        console.log('got all artworks');
+                        var artworks=[];
+                        for (var i=0; i < res.rows.length; ++i){
+                            artworks.push(res.rows.item(i));
+                        }
+                        console.log(artworks);
+                    });
+
+                });
             }));
             promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS playlist (id integer primary key autoincrement, name text)"));
             promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS playlist_item (playlist integer, title integer, position integer)"));

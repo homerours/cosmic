@@ -14,7 +14,7 @@ You will find some more screenshots [here](https://github.com/homerours/cosmic/t
 
 - Scan recursively local directories, load music files into SQLite local database.
 - ID3 Tags reading (including album cover), using [JavaScript-ID3-Reader](https://github.com/aadsm/JavaScript-ID3-Reader).
-- Find missing album covers online, using iTunes API.
+- Find missing album covers online.
 - Navigation by artists, playlists or global search.
 - Uses artwork miniature files (to speed up the views), obtained using [cordova-imageResizer plugin](https://github.com/wymsee/cordova-imageResizer).
 

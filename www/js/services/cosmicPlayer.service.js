@@ -1,5 +1,5 @@
 // Service for playing audio files
-angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q,$cordovaMedia,cosmicDB, $localstorage) {
+angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q,$cordovaMedia,cosmicDB, $localstorage,deviceFS) {
     function shuffle(array) {
         var currentIndex = array.length, temporaryValue, randomIndex ;
 
