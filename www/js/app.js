@@ -121,7 +121,9 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
     //if(!ionic.Platform.isIOS())$ionicConfigProvider.scrolling.jsScrolling(false); // native scrolling
     $ionicConfigProvider.tabs.position('bottom'); // other values: top
     $ionicConfigProvider.tabs.style('standard');
+    $ionicConfigProvider.spinner.icon('ios-small');
     $ionicConfigProvider.views.transition('ios');
+    //$ionicConfigProvider.views.maxCache(0);
     $ionicConfigProvider.views.swipeBackEnabled(true);
     $ionicConfigProvider.views.swipeBackHitWidth(80);
     ionic.Platform.isFullScreen = true;
