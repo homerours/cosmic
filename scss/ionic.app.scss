@@ -18,6 +18,8 @@ $dark:                            #444 !default;
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
+$z-index-tabs : 10; // Avoid overlapping
+
 $pink                 : #E12F56;
 $light-grey           : #b2b2b2;
 $white: white;
