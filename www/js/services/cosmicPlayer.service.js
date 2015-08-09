@@ -46,9 +46,14 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             this.loop = ! this.loop;
             $localstorage.set('loop',this.loop);
         },
+        toggleCurrentLike : function(){
+            this.playlist[this.playlistIndex].like = 1-this.playlist[this.playlistIndex].like;
+            cosmicDB.toggleLikeTitle(this.playlist[this.playlistIndex].id);
+        },
 
         // Load a playlist in the player
         loadPlaylist: function(playlist) {
+            console.log(playlist);
             var playlistCopy = playlist.slice();
             if (this.shuffle){
                 playlistCopy = shuffle(playlistCopy);

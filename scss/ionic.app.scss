@@ -233,7 +233,7 @@ play-bar{
     .song{
         width          : 100%;
         padding-left   : ($play-bar-image-diameter + 2 * $play-bar-horizontal-padding);
-        padding-right  : ($play-bar-image-diameter + 2 * $play-bar-horizontal-padding);
+        padding-right  : 110px;
         vertical-align : middle;
         display        : table-cell;
         line-height    : 16px;
@@ -246,6 +246,12 @@ play-bar{
         .artist{
             color: $dark;
         }
+    }
+    .like{
+        position  : absolute;
+        right     : (70px);
+        top       : 12px;
+        font-size : $play-bar-next-font-size;
     }
     .button{
         position  : absolute;
@@ -274,12 +280,12 @@ play-bar{
     }
     .title{
         position      : absolute;
-        bottom        : 0;
+        top           : 30px;
         font-size     : $font-size-xlarge;
-        left          : 0;
+        text-align    : center;
         color         : $pink;
         background    : url($player-title-blur-path) top left repeat;
-        max-width     : 100%;
+        width         : 100%;
         line-height   : $font-size-xlarge;
         white-space   : nowrap;
         overflow      : hidden;
@@ -433,6 +439,12 @@ play-bar{
             top       : 0px;
             left      : 10px;
             font-size : 25px;
+        }
+        .like{
+            position  : absolute;
+            right     : 14px;
+            top       : 12px;
+            font-size : 30px;
         }
         .control-box{
             position : relative;

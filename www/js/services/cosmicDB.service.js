@@ -14,7 +14,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             var promises = [];
             promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artist (id integer primary key autoincrement, name text)"));
             promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS album (id integer primary key autoincrement, name text, artist integer, artwork integer default 1)"));
-            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS title (id integer primary key autoincrement, name text, album integer, track integer, year integer,path text, add_time datetime DEFAULT CURRENT_TIMESTAMP, last_play datetime, nb_played integer DEFAULT 0)"));
+            promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS title (id integer primary key autoincrement, name text, album integer, track integer, year integer,path text, add_time datetime DEFAULT CURRENT_TIMESTAMP, last_play datetime, nb_played integer DEFAULT 0, like integer DEFAULT 0)"));
 
             promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artwork (id integer primary key autoincrement, file_name text unique)").then(function(res){
                 console.log(res);
@@ -97,7 +97,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
 
         getTitles:  function(artistId){
             // Get all titles from artist
-            var query= "SELECT title.name AS name, title.id AS id, title.nb_played, title.last_play, title.add_time, title.track AS track, title.path AS path, artwork.file_name AS artwork, album.name AS album,"+
+            var query= "SELECT title.name AS name, title.id AS id, title.like AS like, title.track AS track, title.path AS path, artwork.file_name AS artwork, album.name AS album,"+
                 " album.id AS albumId , arti.artist AS artist FROM"+
                 " (SELECT  artist.name AS artist, artist.id FROM artist WHERE id=?) arti INNER JOIN"+
                 " album ON album.artist = arti.id INNER JOIN"+
@@ -435,7 +435,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             var query;
 
             // Last Added
-            query = "SELECT song.name AS name, song.id AS id, song.path AS path, artwork.file_name AS artwork, album.name AS albumName,"+
+            query = "SELECT song.name AS name, song.id AS id, song.path AS path, song.like AS like, artwork.file_name AS artwork, album.name AS albumName,"+
                 " album.id AS albumId , artist.name AS artist FROM"+
                 " (SELECT * FROM title ORDER BY add_time DESC LIMIT ?) song INNER JOIN"+
                 " album ON song.album = album.id INNER JOIN"+
@@ -443,17 +443,17 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 " artwork ON album.artwork = artwork.id";
             queries.push({name : "Last Added", query : query});
 
-            // Random
-            query = "SELECT song.name AS name, song.id AS id, song.path AS path, artwork.file_name AS artwork, album.name AS albumName,"+
+            // Likes
+            query = "SELECT song.name AS name, song.id AS id, song.path AS path, song.like AS like, artwork.file_name AS artwork, album.name AS albumName,"+
                 " album.id AS albumId , artist.name AS artist FROM"+
-                " (SELECT * FROM title ORDER BY RANDOM() DESC LIMIT ?) song INNER JOIN"+
+                " (SELECT * FROM title WHERE like = 1 ORDER BY last_play DESC LIMIT ?) song INNER JOIN"+
                 " album ON song.album = album.id INNER JOIN"+
                 " artist ON album.artist = artist.id INNER JOIN"+
                 " artwork ON album.artwork = artwork.id";
-            queries.push({name : "Random", query : query});
+            queries.push({name : "Favorites", query : query});
 
             // Top played
-            query = "SELECT song.name AS name, song.id AS id, song.path AS path, artwork.file_name AS artwork, album.name AS albumName,"+
+            query = "SELECT song.name AS name, song.id AS id, song.path AS path, song.like AS like, artwork.file_name AS artwork, album.name AS albumName,"+
                 " album.id AS albumId , artist.name AS artist FROM"+
                 " (SELECT * FROM title ORDER BY nb_played DESC LIMIT ?) song INNER JOIN"+
                 " album ON song.album = album.id INNER JOIN"+
@@ -462,7 +462,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             queries.push({name : "Top Played", query : query});
 
 
-            query = "SELECT song.name AS name, song.id AS id, song.path AS path, artwork.file_name AS artwork, album.name AS albumName,"+
+            query = "SELECT song.name AS name, song.id AS id, song.path AS path, song.like AS like, artwork.file_name AS artwork, album.name AS albumName,"+
                 " album.id AS albumId , artist.name AS artist FROM"+
                 " (SELECT * FROM title ORDER BY last_play DESC LIMIT ?) song INNER JOIN"+
                 " album ON song.album = album.id INNER JOIN"+
@@ -512,7 +512,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             var self=this;
             var d=$q.defer();
 
-            var query= "SELECT title.name AS name, title.id AS id, title.path AS path, artwork.file_name AS artwork, album.name AS albumName,"+
+            var query= "SELECT title.name AS name, title.id AS id, title.path AS path, title.like AS like, artwork.file_name AS artwork, album.name AS albumName,"+
                 " album.id AS albumId , artist.name AS artist, items.position AS position FROM"+
                 " (SELECT * from playlist_item WHERE playlist = ?) items INNER JOIN"+
                 " title ON items.title = title.id INNER JOIN"+
@@ -596,6 +596,9 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
         },
         updateTitlePlayStatistics : function(titleId){
             $cordovaSQLite.execute(this.db,"UPDATE title SET nb_played = nb_played + 1, last_play = CURRENT_TIMESTAMP WHERE id=?", [titleId]);
+        },
+        toggleLikeTitle : function(titleId){
+            return $cordovaSQLite.execute(this.db,"UPDATE title SET like = 1 - like WHERE id=?", [titleId]);
         }
     };
     database.initDatabase();

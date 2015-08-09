@@ -19,7 +19,7 @@ angular.module('cosmic.directives').directive('playlistBar',function($ionicScrol
 
 });
 
-angular.module('cosmic.directives').directive('playBar',function($state,$ionicViewSwitcher,cosmicConfig,cosmicPlayer){
+angular.module('cosmic.directives').directive('playBar',function($state,$ionicViewSwitcher,cosmicConfig,cosmicPlayer,cosmicDB){
     return {
         restrict: 'E',
         templateUrl: 'templates/playBar.html',

@@ -9,4 +9,5 @@
     <span class="artist">{{player.playlist[player.playlistIndex].artist}}</span>
 </div>
 
+<i class="icon like" ng-click="player.toggleCurrentLike()" ng-class="{'ion-ios-heart': player.playlist[player.playlistIndex].like, 'assertive' : player.playlist[player.playlistIndex].like, 'ion-ios-heart-outline': !player.playlist[player.playlistIndex].like, 'dark' : !player.playlist[player.playlistIndex].like}"></i>
 <button class="button button-icon ion-ios-fastforward" ng-click="player.next()"></button>

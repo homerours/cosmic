@@ -7830,7 +7830,7 @@ play-bar {
   play-bar .song {
     width: 100%;
     padding-left: 70px;
-    padding-right: 70px;
+    padding-right: 110px;
     vertical-align: middle;
     display: table-cell;
     line-height: 16px;
@@ -7841,6 +7841,11 @@ play-bar {
       font-size: 16px; }
     play-bar .song .artist {
       color: #444; }
+  play-bar .like {
+    position: absolute;
+    right: 70px;
+    top: 12px;
+    font-size: 30px; }
   play-bar .button {
     position: absolute;
     right: 15px;
@@ -7863,12 +7868,12 @@ play-bar {
     margin: 0; }
   .artwork-mosaic .title {
     position: absolute;
-    bottom: 0;
+    top: 30px;
     font-size: 20px;
-    left: 0;
+    text-align: center;
     color: #E12F56;
     background: url("../img/blur.png") top left repeat;
-    max-width: 100%;
+    width: 100%;
     line-height: 20px;
     white-space: nowrap;
     overflow: hidden;
@@ -7988,6 +7993,11 @@ play-bar {
       top: 0px;
       left: 10px;
       font-size: 25px; }
+    #player .controls .like {
+      position: absolute;
+      right: 14px;
+      top: 12px;
+      font-size: 30px; }
     #player .controls .control-box {
       position: relative;
       margin: auto;

@@ -10,16 +10,20 @@
                     <div class="control-bar">
                         <div class="control-box">
                             <button  class="button button-icon ion-ios-rewind backward" ng-click="player.prev()"></button>
-                            <button  class="button button-icon ion-ios-play play" ng-click="player.play()" ng-if="!player.playing"></button>
-                            <button  class="button button-icon ion-ios-pause pause" ng-click="player.pause()" ng-if="player.playing"></button>
+                            <button  class="button button-icon ion-ios-play play" ng-click="player.play()" ng-show="!player.playing"></button>
+                            <button  class="button button-icon ion-ios-pause pause" ng-click="player.pause()" ng-show="player.playing"></button>
                             <button  class="button button-icon ion-ios-fastforward forward" ng-click="player.next()"></button>
                         </div>
+
 
                         <button class="button button-icon loop" ng-class="{'ion-ios-loop': !player.loop, 'ion-ios-loop-strong': player.loop, 'pink' : player.loop }" ng-click="player.toogleLoop()"></button>
                         <button class="button button-icon shuffle" ng-class="{'ion-ios-shuffle': !player.shuffle, 'ion-ios-shuffle-strong': player.shuffle, 'pink' : player.shuffle }" ng-click="player.toogleShuffle()"></button>
 
                     </div>
                 </div>
+
+    <i class="icon like" ng-click="player.toggleCurrentLike()" ng-class="{'ion-ios-heart': player.playlist[player.playlistIndex].like, 'assertive' : player.playlist[player.playlistIndex].like, 'ion-ios-heart-outline': !player.playlist[player.playlistIndex].like, 'dark' : !player.playlist[player.playlistIndex].like}"></i>
+
             </div>
         </div>
 
