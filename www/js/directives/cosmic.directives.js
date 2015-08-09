@@ -29,8 +29,10 @@ angular.module('cosmic.directives').directive('playBar',function($state,$ionicVi
             $scope.player = cosmicPlayer;
             $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
             $scope.openPlayer=function(){
-                $ionicViewSwitcher.nextDirection('forward');
-                $state.go('player');
+                if (cosmicPlayer.media){
+                    $ionicViewSwitcher.nextDirection('forward');
+                    $state.go('player');
+                }
             };
         }
     };

@@ -47,13 +47,14 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             $localstorage.set('loop',this.loop);
         },
         toggleCurrentLike : function(){
-            this.playlist[this.playlistIndex].like = 1-this.playlist[this.playlistIndex].like;
-            cosmicDB.toggleLikeTitle(this.playlist[this.playlistIndex].id);
+            if(this.media){
+                this.playlist[this.playlistIndex].like = 1-this.playlist[this.playlistIndex].like;
+                cosmicDB.toggleLikeTitle(this.playlist[this.playlistIndex].id);
+            }
         },
 
         // Load a playlist in the player
         loadPlaylist: function(playlist) {
-            console.log(playlist);
             var playlistCopy = playlist.slice();
             if (this.shuffle){
                 playlistCopy = shuffle(playlistCopy);
@@ -71,7 +72,6 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
         initMedia: function() {
             var self=this;
             self.clearMedia();
-            console.log('init media');
             var mypath=this.playlist[self.playlistIndex].path;
             self.media=new Media(mypath);
             self.play();
@@ -105,14 +105,18 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             this.initMedia();
         },
         play: function() {
-            player.playing = true;
-            this.startWatchTime();
-            this.media.play();
+            if (this.media){
+                player.playing = true;
+                this.startWatchTime();
+                this.media.play();
+            }
         },
         pause: function() {
-            player.playing = false;
-            this.media.pause();
-            this.stopWatchTime();
+            if (this.media){
+                player.playing = false;
+                this.media.pause();
+                this.stopWatchTime();
+            }
         },
         stop: function() {
             this.media.stop();
@@ -145,11 +149,13 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             });
         },
         next: function() {
-            var self=this;
-            self.playlistIndex = (self.playlistIndex + 1) % self.playlist.length;
-            self.initMedia(self.playlistIndex);
-            if (self.playlistIndex === 0 && ! self.loop){
-                self.pause();
+            if (this.media){
+                var self=this;
+                self.playlistIndex = (self.playlistIndex + 1) % self.playlist.length;
+                self.initMedia(self.playlistIndex);
+                if (self.playlistIndex === 0 && ! self.loop){
+                    self.pause();
+                }
             }
         },
 

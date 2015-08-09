@@ -22,25 +22,6 @@ angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope
     // New playlist popup
     $scope.newPlaylist = function (){
         console.log('new playlist');
-        $scope.dataPopup={};
-        var myPopup = $ionicPopup.show({
-            template: '<form ng-submit="submitNewPlaylist()"><input type="text" ng-model="dataPopup.newPlaylistName"></form>',
-            title: 'New playlist',
-            subTitle: "Enter the playlist's name",
-            scope: $scope,
-            buttons: [
-                { text: 'Cancel',
-                    onTap: function(e){
-                        myPopup.close();
-                    }
-                },
-                {
-                    text: '<b>Save</b>',
-                    type: 'button-positive',
-                    onTap: $scope.submitNewPLaylist
-                }
-            ]
-        });
         // submit new playlist
         $scope.submitNewPlaylist = function(){
             console.log('hideKeyboard');
@@ -61,6 +42,26 @@ angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope
                 });
             }
         };
+
+        $scope.dataPopup={};
+        var myPopup = $ionicPopup.show({
+            template: '<form ng-submit="submitNewPlaylist()"><input type="text" ng-model="dataPopup.newPlaylistName"></form>',
+            title: 'New playlist',
+            subTitle: "Enter the playlist's name",
+            scope: $scope,
+            buttons: [
+                { text: 'Cancel',
+                    onTap: function(e){
+                        myPopup.close();
+                    }
+                },
+                {
+                    text: '<b>Save</b>',
+                    type: 'button-positive',
+                    onTap: $scope.submitNewPlaylist
+                }
+            ]
+        });
     };
 
     // Popover
