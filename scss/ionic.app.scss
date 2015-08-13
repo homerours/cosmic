@@ -1,20 +1,3 @@
-/*
-To customize the look and feel of Ionic, you can override the variables
-in ionic's _variables.scss file.
-
-For example, you might change some of the default colors:
-
-$light:                           #fff !default;
-$stable:                          #f8f8f8 !default;
-$positive:                        #387ef5 !default;
-$calm:                            #11c1f3 !default;
-$balanced:                        #33cd5f !default;
-$energized:                       #ffc900 !default;
-$assertive:                       #ef473a !default;
-$royal:                           #886aea !default;
-$dark:                            #444 !default;
- */
-
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
@@ -57,8 +40,9 @@ $item-song-width: 50px;
 // artwork-mosaic
 $artwork-mosaic-miniature-size : 45px;
 $artwork-mosaic-nb-rows        : 2;
-$artwork-mosaic-nb-cols        : 3;
+$artwork-mosaic-nb-cols        : 4;
 
+$special-playlist-grid-margin : 2%;
 
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
@@ -171,35 +155,84 @@ ion-popover-view.fit ion-content {
 }
 
 // Playlists
-.item-image{
-    .miniature{
-        position : absolute;
-        width  : ( $item-thumbnail-width / 2 ) !important;
-        height : ( $item-thumbnail-height / 2 ) !important;
+
+// Special playlist grid
+.special-playlists{
+    z-index     : 2;
+    position    : relative;
+    padding-top : 50%;
+    height      : 0;
+    width       : 100%;
+    .special-playlist-box{
+        position: absolute;
     }
-    .top-left{
-        top        : 0;
-        left       : 0;
+    .box-top{
+        top : 2 * $special-playlist-grid-margin;
+        bottom : (50% + $special-playlist-grid-margin);
     }
-    .top-right{
-        top  : 0;
-        left : ( $item-thumbnail-width / 2 ) !important;
+    .box-bottom{
+        bottom : 2 * $special-playlist-grid-margin;
+        top : (50% + $special-playlist-grid-margin);
     }
-    .bottom-left{
-        top  : ( $item-thumbnail-height / 2 ) !important;
-        left : 0;
+    .box-left{
+        left : $special-playlist-grid-margin;
+        right : (50% + ($special-playlist-grid-margin / 2));
     }
-    .bottom-right{
-        top  : ( $item-thumbnail-height / 2 ) !important;
-        left : ( $item-thumbnail-width / 2 ) !important;
+    .box-right{
+        right : $special-playlist-grid-margin;
+        left : (50% + ($special-playlist-grid-margin / 2));
     }
 }
-.user-playlists-scroll{
-    position : absolute;
-    top      : ( 30px + 5px + ( 2 * $artwork-mosaic-nb-rows * $artwork-mosaic-miniature-size) + $button-height );
-    bottom   : 0;
-    left     : 0;
-    right    : 0;
+
+// User playlists
+.user-playlists{
+    position    : absolute;
+    top         : 0;
+    bottom      : 0;
+    width       : 100%;
+    padding-top : 50%;
+    .container{
+        position : relative;
+        height   : 100%;
+        width    : 100%;
+        .new-playlist-button{
+            position      : absolute;
+            top           : 0;
+            margin-bottom : 0;
+            margin-top    : 0;
+            z-index       : 2;
+        }
+        .item-image{
+            .miniature{
+                position : absolute;
+                width  : ( $item-thumbnail-width / 2 ) !important;
+                height : ( $item-thumbnail-height / 2 ) !important;
+            }
+            .top-left{
+                top        : 0;
+                left       : 0;
+            }
+            .top-right{
+                top  : 0;
+                left : ( $item-thumbnail-width / 2 ) !important;
+            }
+            .bottom-left{
+                top  : ( $item-thumbnail-height / 2 ) !important;
+                left : 0;
+            }
+            .bottom-right{
+                top  : ( $item-thumbnail-height / 2 ) !important;
+                left : ( $item-thumbnail-width / 2 ) !important;
+            }
+        }
+        .user-playlists-scroll{
+            position : absolute;
+            top      : ( 5px +  $button-height );
+            bottom   : 0;
+            left     : 0;
+            right    : 0;
+        }
+    }
 }
 
 // Play Bar
@@ -267,22 +300,20 @@ play-bar{
 
 // artwork-mosaic
 .artwork-mosaic{
-    width        : ( $artwork-mosaic-nb-cols * $artwork-mosaic-miniature-size);
-    height       : ( $artwork-mosaic-nb-rows * $artwork-mosaic-miniature-size);
+    width        : 100%;
+    height       : 100%;
     line-height  : 0px;
     position     : relative;
-    margin-left  : auto;
-    margin-right : auto;
     .miniature{
         display : inline-block;
-        width   : $artwork-mosaic-miniature-size;
-        height  : $artwork-mosaic-miniature-size;
+        width   : 25%;
+        height  : 50%;
         padding : 0;
         margin  : 0;
     }
     .title{
         position      : absolute;
-        top           : 35px;
+        top           : 40%;
         font-size     : $font-size-xlarge;
         text-align    : center;
         color         : $pink;
@@ -482,24 +513,3 @@ play-bar{
 }
 
 
-// Playlists
-.playlists{
-    color: $dark;
-    .separator-line{
-        width: $separator-line-width;
-        margin-left:auto;
-        margin-right:auto;
-        height: 0;
-        border-bottom: solid 1px #ddd;
-    }
-    .playlist-header{
-        font-size: $font-size-medium;
-        font-weight: bold;
-        padding-bottom:0;
-
-    }
-    .text-clickable{
-        text-decoration : underline;
-    }
-
-}

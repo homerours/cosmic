@@ -5,7 +5,7 @@ angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope
     function refreshData(){
 
         $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
-        cosmicDB.getSpecialPlaylists(6).then(function(specialPlaylists){
+        cosmicDB.getSpecialPlaylists(8).then(function(specialPlaylists){
             $scope.specialPlaylists = specialPlaylists;
         });
         cosmicDB.getPlaylists().then(function(playlists){
