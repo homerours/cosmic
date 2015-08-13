@@ -1,5 +1,5 @@
 // Service for playing audio files
-angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q,$cordovaMedia,cosmicDB, $localstorage,deviceFS) {
+angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q,$cordovaMedia,cosmicDB, $localstorage,deviceFS,cosmicConfig) {
     function shuffle(array) {
         var currentIndex = array.length, temporaryValue, randomIndex ;
 
@@ -72,10 +72,52 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
         initMedia: function() {
             var self=this;
             self.clearMedia();
-            var mypath=this.playlist[self.playlistIndex].path;
+            var title = this.playlist[self.playlistIndex];
+            var mypath=title.path;
             self.media=new Media(mypath);
             self.play();
             self.onTitleChange();
+        },
+
+        showMusicControls : function(){
+
+            console.log('Show music controls');
+            var self=this;
+            var title = this.playlist[self.playlistIndex];
+            var notificationData = {
+                artist : title.artist,
+                song : title.name,
+                image : cosmicConfig.appRootStorage + 'miniatures/' + title.artwork,
+                isPlaying : self.playing
+            };
+            MusicControls.show(notificationData,function(success){
+                console.log('SUCCESS SHOW: '+success);
+            },function(error){
+                console.log('ERROR SHOW: '+error);
+            });
+            MusicControls.listen(function(action){
+
+                console.log("ACTION: "+action);
+
+                if (action === 'music-controls-play'){
+                    self.play();
+                }
+                if (action === 'music-controls-pause'){
+                    self.pause();
+                }
+                if (action === 'music-controls-next'){
+                    self.next();
+                }
+                if (action === 'music-controls-previous'){
+                    self.prev();
+                }
+            },function(success){
+                console.log('Success listen');
+                console.log('SUCCESS LISTEN: '+success);
+            },function(error){
+                console.log('ERROR LISTEN: '+error);
+            });
+
         },
 
         // Release media
@@ -109,6 +151,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
                 player.playing = true;
                 this.startWatchTime();
                 this.media.play();
+                this.showMusicControls();
             }
         },
         pause: function() {
@@ -116,6 +159,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
                 player.playing = false;
                 this.media.pause();
                 this.stopWatchTime();
+                this.showMusicControls();
             }
         },
         stop: function() {
