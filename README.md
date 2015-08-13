@@ -13,6 +13,7 @@ You will find some more screenshots [here](https://github.com/homerours/cosmic/t
 ## Features
 
 - Scan recursively local directories, load music files into SQLite local database.
+- Media controls in notifications, using [music-controls-plugin](https://github.com/homerours/cordova-music-controls-plugin)
 - ID3 Tags reading (including album cover), using [JavaScript-ID3-Reader](https://github.com/aadsm/JavaScript-ID3-Reader).
 - Find missing album covers online.
 - Navigation by artists, playlists or global search.
