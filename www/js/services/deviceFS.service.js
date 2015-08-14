@@ -3,49 +3,6 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
 
     var deviceFSService = {
 
-        // Verify that the storage directories exists and create needed directories
-        initDeviceFS : function(){
-            var q = $q.defer();
-            var path = cosmicConfig.appRootStorage;
-            var dataPath = cosmicConfig.appDataFolder;
-            var dirName = 'artworks';
-            var dirName2 = 'tmp';
-            var dirName3 = 'miniatures';
-            console.log('Initialisation : '+ path);
-
-            window.resolveLocalFileSystemURL(path, function (fileSystem) {
-                fileSystem.getDirectory(dirName, {create : true, exclusive : false}, function (result) {
-                    console.log('Create folder : ' + dirName);
-                    fileSystem.getDirectory(dirName2, {create : true, exclusive : false}, function (result) {
-                        console.log('Create folder : ' + dirName2);
-                        fileSystem.getDirectory(dirName3, {create : true, exclusive : false}, function (result) {
-                            console.log('Create folder : ' + dirName3);
-
-
-                            $cordovaFile.copyFile(dataPath+'artworks/','default_artwork.jpg',path + 'artworks/','default_artwork.jpg').then(function(){
-                                console.log('Copy default artwork');
-                            });
-                            $cordovaFile.copyFile(dataPath+'miniatures/','default_artwork.jpg',path + 'miniatures/','default_artwork.jpg').then(function(){
-                                console.log('Copy default miniatures');
-                            });
-
-
-                            q.resolve();
-                        }, function (error) {
-                            q.reject('Directory Initialisation failed : '+error);
-                        });
-                    }, function (error) {
-                        q.reject('Directory Initialisation failed : '+error);
-                    });
-                }, function (error) {
-                    q.reject('Directory Initialisation failed : '+error);
-                });
-            }, function (error) {
-                q.reject('Directory Initialisation failed : '+error);
-            });
-            return q.promise;
-        },
-
         // Scan entry from local filesystem
         handleItem : function(entry,results){
             var extensionsAudio=cosmicConfig.extensionsAudio;
@@ -126,7 +83,6 @@ angular.module('cosmic.services').factory("deviceFS", function($q,cosmicDB,ID3Ta
 
     };
 
-    deviceFSService.initDeviceFS();
     return deviceFSService;
 
 });

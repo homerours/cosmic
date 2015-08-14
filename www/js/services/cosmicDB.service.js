@@ -17,7 +17,6 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS title (id integer primary key autoincrement, name text, album integer, track integer, year integer,path text, add_time datetime DEFAULT CURRENT_TIMESTAMP, last_play datetime, nb_played integer DEFAULT 0, like integer DEFAULT 0, like_time datetime DEFAULT CURRENT_TIMESTAMP)"));
 
             promises.push($cordovaSQLite.execute(this.db, "CREATE TABLE IF NOT EXISTS artwork (id integer primary key autoincrement, file_name text unique)").then(function(res){
-                console.log(res);
                 return $cordovaSQLite.execute(self.db, "INSERT OR REPLACE INTO artwork (id,file_name) VALUES (1,?)",['default_artwork.jpg']).then(function(){
                     $cordovaSQLite.execute(self.db, "SELECT * from artwork",[]).then(function(res){
                         console.log('got all artworks');
@@ -25,7 +24,6 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                         for (var i=0; i < res.rows.length; ++i){
                             artworks.push(res.rows.item(i));
                         }
-                        console.log(artworks);
                     });
 
                 });

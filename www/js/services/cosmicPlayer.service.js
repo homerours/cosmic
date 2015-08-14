@@ -72,6 +72,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
         initMedia: function() {
             var self=this;
             self.clearMedia();
+            self.duration = -1;
             var title = this.playlist[self.playlistIndex];
             var mypath=title.path;
             self.media=new Media(mypath);

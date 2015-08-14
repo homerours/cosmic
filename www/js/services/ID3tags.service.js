@@ -21,8 +21,8 @@ angular.module('cosmic.services').factory("ID3Tags", function($q,cosmicConfig,im
                 var currentTitle={title:tags.title,album: tags.album, artist:tags.artist,track:tags.track,year:tags.year};
 
                 // If album cover
-                if (image && self.handleArtworks){
-                    console.log('This title has an artwork!');
+                if (image && self.handleArtworks && image.data.length > 100 && image.data.length < 1000000){
+                    console.log('This title has an artwork! Length: ' + image.data.length);
                     imageService.storeArtwork(image).then(function(imageFileName){
                         currentTitle.artwork=imageFileName;
                         defered.resolve(currentTitle);

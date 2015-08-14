@@ -123,7 +123,6 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
     $ionicConfigProvider.tabs.style('standard');
     $ionicConfigProvider.spinner.icon('ios-small');
     $ionicConfigProvider.views.transition('ios');
-    //$ionicConfigProvider.views.maxCache(0);
     $ionicConfigProvider.views.swipeBackEnabled(true);
     $ionicConfigProvider.views.swipeBackHitWidth(80);
     ionic.Platform.isFullScreen = true;
@@ -141,5 +140,4 @@ document.addEventListener("deviceready", bootstrapAngular, false);
 } else {
     console.log("URL: Running in browser");
     document.addEventListener("DOMContentLoaded", bootstrapAngular, false);
-    //bootstrapAngular();
 }

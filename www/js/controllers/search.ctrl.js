@@ -5,8 +5,8 @@ angular.module('cosmic.controllers').controller('SearchCtrl', function($scope,$q
     // Focus on search
     $timeout(function(){
         var searchElement = angular.element(document.getElementById('search-input'));
-        searchElement[0].focus();
         cordova.plugins.Keyboard.show();
+        searchElement[0].focus();
     },150);
 
     // Watch for search update

@@ -42,6 +42,7 @@ $artwork-mosaic-miniature-size : 45px;
 $artwork-mosaic-nb-rows        : 2;
 $artwork-mosaic-nb-cols        : 4;
 
+// Playlists
 $special-playlist-grid-margin : 2%;
 
 // Include all of Ionic
@@ -160,7 +161,7 @@ ion-popover-view.fit ion-content {
 .special-playlists{
     z-index     : 2;
     position    : relative;
-    padding-top : 50%;
+    padding-top : 50% + 2 * $special-playlist-grid-margin;
     height      : 0;
     width       : 100%;
     .special-playlist-box{
@@ -190,7 +191,7 @@ ion-popover-view.fit ion-content {
     top         : 0;
     bottom      : 0;
     width       : 100%;
-    padding-top : 50%;
+    padding-top : 50% + 2 * $special-playlist-grid-margin;
     .container{
         position : relative;
         height   : 100%;
@@ -324,6 +325,7 @@ play-bar{
         overflow      : hidden;
         padding-left  : 2px;
         padding-right : 2px;
+        padding-bottom: 2px;
 
     }
 }
@@ -487,13 +489,13 @@ play-bar{
             .play{
                 position  : absolute;
                 top       : 0;
-                left      : 90px;
+                left      : 89px;
                 font-size : 40px;
             }
             .pause{
                 position  : absolute;
                 top       : 0;
-                left      : 86px;
+                left      : 85px;
                 font-size : 40px;
             }
             .forward{

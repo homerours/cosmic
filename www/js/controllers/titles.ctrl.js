@@ -8,7 +8,6 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
     cosmicDB.getTitles(artistId).then(function(data){
         $scope.albums=data.albums;
         $scope.playlist=data.playlist;
-        console.log(data.playlist);
     });
     // Start playing titles
     $scope.playTitle = function (index){

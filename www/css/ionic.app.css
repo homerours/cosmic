@@ -7765,7 +7765,7 @@ ion-popover-view.fit ion-content {
 .special-playlists {
   z-index: 2;
   position: relative;
-  padding-top: 50%;
+  padding-top: 54%;
   height: 0;
   width: 100%; }
   .special-playlists .special-playlist-box {
@@ -7788,7 +7788,7 @@ ion-popover-view.fit ion-content {
   top: 0;
   bottom: 0;
   width: 100%;
-  padding-top: 50%; }
+  padding-top: 54%; }
   .user-playlists .container {
     position: relative;
     height: 100%;
@@ -7896,7 +7896,8 @@ play-bar {
     white-space: nowrap;
     overflow: hidden;
     padding-left: 2px;
-    padding-right: 2px; }
+    padding-right: 2px;
+    padding-bottom: 2px; }
 
 .playlist-bar {
   padding: 0;
@@ -8024,12 +8025,12 @@ play-bar {
       #player .controls .control-box .play {
         position: absolute;
         top: 0;
-        left: 90px;
+        left: 89px;
         font-size: 40px; }
       #player .controls .control-box .pause {
         position: absolute;
         top: 0;
-        left: 86px;
+        left: 85px;
         font-size: 40px; }
       #player .controls .control-box .forward {
         position: absolute;

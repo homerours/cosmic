@@ -1,5 +1,5 @@
 // Settings
-angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,deviceFS,cosmicDB,$cordovaToast,  $ionicPopup,$localstorage, $cordovaStatusbar) {
+angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,cosmicDB,$cordovaToast, $ionicPopup,$localstorage, $cordovaStatusbar) {
 
     $scope.isSearchingArtworks = false;
 
@@ -61,22 +61,6 @@ angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,
 
     };
 
-    // Start recursive scan of a directory
-    var startScan = function(){
-        $scope.scan=null;
-        console.log('start scan');
-        deviceFS.scanMusicFolder().then(function(){
-            $scope.scan=startScan;
-        });
-    };
-    $scope.scan=startScan;
-
-    $scope.notif= function(){
-        $cordovaToast.showShortTop('Here is a message').then(function(success) {
-        }, function (error) {
-        });
-        //$cordovaProgress.showText(false, 100000, "Loading");
-    };
 
 });
 
