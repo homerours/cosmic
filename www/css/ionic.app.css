@@ -7740,7 +7740,7 @@ ion-popover-view.fit ion-content {
   height: 60px !important; }
   .item-song > img:first-child, .item-song .item-image, .item-song .item-content > img:first-child, .item-song .item-content .item-image, .item-song-left > img:first-child, .item-song-left .item-image, .item-song-left .item-content > img:first-child, .item-song-left .item-content .item-image {
     position: absolute;
-    top: 5px;
+    top: 4px;
     left: 10px;
     max-width: 50px;
     max-height: 50px;
