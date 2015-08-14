@@ -124,7 +124,7 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
     $ionicConfigProvider.spinner.icon('ios-small');
     $ionicConfigProvider.views.transition('ios');
     $ionicConfigProvider.views.swipeBackEnabled(true);
-    $ionicConfigProvider.views.swipeBackHitWidth(80);
+    $ionicConfigProvider.views.swipeBackHitWidth(60);
     ionic.Platform.isFullScreen = true;
 }]);
 
