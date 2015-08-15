@@ -2,6 +2,7 @@
 angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,cosmicDB,$cordovaToast, $ionicPopup,$localstorage, $cordovaStatusbar) {
 
     $scope.isSearchingArtworks = false;
+    $scope.isSearchingArtists = false;
 
     var statusBarConfig = {show : ($localstorage.get('showStatusBar','true') === 'true')};
     $scope.statusBarConfig = statusBarConfig;
@@ -28,6 +29,20 @@ angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,
             },function(error){
                 console.log(error);
                 $scope.isSearchingArtworks = false;
+            });
+        }
+    };
+    // Find artists names
+    $scope.findArtistNames = function(){
+        if ( ! $scope.isSearchingArtists){
+            $scope.isSearchingArtists = true;
+            cosmicDB.correctArtistNames().then(function(nbArtists){
+                $scope.isSearchingArtists = false;
+                $cordovaToast.showShortTop('Correctes '+nbArtists+' names !');
+                console.log('Success itunes');
+            },function(error){
+                console.log(error);
+                $scope.isSearchingArtists = false;
             });
         }
     };

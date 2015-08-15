@@ -83,7 +83,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 " FROM artist INNER JOIN"+
                 " (SELECT COUNT(title.id) AS nbTitles, album.id AS id, album.artwork, album.artist FROM album INNER JOIN title ON title.album=album.id GROUP BY title.album) alb"+
                 " ON artist.id = alb.artist"+
-                " INNER JOIN artwork ON alb.artwork = artwork.id GROUP BY alb.artist ORDER BY artist.name";
+                " INNER JOIN artwork ON alb.artwork = artwork.id GROUP BY alb.artist ORDER BY artist.name COLLATE NOCASE";
             return $cordovaSQLite.execute(this.db,query, []).then(function(res) {
                 var artists=[];
                 for (var i=0; i < res.rows.length; ++i){
@@ -156,10 +156,8 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             });
         },
         addArtist: function(artistName){
-            console.log('add '+artistName);
             var dbService=this;
             return dbService.getArtistId(artistName).then(function(artistId){
-                console.log('id '+artistId);
                 if (artistId===0){
                     return $cordovaSQLite.execute(dbService.db,"INSERT INTO artist (name) VALUES (?)", [artistName]).then(function(res) {
                         console.log("INSERT ID -> " + res.insertId);
@@ -209,7 +207,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
         addTitle: function(title){
             var defered=$q.defer();
             var dbService=this;
-            $cordovaSQLite.execute(dbService.db,"SELECT * FROM title WHERE path=?", [title.path]).then(function(res) {
+            $cordovaSQLite.execute(dbService.db,"SELECT id FROM title WHERE path=?", [title.path]).then(function(res) {
                 if (res.rows.length===0){
                     dbService.addArtist(title.artist).then(function(artistId){
                         return dbService.addAlbum(title.album,artistId,title.artwork);
@@ -219,12 +217,12 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                         return $cordovaSQLite.execute(dbService.db,"INSERT INTO title (name,album,track,year,path) VALUES (?,?,?,?,?)", [title.title,albumId,title.track,title.year,title.path]);
                     })
                     .then(function(res) {
-                        console.log('Inserted title '+ title.title);
                         if (title.artwork){
                             $cordovaFile.removeFile(cosmicConfig.appRootStorage+ 'tmp/', title.artwork);
                         }
                         defered.resolve(res.insertId);
                     }, function (err){
+                        console.log('Error inserting title: '+err);
                         defered.reject(err);
                     });
 
@@ -236,6 +234,59 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             return defered.promise;
         },
 
+        updateArtistName : function(artist){
+            var defered=$q.defer();
+            var self=this;
+            $cordovaSQLite.execute(self.db,"SELECT id FROM artist WHERE name=? AND id!=?", [artist.name,artist.id]).then(function(res0) {
+                if (res0.rows.length===0){
+                    $cordovaSQLite.execute(self.db,"UPDATE artist SET name = ? WHERE id = ?", [artist.name,artist.id]).then(function() {
+                        defered.resolve(artist.id);
+                    });
+                } else if (res0.rows.length === 1){
+                    console.log('Artist collision');
+                    var artistId2 = res0.rows.item(0).id;
+                    var query = "SELECT art1.id AS id1, art1.artwork AS artwork1, art2.artwork AS artwork2 FROM"+
+                        " (SELECT name, id, artwork FROM album WHERE artist = ?) art1 INNER JOIN"+
+                        " (SELECT name, id, artwork FROM album WHERE artist = ?) art2 ON art1.name = art2.name";
+                    // find duplicates albums
+                    $cordovaSQLite.execute(self.db,query, [artist.id,artistId2]).then(function(res) {
+                        // artist fusion
+                        $cordovaSQLite.execute(self.db,"UPDATE album SET artist = ? WHERE artist = ?", [artistId2,artist.id]).then(function() {
+                            $cordovaSQLite.execute(self.db,"DELETE FROM artist WHERE id = ?", [artist.id]).then(function() {
+                                console.log('synch');
+                                var syncLoop = function(i){
+                                    if (i>= res.rows.length){
+                                        defered.resolve(artistId2);
+                                    } else {
+                                        var item = res.rows.item(i);
+                                        var deletedAlbumId = item.id1;
+                                        var remainingAlbumId = item.id2;
+                                        if (item.artwork1 > 1){
+                                            deletedAlbumId = item.id2;
+                                            remainingAlbumId = item.id1;
+                                        }
+                                        $cordovaSQLite.execute(self.db,"DELETE FROM album WHERE id=?", [deletedAlbumId]).then(function() {
+                                            $cordovaSQLite.execute(self.db,"UPDATE title SET album=? WHERE album=?", [remainingAlbumId,deletedAlbumId]).then(function() {
+                                                i++;
+                                                syncLoop(i);
+                                            });
+                                        });
+                                    }
+                                };
+                                syncLoop(0);
+                            });
+                        });
+                    },function(err){
+                        console.log('Error: '+err);
+                        defered.reject(err);
+                    });
+                } else {
+                    defered.reject("two artists with same names");
+                }
+            });
+            return defered.promise;
+
+        },
         // Download missing album covers from the iTunes API
         downloadMissingArtworks : function(){
             var self=this;
@@ -263,11 +314,59 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                         }
                     };
                     syncLoop(0);
+                },function(error){
+                    console.log(error);
+                    d.reject(error);
                 });
             });
             return d.promise;
 
         },
+        // Use artist names from itunes API
+        correctArtistNames : function(){
+            var self=this;
+            var query = "SELECT name, id FROM artist";
+            var d=$q.defer();
+            $cordovaSQLite.execute(self.db,query, []).then(function(res) {
+                var promises=[];
+                var results=[];
+                for (i=0; i<res.rows.length; i++){
+                    promises.push(self.findArtistName(res.rows.item(i),results));
+                }
+                $q.all(promises).then(function(){
+                    var syncLoop = function(i){
+                        if (i>= results.length){
+                            d.resolve(results.length);
+                        } else {
+                            self.updateArtistName(results[i]).then(function(){
+                                i++;
+                                syncLoop(i);
+                            });
+                        }
+                    };
+                    syncLoop(0);
+                },function(err){
+                    d.reject(err);
+                });
+            });
+            return d.promise;
+
+        },
+
+        findArtistName : function(artist,results){
+            var d=$q.defer();
+            onlineArtwork.correctArtistNameFromItunes(artist.name).then(function(itunesArtist){
+                if (artist.name !== itunesArtist){
+                    results.push({id : artist.id, name : itunesArtist});
+                }
+                d.resolve();
+            },function(error){
+                console.log(error);
+                d.resolve();
+            });
+            return d.promise;
+        },
+
         downloadArtwork : function(item,results){
             var d=$q.defer();
             var self = this;

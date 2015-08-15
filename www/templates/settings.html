@@ -19,6 +19,11 @@
                 Find missing album covers online
                 <ion-spinner ng-show="isSearchingArtworks" class="icon ios"></ion-spinner>
             </div>
+            <div class="item item-icon-left item-icon-right" ng-click="findArtistNames()">
+                <i class="icon ion-ios-cloud-download"></i>
+                Find Artist names online
+                <ion-spinner ng-show="isSearchingArtists" class="icon ios"></ion-spinner>
+            </div>
 
             <div class="item item-icon-left" ng-click="clearAllDatabase()">
                 <i class="icon ion-ios-trash assertive"></i>

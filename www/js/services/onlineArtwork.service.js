@@ -38,6 +38,30 @@ angular.module('cosmic.services').factory("onlineArtwork", function($q,cosmicCon
             }
 
             return d.promise;
+        },
+
+        correctArtistNameFromItunes : function(artist){
+            var self = this;
+            var d=$q.defer();
+            if (artist == "Unknown Artist"){
+                d.reject('Not enough information !');
+            } else {
+                var terms = "term=" + artist + "&entity=musicArtist&limit=1";
+                $http.get(self.itunesApiUrl + terms).success(function(data){
+                    if (data.results.length > 0){
+                        var itunesArtist = data.results[0].artistName;
+                        d.resolve(itunesArtist);
+                    } else {
+                        d.reject('no results');
+                    }
+
+                }).error(function(error){
+                    d.reject(error);
+                });
+            }
+
+            return d.promise;
+
         }
 
     };

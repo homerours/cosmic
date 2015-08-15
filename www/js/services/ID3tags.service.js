@@ -96,7 +96,7 @@ angular.module('cosmic.services').factory("ID3Tags", function($q,cosmicConfig,im
             var self=this;
             var d= $q.defer();
             var tagList=[];
-            var blockSize = 50;
+            var blockSize = 20;
             var nbBlocks = Math.ceil(fileList.length / blockSize);
             var syncLoop = function(i){
                 console.log('BLOCK '+i);
