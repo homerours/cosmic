@@ -31,7 +31,6 @@ angular.module('cosmic.controllers').controller('ManageDirectoriesCtrl', functio
 
     $scope.addDirectory = function(file){
         console.log('Add directory');
-        console.log(file);
         if (file.isDirectory){
             // Check if the directory if a child of an already-included directory
             var isChild = false;
@@ -59,26 +58,24 @@ angular.module('cosmic.controllers').controller('ManageDirectoriesCtrl', functio
 
 
     // Modal for directory browser
-    $ionicModal.fromTemplateUrl('templates/file-browser-modal.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-    }).then(function(modal) {
-        $scope.modal = modal;
-    });
     $scope.openModal = function() {
-        if ($scope.isScanning){
-            $cordovaToast.showShortTop('Please wait for the first scan to be finished');
-        } else {
-            $scope.modal.show();
-        }
+        $ionicModal.fromTemplateUrl('templates/file-browser-modal.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
+            $scope.modal = modal;
+            if ($scope.isScanning){
+                $cordovaToast.showShortTop('Please wait for the first scan to be finished');
+            } else {
+                $scope.modal.show();
+            }
+            $scope.closeModal = function() {
+                $scope.modal.remove().then(function(){
+                    $scope.modal=null;
+                });
+            };
+        });
     };
-    $scope.closeModal = function() {
-        $scope.modal.hide();
-    };
-    //Cleanup the modal when we're done with it!
-    $scope.$on('$destroy', function() {
-        $scope.modal.remove();
-    });
 
     var fs = new fileFactory();
 

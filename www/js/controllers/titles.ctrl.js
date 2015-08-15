@@ -1,5 +1,5 @@
 // Titles
-angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $stateParams, $state,cosmicDB,cosmicPlayer,$ionicViewSwitcher,$ionicGesture,$ionicPopover,$cordovaToast,cosmicConfig) {
+angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $stateParams, $state,cosmicDB,cosmicPlayer,$ionicViewSwitcher,$ionicPopover,$cordovaToast,cosmicConfig) {
 
     $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
     var artistId=$stateParams.artistId;
@@ -9,6 +9,7 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
         $scope.albums=data.albums;
         $scope.playlist=data.playlist;
     });
+
     // Start playing titles
     $scope.playTitle = function (index){
         cosmicPlayer.loadPlaylist($scope.playlist);
@@ -17,62 +18,67 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
         $state.go('player');
     };
 
-    // Go to player
-    var titlesView=angular.element(document.getElementById('titles-view'));
-    $ionicGesture.on('swipeleft',function(e){
-        console.log('Swipe left');
-        $ionicViewSwitcher.nextDirection('forward');
-        $state.go('player');
-    }, titlesView);
-
-
     // Popover
     var selectedTitle;
     var event;
-    $ionicPopover.fromTemplateUrl('templates/title-popover.html', {
-        scope: $scope,
-    }).then(function(popover) {
-        $scope.popover = popover;
-        $scope.showPopover = function(ev,title){
-            ev.stopPropagation();
-            event = ev;
-            selectedTitle = title;
-            popover.show(event);
-        };
+    $scope.showPopover = function(ev,title){
+        ev.stopPropagation();
+        event = ev;
+        selectedTitle = title;
 
-        // add the title to an existing playlist
-        $scope.addToPlaylist = function(){
-            console.log('add to playlist');
-            popover.hide();
-            $ionicPopover.fromTemplateUrl('templates/select-playlist-popover.html', {
-                scope: $scope,
-            }).then(function(playlistPopover) {
-                // Get playlists
-                cosmicDB.getPlaylistsNames().then(function(playlists){
-                    $scope.playlists = playlists;
-                    playlistPopover.show(event);
-                    $scope.addTitleToPlaylist = function(playlistId){
-                        console.log('add to playlist '+playlistId);
-                        cosmicDB.addTitleToPlaylist(playlistId,selectedTitle.id).then(function(){
-                            $cordovaToast.showShortTop('Done !');
-                            playlistPopover.remove();
-                        });
-                    };
+        $ionicPopover.fromTemplateUrl('templates/title-popover.html', {
+            scope: $scope,
+        }).then(function(popover) {
+            $scope.popover = popover;
+            popover.show(event);
+
+            // add the title to an existing playlist
+            $scope.addToPlaylist = function(){
+                console.log('add to playlist');
+                popover.hide();
+                $ionicPopover.fromTemplateUrl('templates/select-playlist-popover.html', {
+                    scope: $scope,
+                }).then(function(popover) {
+                    // Get playlists
+                    cosmicDB.getPlaylistsNames().then(function(playlists){
+                        $scope.playlists = playlists;
+                        $scope.popover =popover;
+                        popover.show(event);
+                        $scope.addTitleToPlaylist = function(playlistId){
+                            console.log('add to playlist '+playlistId);
+                            cosmicDB.addTitleToPlaylist(playlistId,selectedTitle.id).then(function(){
+                                $cordovaToast.showShortTop('Done !');
+                                popover.hide();
+                            });
+                        };
+                    });
+
                 });
 
+            };
+            // Add the current title as next on the current playlist
+            $scope.addNext = function(){
+                console.log('select title : ');
+                console.log(selectedTitle);
+                cosmicPlayer.setNext(selectedTitle);
+                popover.hide();
+                $cordovaToast.showShortTop('Done !');
+            };
+        });
+    };
+
+
+    var destroy = true;
+    $scope.$on('popover.hidden', function(){
+        console.log('destroyPopover');
+        if (destroy){
+            destroy = false;
+            $scope.popover.remove().then(function(){
+                $scope.popover = null;
+                destroy = true;
             });
-
-        };
-        // Add the current title as next on the current playlist
-        $scope.addNext = function(){
-            console.log('select title : ');
-            console.log(selectedTitle);
-            cosmicPlayer.setNext(selectedTitle);
-            popover.hide();
-            $cordovaToast.showShortTop('Done !');
-        };
+        }
     });
-
 });
 
 

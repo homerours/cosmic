@@ -1,10 +1,10 @@
 // Playlists
 angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope, cosmicDB, $ionicPopup,$cordovaToast, cosmicConfig,cosmicPlayer,$ionicPopover,$ionicViewSwitcher,$state) {
 
+    $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
+
     // Refresh view
     function refreshData(){
-
-        $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
         cosmicDB.getSpecialPlaylists(8).then(function(specialPlaylists){
             $scope.specialPlaylists = specialPlaylists;
         });
@@ -30,7 +30,6 @@ angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope
             if (newPlaylistName===''){
                 $cordovaToast.showShortTop('Playlist name can not be empty !');
             } else {
-                console.log('New playlist : '+ newPlaylistName);
                 myPopup.close();
                 cosmicDB.addPlaylist(newPlaylistName).then(function(res){
                     $cordovaToast.showShortTop('Playlist created !');
@@ -71,42 +70,53 @@ angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope
         document.body.classList.remove('platform-ionic');
         document.body.classList.add('platform-ionic');
     }, 500);
+
     var selectedPlaylist;
     var event;
-    $ionicPopover.fromTemplateUrl('templates/playlist-popover.html', {
-        scope: $scope,
-    }).then(function(popover) {
-        $scope.popover = popover;
-        $scope.showPopover = function(ev,playlist){
-            //ev.stopPropagation();
-            ev.preventDefault();
-            event = ev;
-            selectedPlaylist = playlist;
+    $scope.showPopover = function(ev,playlist){
+        ev.preventDefault();
+        event = ev;
+        selectedPlaylist = playlist;
+
+        $ionicPopover.fromTemplateUrl('templates/playlist-popover.html', {
+            scope: $scope,
+        }).then(function(popover) {
+            $scope.popover = popover;
             popover.show(event);
-        };
 
-        // Start playing the selected playlist
-        $scope.startPlaylist = function(){
-            console.log('Start playing playlist');
-            cosmicDB.getPlaylistItems(selectedPlaylist.id).then(function(playlist){
-                cosmicPlayer.loadPlaylist(playlist);
-                cosmicPlayer.launchPlayerByIndex(0); // Start at first title
-                $ionicViewSwitcher.nextDirection('forward');
-                $state.go('player');
-            });
-            popover.hide();
+            // Start playing the selected playlist
+            $scope.startPlaylist = function(){
+                console.log('Start playing playlist');
+                cosmicDB.getPlaylistItems(selectedPlaylist.id).then(function(playlist){
+                    cosmicPlayer.loadPlaylist(playlist);
+                    cosmicPlayer.launchPlayerByIndex(0); // Start at first title
+                    $ionicViewSwitcher.nextDirection('forward');
+                    $state.go('player');
+                });
+                $scope.popover.hide();
 
-        };
-        // Delete playlist
-        $scope.deletePlaylist = function(){
-            console.log('Delete Playlist');
-            cosmicDB.deletePlaylist(selectedPlaylist.id).then(function(){
-                $cordovaToast.showShortTop('Playlist Deleted');
-                refreshData();
+            };
+            // Delete playlist
+            $scope.deletePlaylist = function(){
+                console.log('Delete Playlist');
+                cosmicDB.deletePlaylist(selectedPlaylist.id).then(function(){
+                    $cordovaToast.showShortTop('Playlist Deleted');
+                    refreshData();
+                });
+                $scope.popover.hide();
+            };
+        });
+    };
+    var destroy = true;
+    $scope.$on('popover.hidden', function(){
+        console.log('destroyPopover');
+        if (destroy){
+            destroy = false;
+            $scope.popover.remove().then(function(){
+                $scope.popover = null;
+                destroy = true;
             });
-            popover.hide();
-        };
+        }
     });
 
 });
-

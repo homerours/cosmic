@@ -5,5 +5,11 @@ angular.module('cosmic.controllers').controller('ArtistsCtrl', function($scope,$
     cosmicDB.getArtists().then(function(artists){
         $scope.artists=artists;
     });
+    $scope.refreshArtists = function() {
+        cosmicDB.getArtists().then(function(artists){
+            $scope.artists=artists;
+            $scope.$broadcast('scroll.refreshComplete');
+        });
+    };
 });
 

@@ -19,54 +19,60 @@ angular.module('cosmic.controllers').controller('PlaylistSpecialCtrl', function(
     };
 
     // Popover
-    document.body.classList.remove('platform-ios');
-    document.body.classList.remove('platform-android');
-    document.body.classList.remove('platform-ionic');
-    document.body.classList.add('platform-ionic');
     var selectedTitle;
     var event;
-    $ionicPopover.fromTemplateUrl('templates/title-popover.html', {
-        scope: $scope,
-    }).then(function(popover) {
-        $scope.popover = popover;
-        $scope.showPopover = function(ev,title){
-            ev.stopPropagation();
-            event = ev;
-            selectedTitle = title;
-            popover.show(event);
-        };
+    $scope.showPopover = function(ev,title){
+        ev.stopPropagation();
+        event = ev;
+        selectedTitle = title;
+        $ionicPopover.fromTemplateUrl('templates/title-popover.html', {
+            scope: $scope,
+        }).then(function(popover) {
+            $scope.popover = popover;
+            $scope.popover.show(event);
 
-        // add the title to an existing playlist
-        $scope.addToPlaylist = function(){
-            console.log('add to playlist');
-            popover.hide();
-            $ionicPopover.fromTemplateUrl('templates/select-playlist-popover.html', {
-                scope: $scope,
-            }).then(function(playlistPopover) {
-                // Get playlists
-                cosmicDB.getPlaylistsNames().then(function(playlists){
-                    $scope.playlists = playlists;
-                    playlistPopover.show(event);
-                    $scope.addTitleToPlaylist = function(playlistId){
-                        console.log('add to playlist '+playlistId);
-                        cosmicDB.addTitleToPlaylist(playlistId,selectedTitle.id).then(function(){
-                            $cordovaToast.showShortTop('Done !');
-                            playlistPopover.remove();
-                        });
-                    };
+            // add the title to an existing playlist
+            $scope.addToPlaylist = function(){
+                console.log('add to playlist');
+                popover.hide();
+                $ionicPopover.fromTemplateUrl('templates/select-playlist-popover.html', {
+                    scope: $scope,
+                }).then(function(popover) {
+                    // Get playlists
+                    cosmicDB.getPlaylistsNames().then(function(playlists){
+                        $scope.playlists = playlists;
+                        $scope.popover=popover;
+                        $scope.popover.show(event);
+                        $scope.addTitleToPlaylist = function(playlistId){
+                            console.log('add to playlist '+playlistId);
+                            cosmicDB.addTitleToPlaylist(playlistId,selectedTitle.id).then(function(){
+                                $cordovaToast.showShortTop('Done !');
+                                $scope.popover.hide();
+                            });
+                        };
+                    });
+
                 });
 
+            };
+            // Add the current title as next on the current playlist
+            $scope.addNext = function(){
+                cosmicPlayer.setNext(selectedTitle);
+                $scope.popover.hide();
+                $cordovaToast.showShortTop('Done !');
+            };
+        });
+    };
+    var destroy = true;
+    $scope.$on('popover.hidden', function(){
+        console.log('destroyPopover');
+        if (destroy){
+            destroy = false;
+            $scope.popover.remove().then(function(){
+                $scope.popover = null;
+                destroy = true;
             });
-
-        };
-        // Add the current title as next on the current playlist
-        $scope.addNext = function(){
-            console.log('select title : ');
-            console.log(selectedTitle);
-            cosmicPlayer.setNext(selectedTitle);
-            popover.hide();
-            $cordovaToast.showShortTop('Done !');
-        };
+        }
     });
 
 

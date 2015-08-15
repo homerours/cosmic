@@ -123,17 +123,17 @@ angular.module('cosmic.directives').directive('playSquare',function($state,cosmi
 
 });
 
-angular.module('cosmic.directives').directive('dragAnimation',  function ($ionicGesture) {
-    return {
-        restrict: 'A',
-        link: function (scope, element) {
-            $ionicGesture.on('drag', function (event) {
-                element.css({ "-webkit-transform": "translate(" + event.gesture.deltaX + "px, " + event.gesture.deltaY + "px)" });
-            }, element);
+//angular.module('cosmic.directives').directive('dragAnimation',  function ($ionicGesture) {
+    //return {
+        //restrict: 'A',
+        //link: function (scope, element) {
+            //$ionicGesture.on('drag', function (event) {
+                //element.css({ "-webkit-transform": "translate(" + event.gesture.deltaX + "px, " + event.gesture.deltaY + "px)" });
+            //}, element);
 
-            $ionicGesture.on('dragend', function() {
-                element.css({ "-webkit-transform": "translate(0)" });
-            }, element);
-        }
-    };
-});
+            //$ionicGesture.on('dragend', function() {
+                //element.css({ "-webkit-transform": "translate(0)" });
+            //}, element);
+        //}
+    //};
+//});

@@ -1,5 +1,7 @@
 <ion-view view-title="Artists">
     <ion-content has-bouncing="true">
+        <ion-refresher pulling-text="Pull to refresh" on-refresh="refreshArtists()"></ion-refresher>
+
         <div class="list">
 
             <a collection-repeat="artist in artists" class="item item-thumbnail-left" ng-href="#/tab/artists/{{artist.id}}">

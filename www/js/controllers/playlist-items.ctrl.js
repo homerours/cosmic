@@ -23,33 +23,44 @@ angular.module('cosmic.controllers').controller('PlaylistItemsCtrl', function($s
     // Popover
     var selectedTitle;
     var event;
-    $ionicPopover.fromTemplateUrl('templates/playlist-item-popover.html', {
-        scope: $scope,
-    }).then(function(popover) {
-        $scope.popover = popover;
-        $scope.showPopover = function(ev,title){
-            ev.stopPropagation();
-            event = ev;
-            selectedTitle = title;
+    $scope.showPopover = function(ev,title){
+        ev.stopPropagation();
+        event = ev;
+        selectedTitle = title;
+        $ionicPopover.fromTemplateUrl('templates/playlist-item-popover.html', {
+            scope: $scope,
+        }).then(function(popover) {
+            $scope.popover = popover;
             popover.show(event);
-        };
 
-        // Remove the song from the playlist
-        $scope.removeFromPlaylist = function(){
-            popover.hide();
-            cosmicDB.removeTitleFromPlaylist(playlistId,selectedTitle.position).then(function(){
-                loadPlaylistContent();
+            // Remove the song from the playlist
+            $scope.removeFromPlaylist = function(){
+                $scope.popover.hide();
+                cosmicDB.removeTitleFromPlaylist(playlistId,selectedTitle.position).then(function(){
+                    loadPlaylistContent();
+                    $cordovaToast.showShortTop('Done !');
+                });
+            };
+            // Add the current title as next on the current playlist
+            $scope.addNext = function(){
+                cosmicPlayer.setNext(selectedTitle);
+                $scope.popover.hide();
                 $cordovaToast.showShortTop('Done !');
-            });
-        };
-        // Add the current title as next on the current playlist
-        $scope.addNext = function(){
-            cosmicPlayer.setNext(selectedTitle);
-            popover.hide();
-            $cordovaToast.showShortTop('Done !');
-        };
-    });
+            };
+        });
+    };
 
+    var destroy = true;
+    $scope.$on('popover.hidden', function(){
+        console.log('destroyPopover');
+        if (destroy){
+            destroy = false;
+            $scope.popover.remove().then(function(){
+                $scope.popover = null;
+                destroy = true;
+            });
+        }
+    });
 
 });
 

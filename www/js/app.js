@@ -24,7 +24,6 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
         url: "/tab",
         abstract: true,
         templateUrl: "templates/tabs.html",
-        controller : 'TabsCtrl'
     })
 
     .state('tab.playlists', {
@@ -121,7 +120,7 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
     //if(!ionic.Platform.isIOS())$ionicConfigProvider.scrolling.jsScrolling(false); // native scrolling
     $ionicConfigProvider.tabs.position('bottom'); // other values: top
     $ionicConfigProvider.tabs.style('standard');
-    $ionicConfigProvider.spinner.icon('ios-small');
+    $ionicConfigProvider.spinner.icon('ios');
     $ionicConfigProvider.views.transition('ios');
     $ionicConfigProvider.views.swipeBackEnabled(true);
     $ionicConfigProvider.views.swipeBackHitWidth(60);
