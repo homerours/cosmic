@@ -1,5 +1,5 @@
 // Search
-angular.module('cosmic.controllers').controller('SearchCtrl', function($scope,$q, cosmicDB,cosmicConfig,cosmicPlayer,$ionicViewSwitcher,$state,$timeout,$ionicPopover,$cordovaToast) {
+angular.module('cosmic.controllers').controller('SearchCtrl', function($scope,$q, cosmicDB,cosmicConfig,cosmicPlayer,$ionicViewSwitcher,$state,$timeout,$ionicPopover,$cordovaToast,$localstorage) {
     $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
 
     // Focus on search
@@ -37,8 +37,10 @@ angular.module('cosmic.controllers').controller('SearchCtrl', function($scope,$q
     $scope.playTitle = function (title){
         cosmicPlayer.loadPlaylist($scope.titles);
         cosmicPlayer.launchPlayer(title);
-        $ionicViewSwitcher.nextDirection('forward');
-        $state.go('player');
+        if ($localstorage.get('goToPlayer','true') === 'true'){
+            $ionicViewSwitcher.nextDirection('forward');
+            $state.go('player');
+        }
     };
 
     // Search function

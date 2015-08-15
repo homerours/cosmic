@@ -6,13 +6,14 @@
 
         <div class="list">
 
-            <ion-toggle ng-model="statusBarConfig.show" ng-change="toggleStatusBar()" toggle-class="toggle-balanced">Show Statusbar</ion-toggle>
-
             <a class="item dark item-icon-left item-icon-right" ng-href="#/tab/settings/manage-directories">
                 <i class="icon ion-ios-folder"></i>
                 Manage Music Directories
                 <i class="icon ion-ios-arrow-right"></i>
             </a>
+
+            <ion-toggle ng-model="config.showStatusBar" ng-change="toggleStatusBar()" toggle-class="toggle-balanced">Show Statusbar</ion-toggle>
+            <ion-toggle ng-model="config.goToPlayer" ng-change="toggleGoToPlayer()" toggle-class="toggle-balanced">Go to player on play</ion-toggle>
 
             <div class="item item-icon-left item-icon-right" ng-click="findMissingArtworks()">
                 <i class="icon ion-ios-cloud-download"></i>

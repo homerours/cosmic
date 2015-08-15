@@ -79,9 +79,9 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
         getArtists: function(){
             // Get all artists from database
             var query = "SELECT artist.name AS name, artist.id AS id, MAX(artwork.id) AS albumId, COUNT(alb.id) AS nbAlbums,"+
-                " SUM(alb.nbTitles) AS nbTitles, artwork.file_name AS artwork"+
+                " SUM(alb.nbTitles) AS nbTitles, SUM(alb.like) AS like, artwork.file_name AS artwork"+
                 " FROM artist INNER JOIN"+
-                " (SELECT COUNT(title.id) AS nbTitles, album.id AS id, album.artwork, album.artist FROM album INNER JOIN title ON title.album=album.id GROUP BY title.album) alb"+
+                " (SELECT COUNT(title.id) AS nbTitles, SUM(title.like) AS like, album.id AS id, album.artwork, album.artist FROM album INNER JOIN title ON title.album=album.id GROUP BY title.album) alb"+
                 " ON artist.id = alb.artist"+
                 " INNER JOIN artwork ON alb.artwork = artwork.id GROUP BY alb.artist ORDER BY artist.name COLLATE NOCASE";
             return $cordovaSQLite.execute(this.db,query, []).then(function(res) {
@@ -95,7 +95,8 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
 
         getTitles:  function(artistId){
             // Get all titles from artist
-            var query= "SELECT title.name AS name, title.id AS id, title.like AS like, title.track AS track, title.path AS path, artwork.file_name AS artwork, album.name AS album,"+
+            var query= "SELECT title.name AS name, title.id AS id, title.like AS like, title.track AS track, title.path AS path,"+
+                " artwork.file_name AS artwork, album.name AS album,"+
                 " album.id AS albumId , arti.artist AS artist FROM"+
                 " (SELECT  artist.name AS artist, artist.id FROM artist WHERE id=?) arti INNER JOIN"+
                 " album ON album.artist = arti.id INNER JOIN"+
@@ -573,8 +574,10 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             var self=this;
             var d=$q.defer();
 
-            var query="SELECT playlist.id AS id, playlist.name AS name, IFNULL(artwork.file_name,'default_artwork.jpg') AS artwork, IFNULL(c.nbTitles, 0) AS nbTitles, IFNULL(playlist_item.position, 0) AS position FROM playlist LEFT OUTER JOIN"+
-                " (SELECT COUNT(*) AS nbTitles, playlist_item.playlist AS playlist FROM playlist_item GROUP BY playlist_item.playlist) c ON c.playlist = playlist.id LEFT OUTER JOIN"+
+            var query="SELECT playlist.id AS id, playlist.name AS name, IFNULL(artwork.file_name,'default_artwork.jpg') AS artwork,"+
+                " IFNULL(c.like, 0) AS like, IFNULL(c.nbTitles, 0) AS nbTitles, IFNULL(playlist_item.position, 0) AS position FROM playlist LEFT OUTER JOIN"+
+                " (SELECT COUNT(*) AS nbTitles, SUM(title.like) AS like, playlist_item.playlist AS playlist FROM playlist_item"+
+                " INNER JOIN title ON title.id=playlist_item.title GROUP BY playlist_item.playlist) c ON c.playlist = playlist.id LEFT OUTER JOIN"+
                 " playlist_item ON playlist_item.playlist = playlist.id LEFT OUTER JOIN"+
                 " title ON title.id = playlist_item.title LEFT OUTER JOIN"+
                 " album ON album.id = title.album LEFT OUTER JOIN"+
@@ -584,7 +587,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 var i = 0;
                 while (i<res.rows.length){
                     var currentPlaylistId=res.rows.item(i).id;
-                    var currentPlaylist={name: res.rows.item(i).name, id : res.rows.item(i).id, nbTitles : res.rows.item(i).nbTitles};
+                    var currentPlaylist={name: res.rows.item(i).name, id : res.rows.item(i).id, nbTitles : res.rows.item(i).nbTitles, like :res.rows.item(i).like};
                     var artworks= [];
                     while (i<res.rows.length && res.rows.item(i).id==currentPlaylistId){
                         artworks.push(res.rows.item(i).artwork);

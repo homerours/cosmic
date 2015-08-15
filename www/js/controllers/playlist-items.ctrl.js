@@ -1,5 +1,5 @@
 // Playlist-items
-angular.module('cosmic.controllers').controller('PlaylistItemsCtrl', function($scope, $stateParams, $state,cosmicDB,cosmicPlayer,$ionicViewSwitcher,cosmicConfig,$ionicPopover,$cordovaToast) {
+angular.module('cosmic.controllers').controller('PlaylistItemsCtrl', function($scope, $stateParams, $state,cosmicDB,cosmicPlayer,$ionicViewSwitcher,cosmicConfig,$ionicPopover,$cordovaToast,$localstorage) {
 
     var playlistId=$stateParams.playlistId;
     $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
@@ -16,8 +16,10 @@ angular.module('cosmic.controllers').controller('PlaylistItemsCtrl', function($s
     $scope.playTitle = function (title){
         cosmicPlayer.loadPlaylist($scope.playlist);
         cosmicPlayer.launchPlayer(title);
-        $ionicViewSwitcher.nextDirection('forward');
-        $state.go('player');
+        if ($localstorage.get('goToPlayer','true') === 'true'){
+            $ionicViewSwitcher.nextDirection('forward');
+            $state.go('player');
+        }
     };
 
     // Popover

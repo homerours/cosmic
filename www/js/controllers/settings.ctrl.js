@@ -4,18 +4,20 @@ angular.module('cosmic.controllers').controller('SettingsCtrl', function($scope,
     $scope.isSearchingArtworks = false;
     $scope.isSearchingArtists = false;
 
-    var statusBarConfig = {show : ($localstorage.get('showStatusBar','true') === 'true')};
-    $scope.statusBarConfig = statusBarConfig;
+    $scope.config = {showStatusBar : ($localstorage.get('showStatusBar','true') === 'true'), goToPlayer : ($localstorage.get('goToPlayer','true') === 'true')};
 
     // Hide/show status bar
     $scope.toggleStatusBar = function(){
-        console.log('Toggle Status bar : ' +$scope.statusBarConfig.show);
-        $localstorage.set('showStatusBar',$scope.statusBarConfig.show);
-        if ($scope.statusBarConfig.show) {
+        $localstorage.set('showStatusBar',$scope.config.showStatusBar);
+        if ($scope.config.showStatusBar) {
             $cordovaStatusbar.show();
         } else {
             $cordovaStatusbar.hide();
         }
+    };
+    // Go to player on play
+    $scope.toggleGoToPlayer = function(){
+        $localstorage.set('goToPlayer',$scope.config.goToPlayer);
     };
 
     // Find missing album covers

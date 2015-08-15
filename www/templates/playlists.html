@@ -32,7 +32,7 @@
                                 <img ng-src="{{miniaturesPath}}{{playlist.artworks[3]}}" class="miniature bottom-right">
                             </div>
                             <h2>{{playlist.name}}</h2>
-                            <p><b>{{playlist.nbTitles}}</b> song<span ng-if="playlist.nbTitles>1">s</span></p>
+                            <p><b>{{playlist.nbTitles}}</b> song<span ng-if="playlist.nbTitles>1">s</span><span ng-if="playlist.like>0">, <b>{{playlist.like}}</b> <i class="icon ion-ios-heart"></i></span></p>
 
                             <button class="button button-icon ion-more" ng-click="showPopover($event,playlist)"></button>
                         </a>
