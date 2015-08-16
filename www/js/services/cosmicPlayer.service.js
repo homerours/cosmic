@@ -47,6 +47,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             $localstorage.set('loop',this.loop);
         },
         toggleCurrentLike : function(){
+            //console.log('toggle like: '+this.playlist[this.playlistIndex].like);
             if(this.media){
                 this.playlist[this.playlistIndex].like = 1-this.playlist[this.playlistIndex].like;
                 cosmicDB.toggleLikeTitle(this.playlist[this.playlistIndex].id);

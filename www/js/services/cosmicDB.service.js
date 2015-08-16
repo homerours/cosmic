@@ -667,7 +667,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             var words = term.split(' ');
             var self=this;
             var d=$q.defer();
-            var query= "SELECT title.name AS name, title.id AS id, title.track, title.path AS path, title.nb_played, artwork.file_name AS artwork, album.name AS album,"+
+            var query= "SELECT title.name AS name, title.id AS id, title.nb_played, title.path AS path, title.like AS like, artwork.file_name AS artwork, album.name AS album,"+
                 " album.id AS albumId , artist.name AS artist, title.name || ' ' || artist.name || ' ' || album.name AS search_field FROM title"+
                 " INNER JOIN album ON album.id = title.album"+
                 " INNER JOIN artist ON artist.id = album.artist"+
