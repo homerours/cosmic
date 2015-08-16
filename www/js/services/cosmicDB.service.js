@@ -289,19 +289,29 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
 
         },
         // Download missing album covers from the iTunes API
-        downloadMissingArtworks : function(){
+        downloadArtworks : function(albums){
             var self=this;
-            var query = "SELECT artist.name AS artist, album.id AS albumId, album.name AS album FROM album"+
-                " INNER JOIN artist ON artist.id = album.artist WHERE album.artwork=1";
+            var query;
+            if (albums === 'all'){
+                query = "SELECT artist.name AS artist, album.id AS albumId, album.name AS album, MAX(title.name) AS title FROM album"+
+                    " INNER JOIN artist ON artist.id = album.artist"+
+                    " INNER JOIN title ON title.album = album.id GROUP BY album.id";
+            } else {
+                query = "SELECT artist.name AS artist, album.id AS albumId, album.name AS album, MAX(title.name) AS title FROM album"+
+                    " INNER JOIN artist ON artist.id = album.artist"+
+                    " INNER JOIN title ON title.album = album.id WHERE album.artwork=1 GROUP BY album.id";
+            }
             var d=$q.defer();
             $cordovaSQLite.execute(self.db,query, []).then(function(res) {
                 var promises=[];
                 var results=[];
                 console.log('Got '+res.rows.length +' albums without cover');
                 for (i=0; i<res.rows.length; i++){
+                    //console.log(res.rows.item(i));
                     promises.push(self.downloadArtwork(res.rows.item(i),results));
                 }
                 $q.all(promises).then(function(){
+                    console.log('Download finished');
                     var syncLoop = function(i){
                         if (i>= results.length){
                             d.resolve(results.length);
@@ -371,7 +381,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
         downloadArtwork : function(item,results){
             var d=$q.defer();
             var self = this;
-            onlineArtwork.downloadArtworkFromItunes({artist : item.artist, album : item.album}).then(function(fileName){
+            onlineArtwork.downloadArtworkFromItunes(item).then(function(fileName){
                 results.push({albumId : item.albumId, artworkFile : fileName});
                 d.resolve();
             }, function(error){
