@@ -61,8 +61,6 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
             };
             // Add the current title as next on the current playlist
             $scope.addNext = function(){
-                console.log('select title : ');
-                console.log(selectedTitle);
                 cosmicPlayer.setNext(selectedTitle);
                 popover.hide();
                 $cordovaToast.showShortTop('Done !');

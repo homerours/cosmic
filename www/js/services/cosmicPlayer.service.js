@@ -83,7 +83,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 
         showMusicControls : function(){
 
-            console.log('Show music controls');
+            //console.log('Show music controls');
             var self=this;
             var title = this.playlist[self.playlistIndex];
             var notificationData = {
@@ -93,9 +93,9 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
                 isPlaying : self.playing
             };
             MusicControls.show(notificationData,function(success){
-                console.log('SUCCESS SHOW: '+success);
+                //console.log('SUCCESS SHOW: '+success);
             },function(error){
-                console.log('ERROR SHOW: '+error);
+                //console.log('ERROR SHOW: '+error);
             });
             MusicControls.listen(function(action){
 
@@ -114,10 +114,10 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
                     self.prev();
                 }
             },function(success){
-                console.log('Success listen');
-                console.log('SUCCESS LISTEN: '+success);
+                //console.log('Success listen');
+                //console.log('SUCCESS LISTEN: '+success);
             },function(error){
-                console.log('ERROR LISTEN: '+error);
+                //console.log('ERROR LISTEN: '+error);
             });
 
         },
