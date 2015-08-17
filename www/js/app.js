@@ -37,7 +37,7 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
     })
 
     .state('tab.playlist-items', {
-        url: '/playlists/user/:playlistId',
+        url: '/playlists/user/:playlistId/:playlistName',
         views: {
             'tab-playlists': {
                 templateUrl: 'templates/playlist-items.html',
@@ -47,7 +47,7 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
     })
 
     .state('tab.playlist-special', {
-        url: '/playlists/special/:playlistId',
+        url: '/playlists/special/:playlistId/:playlistName',
         views: {
             'tab-playlists': {
                 templateUrl: 'templates/playlist-items.html',

@@ -487,7 +487,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             var self=this;
             var d=$q.defer();
 
-            $cordovaSQLite.execute(self.db,"SELECT * FROM playlist", []).then(function(res){
+            $cordovaSQLite.execute(self.db,"SELECT * FROM playlist ORDER BY name COLLATE NOCASE", []).then(function(res){
                 var playlists=[];
                 for (var i=0; i< res.rows.length; i++){
                     playlists.push(res.rows.item(i));

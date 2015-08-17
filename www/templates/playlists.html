@@ -4,16 +4,16 @@
 
         <div class="special-playlists">
             <div class="special-playlist-box box-top box-left">
-                <a href="#/tab/playlists/special/0" artwork-mosaic title="{{specialPlaylists[0].name}}" songs="specialPlaylists[0].titles"></a>
+                <a href="#/tab/playlists/special/0/{{specialPlaylists[0].name}}" artwork-mosaic title="{{specialPlaylists[0].name}}" songs="specialPlaylists[0].titles"></a>
             </div>
             <div class="special-playlist-box box-top box-right">
-                <a href="#/tab/playlists/special/1" artwork-mosaic title="{{specialPlaylists[1].name}}" songs="specialPlaylists[1].titles"></a>
+                <a href="#/tab/playlists/special/1/{{specialPlaylists[1].name}}" artwork-mosaic title="{{specialPlaylists[1].name}}" songs="specialPlaylists[1].titles"></a>
             </div>
             <div class="special-playlist-box box-bottom box-left">
-                <a href="#/tab/playlists/special/2" artwork-mosaic title="{{specialPlaylists[2].name}}" songs="specialPlaylists[2].titles"></a>
+                <a href="#/tab/playlists/special/2/{{specialPlaylists[2].name}}" artwork-mosaic title="{{specialPlaylists[2].name}}" songs="specialPlaylists[2].titles"></a>
             </div>
             <div class="special-playlist-box box-bottom box-right">
-                <a href="#/tab/playlists/special/3" artwork-mosaic title="{{specialPlaylists[3].name}}" songs="specialPlaylists[3].titles"></a>
+                <a href="#/tab/playlists/special/3/{{specialPlaylists[3].name}}" artwork-mosaic title="{{specialPlaylists[3].name}}" songs="specialPlaylists[3].titles"></a>
             </div>
         </div>
 
@@ -24,7 +24,7 @@
                 <ion-scroll class="user-playlists-scroll" has-bouncing="true">
                     <div class="list" >
 
-                        <a collection-repeat="playlist in playlists" class="item item-thumbnail-left item-button-right" ng-href="#/tab/playlists/user/{{playlist.id}}">
+                        <a collection-repeat="playlist in playlists" class="item item-thumbnail-left item-button-right" ng-href="#/tab/playlists/user/{{playlist.id}}/{{playlist.name}}">
                             <div class="item-image" >
                                 <img ng-src="{{miniaturesPath}}{{playlist.artworks[0]}}" class="miniature top-left">
                                 <img ng-src="{{miniaturesPath}}{{playlist.artworks[1]}}" class="miniature top-right">

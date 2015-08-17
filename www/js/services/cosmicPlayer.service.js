@@ -57,11 +57,14 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
         // Load a playlist in the player
         loadPlaylist: function(playlist) {
             var playlistCopy = playlist.slice();
-            if (this.shuffle){
-                playlistCopy = shuffle(playlistCopy);
-            }
-            console.log('Load playlist, size: '+playlist.length);
             player.playlist = playlistCopy;
+            if (this.shuffle){
+               this.shufflePlaylist();
+            }
+        },
+
+        shufflePlaylist : function (){
+            this.playlist = shuffle(this.playlist);
         },
 
         // add an item of current view as next

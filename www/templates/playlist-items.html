@@ -1,5 +1,10 @@
 <ion-view view-title="PlaylistItems">
-    <ion-content class="title-list" scroll="true" has-bouncing="true" >
+    <div class="bar bar-header">
+        <button class="button button-icon icon pink ion-ios-play" ng-click="playPlaylist('normal')"></button>
+        <div class="h1 title">{{playlistName}}</div>
+        <button class="button button-icon icon pink ion-ios-shuffle-strong" ng-click="playPlaylist('shuffle')"></button>
+    </div>
+    <ion-content class="title-list has-header" scroll="true" has-bouncing="true" >
 
 
         <div class="list">
