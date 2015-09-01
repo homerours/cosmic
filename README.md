@@ -33,6 +33,7 @@ This app requires the following plugins:
 - [Image resizer plugin](https://github.com/RaananW/PhoneGap-Image-Resizer)
 - [Music controls plugin](https://github.com/homerours/cordova-music-controls-plugin)
 - [Ionic keyboard plugin](https://github.com/driftyco/ionic-plugin-keyboard)
+
 ## Development
 
 This app has only been tested on Android 4.4. It is currently at an early development stage, major changes may happen. Contributions and/or ideas are welcome.
