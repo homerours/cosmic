@@ -54,7 +54,7 @@ angular.module('cosmic.services').factory("ID3Tags", function($q,cosmicConfig,im
                     file=[];
 
                     self.readTags(fileName,fileBegining).then(function(tags){
-                        if (tags.title){
+                        if (tags.title || tags.artist){
                             var title  = tags.title || name;
                             var artist = tags.artist || 'Unknown Artist';
                             var album  = tags.album || 'Unknown Album';

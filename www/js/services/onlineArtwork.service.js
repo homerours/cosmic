@@ -43,8 +43,8 @@ angular.module('cosmic.services').factory("onlineArtwork", function($q,cosmicCon
                     if (artistName !== title.artist){
                         d.reject('wrong artist');
                     } else {
-                        var url300 = url100.replace('100x100-75.jpg','300x300-75.jpg');
-                        var url600 = url100.replace('100x100-75.jpg','600x600-75.jpg');
+                        var url300 = url100.replace('100x100','300x300');
+                        var url600 = url100.replace('100x100','600x600');
                         var trustHosts = true;
                         var dt=new Date();
                         var options = {};

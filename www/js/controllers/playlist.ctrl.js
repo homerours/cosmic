@@ -12,7 +12,7 @@ angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope
             $scope.playlists=playlists;
         });
     }
-
+	
     // Refresh view on entering on the view
     $scope.$on('$ionicView.enter', function() {
         console.log('Refresh data');

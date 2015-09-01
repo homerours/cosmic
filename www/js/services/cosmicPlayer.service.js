@@ -155,6 +155,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
             if (this.media){
                 player.playing = true;
                 this.startWatchTime();
+				this.duration=this.getDuration();
                 this.media.play();
                 this.showMusicControls();
             }
@@ -226,6 +227,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
                     });
                 },500);
             } else {
+				console.log('on update 0');
                 self.onUpdate(0);
             }
             return;
