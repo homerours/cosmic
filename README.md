@@ -19,10 +19,24 @@ You will find some more screenshots [here](https://github.com/homerours/cosmic/t
 - Navigation by artists, playlists or global search.
 - Uses artwork miniature files (to speed up the views), obtained using [cordova-imageResizer plugin](https://github.com/wymsee/cordova-imageResizer).
 
+## Dependencies
+This app requires the following plugins:
+- [Cordova device plugin](https://github.com/apache/cordova-plugin-device)
+- [Cordova file plugin](https://github.com/apache/cordova-plugin-file)
+- [Cordova file-transfer plugin](https://github.com/apache/cordova-plugin-file-transfer)
+- [Cordova media plugin](https://github.com/apache/cordova-plugin-media)
+- [Cordova splashscreen plugin](https://github.com/apache/cordova-plugin-splashscreen)
+- [Cordova statusbar plugin](https://github.com/apache/cordova-plugin-statusbar)
+- [Cordova whitelist plugin](https://github.com/apache/cordova-plugin-whitelist)
+- [Sqlite plugin](https://github.com/litehelpers/Cordova-sqlite-storage)
+- [Toast plugin](https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin)
+- [Image resizer plugin](https://github.com/RaananW/PhoneGap-Image-Resizer)
+- [Music controls plugin](https://github.com/homerours/cordova-music-controls-plugin)
+- [Ionic keyboard plugin](https://github.com/driftyco/ionic-plugin-keyboard)
 ## Development
 
-This app has only been tested on Android 4.4 but all components are compatible with iOS. It is currently at an early development stage, major changes may happen. Contributions and/or ideas are welcome.
+This app has only been tested on Android 4.4. It is currently at an early development stage, major changes may happen. Contributions and/or ideas are welcome.
 
 ## References
 
-This project has been strongly influenced by [this article](http://www.raymondcamden.com/2015/04/29/working-with-mp3s-id3-and-phonegapcordova) on Raymond Camden’s blog and [this article](https://blog.nraboy.com/2014/09/manage-files-in-android-and-ios-using-ionicframework/) on Nic Raboy’s blog.
+This project has been influenced by [this article](http://www.raymondcamden.com/2015/04/29/working-with-mp3s-id3-and-phonegapcordova) on Raymond Camden’s blog and [this article](https://blog.nraboy.com/2014/09/manage-files-in-android-and-ios-using-ionicframework/) on Nic Raboy’s blog.
