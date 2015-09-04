@@ -13,11 +13,7 @@ angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope
         });
     }
 	
-    // Refresh view on entering on the view
-    $scope.$on('$ionicView.enter', function() {
-        console.log('Refresh data');
-        refreshData();
-    });
+	refreshData();
 
     // New playlist popup
     $scope.newPlaylist = function (){
