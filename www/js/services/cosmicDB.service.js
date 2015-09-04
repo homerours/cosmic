@@ -20,9 +20,9 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 return $cordovaSQLite.execute(self.db, "INSERT OR REPLACE INTO artwork (id,file_name) VALUES (1,?)",['default_artwork.jpg']).then(function(){
                     $cordovaSQLite.execute(self.db, "SELECT * from artwork",[]).then(function(res){
                         console.log('got all artworks');
-                        var artworks=[];
+                        var artworks=new Array(res.rows.length);
                         for (var i=0; i < res.rows.length; ++i){
-                            artworks.push(res.rows.item(i));
+                            artworks[i]=res.rows.item(i);
                         }
                     });
 
@@ -85,9 +85,9 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 " ON artist.id = alb.artist"+
                 " INNER JOIN artwork ON alb.artwork = artwork.id GROUP BY alb.artist ORDER BY artist.name COLLATE NOCASE";
             return $cordovaSQLite.execute(this.db,query, []).then(function(res) {
-                var artists=[];
+                var artists=new Array(res.rows.length);
                 for (var i=0; i < res.rows.length; ++i){
-                    artists.push(res.rows.item(i));
+                    artists[i]=res.rows.item(i);
                 }
                 return artists;
             });
@@ -104,9 +104,8 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 " artwork ON album.artwork = artwork.id ORDER BY album.name,title.track";
 
             return $cordovaSQLite.execute(this.db,query, [artistId]).then(function(res) {
-                console.log('Got '+res.rows.length+' titles');
                 var albums=[]; // For the scope
-                var viewPlaylist=[]; // For the player service
+                var viewPlaylist=new Array(res.rows.length); // For the player service
                 var i = 0;
                 while (i<res.rows.length){
                     var currentAlbumId=res.rows.item(i).albumId;
@@ -114,7 +113,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                     var titles= [];
                     while (i<res.rows.length && res.rows.item(i).albumId==currentAlbumId){
                         var item = res.rows.item(i);
-                        viewPlaylist.push(item);
+                        viewPlaylist[i]=item;
                         item.index = i;// Index is the position of the song in the playlist
                         titles.push(item);
                         i++;
@@ -122,7 +121,6 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                     currentAlbum.titles=titles;
                     albums.push(currentAlbum);
                 }
-                console.log('Got titles');
                 return {albums : albums, playlist : viewPlaylist};
             },function(err){
                 console.log('error');
@@ -526,9 +524,9 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             var d = $q.defer();
             var query = self.playlistQueries[nbPlaylist];
             $cordovaSQLite.execute(self.db,query.query,[nbTitles]).then(function(res){
-                var playlist=[];
+                var playlist=new Array(res.rows.length);
                 for (var j=0; j<res.rows.length; j++){
-                    playlist.push(res.rows.item(j));
+                    playlist[j]=res.rows.item(j);
                 }
                 d.resolve({name : query.name, titles : playlist});
             },function(err){
@@ -631,9 +629,9 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 " artwork ON album.artwork = artwork.id"+
                 " ORDER BY items.position";
             $cordovaSQLite.execute(self.db,query, [playlistId]).then(function(res){
-                var playlist=[];
+                var playlist=new Array(res.rows.length);
                 for (var i=0; i<res.rows.length; i++){
-                    playlist.push(res.rows.item(i));
+                    playlist[i]=res.rows.item(i);
                 }
                 d.resolve(playlist);
             },function(err){
@@ -692,9 +690,9 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
             }
             query += ' ORDER BY title.nb_played DESC LIMIT 20';
             $cordovaSQLite.execute(self.db,query, words).then(function(res){
-                var titles=[];
+                var titles=new Array(res.rows.length);
                 for (var i=0; i< res.rows.length; i++){
-                    titles.push(res.rows.item(i));
+                    titles[i]=res.rows.item(i);
                 }
                 d.resolve(titles);
 
