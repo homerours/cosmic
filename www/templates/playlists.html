@@ -24,7 +24,7 @@
                 <ion-scroll class="user-playlists-scroll" has-bouncing="true">
                     <div class="list" >
 
-                        <a collection-repeat="playlist in playlists" class="item item-thumbnail-left item-button-right" ng-href="#/tab/playlists/user/{{playlist.id}}/{{playlist.name}}">
+                        <a ng-repeat="playlist in playlists track by playlist.id" class="item item-thumbnail-left item-button-right" ng-href="#/tab/playlists/user/{{playlist.id}}/{{playlist.name}}">
                             <div class="item-image" >
                                 <img ng-src="{{miniaturesPath}}{{playlist.artworks[0]}}" class="miniature top-left">
                                 <img ng-src="{{miniaturesPath}}{{playlist.artworks[1]}}" class="miniature top-right">

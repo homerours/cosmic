@@ -8,11 +8,11 @@
 
 
         <div class="list">
-            <div class="item item-song two-lines" ng-repeat="title in playlist" ng-click="playTitle(title)">
+            <div class="item item-song two-lines" collection-repeat="title in playlist" ng-click="playTitle(title)">
 
-                <img  ng-src="{{miniaturesPath}}{{::title.artwork}}" />
-                <h2>{{::title.name}}</h2>
-                <p>{{::title.artist}}</p>
+                <img  ng-src="{{miniaturesPath}}{{title.artwork}}" />
+                <h2>{{title.name}}</h2>
+                <p>{{title.artist}}</p>
 
                 <button class="button button-icon ion-more" ng-click="showPopover($event,title)"></button>
 

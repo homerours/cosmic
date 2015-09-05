@@ -7737,7 +7737,7 @@ ion-popover-view.fit ion-content {
 .item-song, .item-song .item-content, .item-song-left, .item-song-left .item-content {
   padding-left: 70px;
   padding-right: 70px;
-  height: 60px !important; }
+  height: 60px; }
   .item-song > img:first-child, .item-song .item-image, .item-song .item-content > img:first-child, .item-song .item-content .item-image, .item-song-left > img:first-child, .item-song-left .item-image, .item-song-left .item-content > img:first-child, .item-song-left .item-content .item-image {
     position: absolute;
     top: 4px;

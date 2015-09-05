@@ -4,7 +4,8 @@ angular.module('cosmic.services', []);
 
 angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.services','cosmic.directives'])
 
-.run(function($ionicPlatform,$cordovaStatusbar,$localstorage) {
+.run(function($ionicPlatform,$cordovaStatusbar,$localstorage,$animate) {
+	$animate.enabled(false);
     $ionicPlatform.ready(function() {
         if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
