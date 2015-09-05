@@ -129,7 +129,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
 
         getArtistId: function(artistName){
             var dbService=this;
-            return $cordovaSQLite.execute(dbService.db, "SELECT * FROM artist WHERE name=?", [artistName]).then(function(res) {
+            return $cordovaSQLite.execute(dbService.db, "SELECT * FROM artist WHERE LOWER(name)=?", [artistName.toLowerCase()]).then(function(res) {
                 if (res.rows.length>0){
                     // Existing artist
                     return res.rows.item(0).id;
@@ -143,7 +143,7 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
 
         getAlbumId: function(albumName,artistId){
             var dbService=this;
-            return $cordovaSQLite.execute(dbService.db, "SELECT * FROM album WHERE name=? AND artist=?", [albumName,artistId]).then(function(res) {
+            return $cordovaSQLite.execute(dbService.db, "SELECT * FROM album WHERE LOWER(name)=? AND artist=?", [albumName.toLowerCase(),artistId]).then(function(res) {
                 if (res.rows.length>0){
                     // Existing album
                     return res.rows.item(0);
