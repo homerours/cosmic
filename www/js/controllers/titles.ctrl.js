@@ -6,20 +6,19 @@ angular.module('cosmic.controllers').controller('TitlesCtrl', function($scope, $
 
 	// Get artist titles
 	cosmicDB.getTitles(artistId).then(function(data){
-		$scope.albums=data.albums;
+		$scope.titles=data.titles;
 		$scope.playlist=data.playlist;
 	});
 
 	// Start playing titles
-	$scope.playTitle = function (index){
-		cosmicPlayer.loadPlaylist($scope.playlist);
-		cosmicPlayer.launchPlayer($scope.playlist[index]);
-
-		if ($localstorage.get('goToPlayer','true') === 'true'){
-			$ionicViewSwitcher.nextDirection('forward');
-			$state.go('player');
-		}
-	};
+    $scope.playTitle = function (title){
+        cosmicPlayer.loadPlaylist($scope.playlist);
+        cosmicPlayer.launchPlayer(title);
+        if ($localstorage.get('goToPlayer','true') === 'true'){
+            $ionicViewSwitcher.nextDirection('forward');
+            $state.go('player');
+        }
+    };
 
 	// Popover
 	var selectedTitle;

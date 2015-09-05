@@ -104,24 +104,23 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
                 " artwork ON album.artwork = artwork.id ORDER BY album.name,title.track";
 
             return $cordovaSQLite.execute(this.db,query, [artistId]).then(function(res) {
-                var albums=[]; // For the scope
+                var titles=[]; // For the scope
                 var viewPlaylist=new Array(res.rows.length); // For the player service
                 var i = 0;
+				var i0=0;
                 while (i<res.rows.length){
                     var currentAlbumId=res.rows.item(i).albumId;
-                    var currentAlbum={name: res.rows.item(i).album, id : res.rows.item(i).albumId, artwork : res.rows.item(i).artwork};
-                    var titles= [];
+					titles.push({isSeparator : true, name: res.rows.item(i).album, id : res.rows.item(i).albumId, artwork : res.rows.item(i).artwork});
+					i0=i;
                     while (i<res.rows.length && res.rows.item(i).albumId==currentAlbumId){
                         var item = res.rows.item(i);
+						item.first = (i===i0);
                         viewPlaylist[i]=item;
-                        item.index = i;// Index is the position of the song in the playlist
                         titles.push(item);
                         i++;
                     }
-                    currentAlbum.titles=titles;
-                    albums.push(currentAlbum);
                 }
-                return {albums : albums, playlist : viewPlaylist};
+                return {titles : titles, playlist : viewPlaylist};
             },function(err){
                 console.log('error');
                 console.dir(err);

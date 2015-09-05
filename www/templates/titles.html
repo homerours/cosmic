@@ -1,23 +1,23 @@
 <ion-view view-title="Titles">
-    <ion-content class="title-list" scroll="true" has-bouncing="true" >
+<ion-content scroll="true" has-bouncing="true" >
 
-        <div ng-repeat="album in ::albums">
-            <div class="item item-divider album-header">
-                {{::album.name}}
-            </div>
+<div class="list">
+	<div collection-repeat="title in titles" item-height="title.isSeparator ? 37 : 59">
+		<div ng-if="!title.isSeparator" class="item item-song one-line" ng-click="playTitle(title)">
 
-            <div class="list">
-                <div class="item item-song one-line" ng-repeat="title in ::album.titles" ng-click="playTitle(title.index)">
+			<img  ng-if="title.first" ng-src="{{::miniaturesPath}}{{title.artwork}}" />
+			<h2>{{title.name}}</h2>
 
-                    <img  ng-if="$index==0" ng-src="{{::miniaturesPath}}{{::album.artwork}}" />
-                    <h2>{{::title.name}}</h2>
+			<button class="button button-icon ion-more" ng-click="showPopover($event,title)"></button>
 
-                    <button class="button button-icon ion-more" ng-click="showPopover($event,title)"></button>
+		</div>
 
-                </div>
-            </div>
+		<div ng-if="title.isSeparator" class="item item-divider album-header">
+			{{title.name}}
+		</div>
 
-        </div>
+	</div>
+</div>
 
-    </ion-content>
+</ion-content>
 </ion-view>
