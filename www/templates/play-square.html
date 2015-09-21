@@ -5,9 +5,9 @@
     </div>
 
     <div class="title">
-        {{player.playlist[player.playlistIndex].artist + ' '}}
+		<span class="artist">{{player.playlist[player.playlistIndex].artist}}</span>
         <br/>
-        {{player.playlist[player.playlistIndex].name + '    '}}
+		<span class="song">{{player.playlist[player.playlistIndex].name}}</span>
     </div>
     <div class="current-time">{{position | date : 'mm:ss'}}</div>
     <div class="total-duration">{{duration | date : 'mm:ss'}}</div>

@@ -393,7 +393,6 @@ play-bar{
         top            : 15px;
         left           : 0;
         font-size      : $player-title-size;
-        color          : $pink;
         padding-bottom : 4px;
         line-height    : ($player-icon-size - 2px);
         background     : url($player-title-blur-path) top left repeat;
@@ -401,6 +400,12 @@ play-bar{
         text-overflow  : ellipsis;
         overflow       : hidden;
         max-width      : 100%;
+		.song{
+			color : $pink;
+		}
+		.artist{
+			color : black;
+		}
     }
     .blur{
         background : url($player-blur-path) top right repeat;

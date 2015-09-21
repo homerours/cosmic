@@ -1,13 +1,15 @@
 // Search
-angular.module('cosmic.controllers').controller('SearchCtrl', function($scope,$q, cosmicDB,cosmicConfig,cosmicPlayer,$ionicViewSwitcher,$state,$timeout,$ionicPopover,$cordovaToast,$localstorage) {
+angular.module('cosmic.controllers').controller('SearchCtrl', function($scope, cosmicDB,cosmicConfig,cosmicPlayer,$ionicViewSwitcher,$state,$timeout,$ionicPopover,$cordovaToast,$localstorage) {
     $scope.miniaturesPath = cosmicConfig.appRootStorage + 'miniatures/';
 
-    // Focus on search
-    $timeout(function(){
-        var searchElement = angular.element(document.getElementById('search-input'));
-        searchElement[0].focus();
-        cordova.plugins.Keyboard.show();
-    },150);
+	// Focus on search
+	$scope.$on('$ionicView.beforeEnter', function() {
+		$timeout(function(){
+			var searchElement = angular.element(document.getElementById('search-input'));
+			searchElement[0].focus();
+			cordova.plugins.Keyboard.show();
+		},150);
+	});
 
     // Watch for search update
     $scope.$watch('search',function(){
@@ -35,6 +37,7 @@ angular.module('cosmic.controllers').controller('SearchCtrl', function($scope,$q
     };
 
     $scope.playTitle = function (title){
+        $scope.hideKeyboard();
         cosmicPlayer.loadPlaylist($scope.titles);
         cosmicPlayer.launchPlayer(title);
         if ($localstorage.get('goToPlayer','true') === 'true'){
@@ -44,19 +47,20 @@ angular.module('cosmic.controllers').controller('SearchCtrl', function($scope,$q
     };
 
     // Search function
-    var searchInDB = function(search){
+    function searchInDB(search){
         if (search == $scope.search && search.length>0){
             console.log('Search: '+search);
             cosmicDB.search(search).then(function(titles){
                 $scope.titles = titles;
             });
         }
-    };
+    }
 
     // Popover
     var selectedTitle;
     var event;
     $scope.showPopover = function(ev,title){
+        $scope.hideKeyboard();
         ev.stopPropagation();
         event = ev;
         selectedTitle = title;
@@ -72,7 +76,7 @@ angular.module('cosmic.controllers').controller('SearchCtrl', function($scope,$q
                 $scope.popover.hide();
                 $ionicPopover.fromTemplateUrl('templates/select-playlist-popover.html', {
                     scope: $scope,
-                }).then(function() {
+                }).then(function(popover) {
                     // Get playlists
                     cosmicDB.getPlaylistsNames().then(function(playlists){
                         $scope.playlists = playlists;

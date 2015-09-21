@@ -7949,7 +7949,6 @@ play-bar {
     top: 15px;
     left: 0;
     font-size: 36px;
-    color: #E12F56;
     padding-bottom: 4px;
     line-height: 33px;
     background: url("../img/blur.png") top left repeat;
@@ -7957,6 +7956,10 @@ play-bar {
     text-overflow: ellipsis;
     overflow: hidden;
     max-width: 100%; }
+    .play-square .title .song {
+      color: #E12F56; }
+    .play-square .title .artist {
+      color: black; }
   .play-square .blur {
     background: url("../img/flou4.png") top right repeat;
     height: 100%;
