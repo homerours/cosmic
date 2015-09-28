@@ -96,7 +96,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 				cover : cosmicConfig.appRootStorage + 'miniatures/' + title.artwork,
 				isPlaying : self.playing
 			};
-			MusicController.create(notificationData, function(success){
+			MusicControls.create(notificationData, function(success){
 				console.log('SUCCESS SHOW: '+success);
 			},function(error){
 				console.log('ERROR SHOW: '+error);
@@ -139,8 +139,8 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 							break;
 					}
 				};
-				MusicController.subscribe(events);
-				MusicController.listen();
+				MusicControls.subscribe(events);
+				MusicControls.listen();
 			}
 		},
 
