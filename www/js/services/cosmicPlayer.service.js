@@ -104,7 +104,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 			if (!self.controls){
 				self.controls  = true;
 				var events = function (action) {
-					console.log(action);
+					//console.log(action);
 					switch(action){
 						case 'music-controller-next':
 							self.next();

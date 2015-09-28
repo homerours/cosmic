@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a music player app for smartphones. It is built using [Apache Cordova](https://cordova.apache.org/) and [Ionic Framework](http://ionicframework.com/). The main goal of this project is to build an user-friendly, nice-looking and efficient music app.
+This is a music player app for Android (4.1+) smartphones. It is built using [Apache Cordova](https://cordova.apache.org/) and [Ionic Framework](http://ionicframework.com/). The main goal of this project is to build an user-friendly, nice-looking and efficient music app.
 
 <img src='https://github.com/homerours/cosmic/blob/master/screenshots/playlist-home.jpg' width='200px' height='350px'>
 <img src='https://github.com/homerours/cosmic/blob/master/screenshots/player.jpg' width='200px' height='350px'>
@@ -37,6 +37,14 @@ This app requires the following plugins:
 ## Development
 
 This app has only been tested on Android 4.4. It is currently at an early development stage, major changes may happen. Contributions and/or ideas are welcome.
+
+## Contributing
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
 
 ## References
 
