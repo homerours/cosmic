@@ -10,3 +10,4 @@ plugins/
 *.DS_Store
 bower.json
 .bowerrc
+refresh_plugin.sh

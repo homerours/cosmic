@@ -1,3 +1,3 @@
 #!/bin/bash
-cordova plugin rm com.homerours.musiccontroller
+cordova plugin rm cordova-plugin-music-controls
 cordova plugin add ../../musicControls

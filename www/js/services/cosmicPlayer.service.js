@@ -101,6 +101,8 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 			},function(error){
 				console.log('ERROR SHOW: '+error);
 			});
+
+			// Register listener function
 			if (!self.controls){
 				self.controls  = true;
 				var events = function (action) {
@@ -113,8 +115,8 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 							self.prev();
 							break;
 						case 'music-controls-headset-plugged':
-							if (!self.playing){
-								self.play();
+							if (self.playing){
+								self.pause();
 							}
 							break;
 						case 'music-controls-headset-unplugged':
