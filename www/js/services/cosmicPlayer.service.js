@@ -106,29 +106,29 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 				var events = function (action) {
 					//console.log(action);
 					switch(action){
-						case 'music-controller-next':
+						case 'music-controls-next':
 							self.next();
 							break;
-						case 'music-controller-previous':
+						case 'music-controls-previous':
 							self.prev();
 							break;
-						case 'music-controller-headset-plugged':
+						case 'music-controls-headset-plugged':
 							if (!self.playing){
 								self.play();
 							}
 							break;
-						case 'music-controller-headset-unplugged':
+						case 'music-controls-headset-unplugged':
 							if (self.playing){
 								self.pause();
 							}
 							break;
-						case 'music-controller-pause':
+						case 'music-controls-pause':
 							self.pause();
 							break;
-						case 'music-controller-play':
+						case 'music-controls-play':
 							self.play();
 							break;
-						case 'music-controller-media-button':
+						case 'music-controls-media-button':
 							if (self.playing){
 								self.pause();
 							} else {
