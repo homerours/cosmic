@@ -198,12 +198,12 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 			// seek to percent
 		seek: function(percent) {
 			var self=this;
-			console.log(percent);
-			console.log('Duration: '+self.duration);
+			//console.log(percent);
+			//console.log('Duration: '+self.duration);
 			if (self.duration >0){
 				var newPosition=percent*self.duration;
 				self.media.seekTo(newPosition);
-				console.log('seek to '+newPosition);
+				//console.log('seek to '+newPosition);
 				self.onUpdate(newPosition);
 			}
 		},
@@ -242,13 +242,13 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 						if (self.duration>0 && (1000*pos>=self.duration-600 || pos < 0)){
 							// update Play statistics
 							cosmicDB.updateTitlePlayStatistics(self.playlist[self.playlistIndex].id);
-							console.log('End of current song --- play next song');
+							//console.log('End of current song --- play next song');
 							self.next();
 						}
 					});
 				},500);
 			} else {
-				console.log('on update 0');
+				//console.log('on update 0');
 				self.onUpdate(0);
 			}
 			return;
@@ -271,7 +271,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 				var counter=0;
 				var inter=$interval(function(){
 					dur=self.media.getDuration();
-					console.log('tour : ',counter);
+					//console.log('tour : ',counter);
 					if (dur>=0 || counter>10){
 						$interval.cancel(inter);
 						self.duration=1000*dur;

@@ -16,6 +16,7 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
 		if ($localstorage.get('showStatusBar','true') === 'false'){
 			$cordovaStatusbar.hide();
 		}
+		ionic.Platform.setGrade('c'); // remove advanced css feature
 		$ionicPlatform.registerBackButtonAction(function (event) {
 			if ($state.current.name==='tab.playlists') {
 				backAsHome.trigger(function(){

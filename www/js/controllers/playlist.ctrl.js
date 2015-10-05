@@ -14,7 +14,6 @@ angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope
 	}
 
 	$scope.$on('$ionicView.beforeEnter', function() {
-		console.log('Refresh data');
 		refreshData();
 	});
 
@@ -23,7 +22,7 @@ angular.module('cosmic.controllers').controller('PlaylistsCtrl', function($scope
 		console.log('new playlist');
 		// submit new playlist
 		$scope.submitNewPlaylist = function(){
-			console.log('hideKeyboard');
+			//console.log('hideKeyboard');
 			cordova.plugins.Keyboard.close();
 			var newPlaylistName = $scope.dataPopup.newPlaylistName;
 			if (newPlaylistName===''){
