@@ -94,6 +94,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 				artist : title.artist,
 				track : title.name,
 				cover : cosmicConfig.appRootStorage + 'miniatures/' + title.artwork,
+				ticker : 'Now playing '+title.name +' from '+title.artist,
 				isPlaying : self.playing
 			};
 			MusicControls.create(notificationData, function(success){
