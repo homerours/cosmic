@@ -82,6 +82,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 			var mypath=title.path;
 			self.media=new Media(mypath);
 			self.play();
+			this.showMusicControls();
 			self.onTitleChange();
 		},
 
@@ -94,7 +95,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 				artist : title.artist,
 				track : title.name,
 				cover : cosmicConfig.appRootStorage + 'miniatures/' + title.artwork,
-				ticker : 'Now playing '+title.name +' from '+title.artist,
+				ticker : title.artist + ' -- ' + title.name,
 				isPlaying : self.playing
 			};
 			MusicControls.create(notificationData, function(success){
@@ -179,7 +180,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 				this.startWatchTime();
 				this.duration=this.getDuration();
 				this.media.play();
-				this.showMusicControls();
+				MusicControls.updateIsPlaying(true);
 			}
 		},
 		pause: function() {
@@ -187,7 +188,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 				player.playing = false;
 				this.media.pause();
 				this.stopWatchTime();
-				this.showMusicControls();
+				MusicControls.updateIsPlaying(false);
 			}
 		},
 		stop: function() {

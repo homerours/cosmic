@@ -33,11 +33,11 @@ angular.module('cosmic', ['ionic', 'ngCordova', 'cosmic.controllers', 'cosmic.se
 
 .config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider
-		.state('tab', {
-			url: "/tab",
-			abstract: true,
-			templateUrl: "templates/tabs.html",
-		})
+	.state('tab', {
+		url: "/tab",
+		abstract: true,
+		templateUrl: "templates/tabs.html",
+	})
 
 	.state('tab.playlists', {
 		url: '/playlists',
@@ -147,8 +147,8 @@ function bootstrapAngular(){
 }
 
 if (document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1) {
-console.log("URL: Running in Cordova/PhoneGap");
-document.addEventListener("deviceready", bootstrapAngular, false);
+	console.log("URL: Running in Cordova/PhoneGap");
+	document.addEventListener("deviceready", bootstrapAngular, false);
 } else {
 	console.log("URL: Running in browser");
 	document.addEventListener("DOMContentLoaded", bootstrapAngular, false);
