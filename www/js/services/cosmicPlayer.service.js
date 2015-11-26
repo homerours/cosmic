@@ -274,6 +274,7 @@ angular.module('cosmic.services').factory('cosmicPlayer',  function($interval,$q
 				var inter=$interval(function(){
 					dur=self.media.getDuration();
 					//console.log('tour : ',counter);
+					//console.log('dur: ',dur);
 					if (dur>=0 || counter>10){
 						$interval.cancel(inter);
 						self.duration=1000*dur;
