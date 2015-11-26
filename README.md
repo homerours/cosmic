@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a music player app for Android (4.1+) smartphones. It is built using [Apache Cordova](https://cordova.apache.org/) and [Ionic Framework](http://ionicframework.com/). The main goal of this project is to build an user-friendly, nice-looking and efficient music app.
+This is a music player app for Android (4.1+) smartphones. It is built using [Apache Cordova](https://cordova.apache.org/) and [Ionic Framework](http://ionicframework.com/). The main goal of this project is to build an user-friendly, nice-looking and efficient music app. Try [the android debug-apk](https://github.com/homerours/cosmic/blob/master/android-debug.apk) !
 
 <img src='https://github.com/homerours/cosmic/blob/master/screenshots/playlist-home.jpg' width='200px' height='350px'>
 <img src='https://github.com/homerours/cosmic/blob/master/screenshots/player.jpg' width='200px' height='350px'>
