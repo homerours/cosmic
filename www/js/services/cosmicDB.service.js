@@ -4,7 +4,8 @@ angular.module('cosmic.services').factory('cosmicDB',  function($q,$cordovaSQLit
         db: null,
         initDatabase: function(){
             console.log("INIT DATABASE");
-            this.db = $cordovaSQLite.openDB("cosmic");
+            //this.db = $cordovaSQLite.openDB({name: 'cosmic.db'});
+            this.db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
             this.playlistQueries = this.specialPlaylistQueries();
             this.createTables();
         },

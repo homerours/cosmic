@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.homerours.cosmic" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.homerours.cosmicgerry" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Cosmic</name>
   <description>
       A simple and efficient music player.
@@ -18,24 +18,66 @@
   <preference name="SplashScreenDelay" value="3000"/>
   <preference name="orientation" value="portrait"/>
   <preference name="KeyboardDisplayRequiresUserAction" value="false"/>
-  <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+  <preference name="AndroidPersistentFileLocation" value="Compatibility"/>
   <allow-navigation href="data:*"/>
+  <allow-navigation href="http://192.168.100.77:8100"/>
   <feature name="StatusBar">
-    <param name="ios-package" value="CDVStatusBar" onload="true"/>
+    <param name="ios-package" onload="true" value="CDVStatusBar"/>
   </feature>
   <platform name="android">
-    <icon src="resources/android/icon/drawable-ldpi-icon.png" density="ldpi"/>
-    <icon src="resources/android/icon/drawable-mdpi-icon.png" density="mdpi"/>
-    <icon src="resources/android/icon/drawable-hdpi-icon.png" density="hdpi"/>
-    <icon src="resources/android/icon/drawable-xhdpi-icon.png" density="xhdpi"/>
-    <icon src="resources/android/icon/drawable-xxhdpi-icon.png" density="xxhdpi"/>
-    <icon src="resources/android/icon/drawable-xxxhdpi-icon.png" density="xxxhdpi"/>
-    <splash src="resources/android/splash/drawable-port-ldpi-screen.png" density="port-ldpi"/>
-    <splash src="resources/android/splash/drawable-port-mdpi-screen.png" density="port-mdpi"/>
-    <splash src="resources/android/splash/drawable-port-hdpi-screen.png" density="port-hdpi"/>
-    <splash src="resources/android/splash/drawable-port-xhdpi-screen.png" density="port-xhdpi"/>
-    <splash src="resources/android/splash/drawable-port-xxhdpi-screen.png" density="port-xxhdpi"/>
-    <splash src="resources/android/splash/drawable-port-xxxhdpi-screen.png" density="port-xxxhdpi"/>
+    <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png"/>
+    <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png"/>
+    <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png"/>
+    <icon density="xhdpi" src="resources/android/icon/drawable-xhdpi-icon.png"/>
+    <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-icon.png"/>
+    <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png"/>
+    <splash density="port-ldpi" src="resources/android/splash/drawable-port-ldpi-screen.png"/>
+    <splash density="port-mdpi" src="resources/android/splash/drawable-port-mdpi-screen.png"/>
+    <splash density="port-hdpi" src="resources/android/splash/drawable-port-hdpi-screen.png"/>
+    <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.png"/>
+    <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png"/>
+    <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png"/>
+  </platform>
+  <platform name="ios">
+    <icon src="resources/ios/icon/icon.png" width="57" height="57"/>
+    <icon src="resources/ios/icon/icon@2x.png" width="114" height="114"/>
+    <icon src="resources/ios/icon/icon-40.png" width="40" height="40"/>
+    <icon src="resources/ios/icon/icon-40@2x.png" width="80" height="80"/>
+    <icon src="resources/ios/icon/icon-50.png" width="50" height="50"/>
+    <icon src="resources/ios/icon/icon-50@2x.png" width="100" height="100"/>
+    <icon src="resources/ios/icon/icon-60.png" width="60" height="60"/>
+    <icon src="resources/ios/icon/icon-60@2x.png" width="120" height="120"/>
+    <icon src="resources/ios/icon/icon-60@3x.png" width="180" height="180"/>
+    <icon src="resources/ios/icon/icon-72.png" width="72" height="72"/>
+    <icon src="resources/ios/icon/icon-72@2x.png" width="144" height="144"/>
+    <icon src="resources/ios/icon/icon-76.png" width="76" height="76"/>
+    <icon src="resources/ios/icon/icon-76@2x.png" width="152" height="152"/>
+    <icon src="resources/ios/icon/icon-small.png" width="29" height="29"/>
+    <icon src="resources/ios/icon/icon-small@2x.png" width="58" height="58"/>
+    <icon src="resources/ios/icon/icon-small@3x.png" width="87" height="87"/>
+    <splash src="resources/ios/splash/Default-568h@2x~iphone.png" height="1136" width="640"/>
+    <splash src="resources/ios/splash/Default-667h.png" height="1334" width="750"/>
+    <splash src="resources/ios/splash/Default-736h.png" height="2208" width="1242"/>
+    <splash src="resources/ios/splash/Default-Landscape-736h.png" height="1242" width="2208"/>
+    <splash src="resources/ios/splash/Default-Landscape@2x~ipad.png" height="1536" width="2048"/>
+    <splash src="resources/ios/splash/Default-Landscape@~ipadpro.png" height="2048" width="2732"/>
+    <splash src="resources/ios/splash/Default-Landscape~ipad.png" height="768" width="1024"/>
+    <splash src="resources/ios/splash/Default-Portrait@2x~ipad.png" height="2048" width="1536"/>
+    <splash src="resources/ios/splash/Default-Portrait@~ipadpro.png" height="2732" width="2048"/>
+    <splash src="resources/ios/splash/Default-Portrait~ipad.png" height="1024" width="768"/>
+    <splash src="resources/ios/splash/Default@2x~iphone.png" height="960" width="640"/>
+    <splash src="resources/ios/splash/Default~iphone.png" height="480" width="320"/>
   </platform>
   <icon src="resources/android/icon/drawable-xhdpi-icon.png"/>
+  <plugin name="cordova-plugin-media" spec="~2.4.1">
+    <variable name="MICROPHONE_USAGE_DESCRIPTION" value=" "/>
+  </plugin>
+  <plugin name="cordova-plugin-splashscreen" spec="~4.0.1"/>
+  <plugin name="cordova-plugin-statusbar" spec="~2.2.1"/>
+  <plugin name="cordova-sqlite-storage" spec="~2.0.0"/>
+  <plugin name="cordova-plugin-x-toast" spec="~2.5.2"/>
+  <plugin name="com.raananw.imageResizer" spec="https://github.com/RaananW/PhoneGap-Image-Resizer"/>
+  <plugin name="cordova-plugin-music-controls" spec="https://github.com/homerours/cordova-music-controls-plugin"/>
+  <plugin name="com.rd11.remote-controls" spec="https://github.com/shi11/RemoteControls"/>
+  <plugin name="ionic-plugin-keyboard" spec="~2.2.1"/>
 </widget>
